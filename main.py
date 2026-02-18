@@ -21,6 +21,10 @@ from routes.admin import router as admin_router
 # ─────────────────────────────────────────────────────────────
 Base.metadata.create_all(bind=engine)
 
+
+# ─────────────────────────────────────────────────────────────
+# FastAPI app
+# ─────────────────────────────────────────────────────────────
 app = FastAPI(
     title=settings.APP_TITLE,
     version=settings.APP_VERSION,
@@ -28,12 +32,15 @@ app = FastAPI(
     redoc_url="/redoc",
 )
 
+# ✅ CORS (полностью открыт для Swagger и фронта)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
+    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 # ─────────────────────────────────────────────────────────────
 # Роуты API
@@ -45,10 +52,10 @@ app.include_router(leaderboard_router)
 app.include_router(weapons_router)
 app.include_router(admin_router)
 
+
 # ─────────────────────────────────────────────────────────────
 # ФРОНТ
 # ─────────────────────────────────────────────────────────────
-
 FRONTEND_DIR = "frontend"
 
 if os.path.exists(FRONTEND_DIR):
@@ -59,6 +66,9 @@ if os.path.exists(FRONTEND_DIR):
         return FileResponse(os.path.join(FRONTEND_DIR, "index.html"))
 
 
+# ─────────────────────────────────────────────────────────────
+# Health check
+# ─────────────────────────────────────────────────────────────
 @app.get("/api/health")
 def health():
     return {
