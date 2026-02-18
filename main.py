@@ -14,8 +14,11 @@ from routes.weapons import router as weapons_router
 from routes.admin import router as admin_router
 
 
-# ── Создаём таблицы при старте ─────────────────────────────────────────────
+# ─────────────────────────────────────────────────────────────
+# Создаём таблицы при старте
+# ─────────────────────────────────────────────────────────────
 Base.metadata.create_all(bind=engine)
+
 
 app = FastAPI(
     title=settings.APP_TITLE,
@@ -31,7 +34,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# ── Роуты ──────────────────────────────────────────────────────────────────
+# ─────────────────────────────────────────────────────────────
+# Роуты
+# ─────────────────────────────────────────────────────────────
 app.include_router(upload_router)
 app.include_router(players_router)
 app.include_router(matches_router)
@@ -39,22 +44,31 @@ app.include_router(leaderboard_router)
 app.include_router(weapons_router)
 app.include_router(admin_router)
 
+
 @app.get("/")
 def root():
     return {"message": "CS2 Analytics API is running"}
+
 
 @app.get("/api/health")
 def health():
     return {
         "status": "ok",
         "version": settings.APP_VERSION,
+        "port": os.environ.get("PORT"),
     }
 
 
+# ─────────────────────────────────────────────────────────────
+# ВАЖНО: правильный запуск для Railway
+# ─────────────────────────────────────────────────────────────
 if __name__ == "__main__":
     import uvicorn
+
+    port = int(os.environ.get("PORT", 8000))
+
     uvicorn.run(
         "main:app",
         host="0.0.0.0",
-        port=8000,
+        port=port,
     )
