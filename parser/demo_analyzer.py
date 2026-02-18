@@ -398,24 +398,12 @@ class CS2DemoAnalyzer:
         for sid in self.players:
             self.players[sid]["rounds_played"] = self.total_rounds
 
-        def _build_result(self, map_name: str) -> Dict[str, Any]:
+    def _build_result(self, map_name: str) -> Dict[str, Any]:
         players_list = []
 
         for sid, data in self.players.items():
             rounds = data["rounds_played"]
             if rounds <= 0:
-                continue
-
-            # 🚫 Убираем мусорных игроков навсегда
-            if not sid or str(sid).lower() in ("nan", "none", "0"):
-                continue
-
-            nickname_clean = (data["nickname"] or "").strip()
-            if not nickname_clean or nickname_clean.lower() in ("nan", "none", "undefined"):
-                continue
-
-            steamid_clean = (data["steamid"] or "").strip()
-            if not steamid_clean or steamid_clean.lower() in ("nan", "none", "0"):
                 continue
 
             kills = data["kills"]
@@ -448,8 +436,8 @@ class CS2DemoAnalyzer:
             weapon_kills.sort(key=lambda x: x["kills"], reverse=True)
 
             players_list.append({
-                "nickname": nickname_clean,
-                "steamid": steamid_clean,
+                "nickname": data["nickname"] or "undefined",
+                "steamid": data["steamid"] or str(sid),
                 "team": data["team"] or "undefined",
                 "K": kills,
                 "D": deaths,
@@ -460,11 +448,10 @@ class CS2DemoAnalyzer:
                 "FK": data["first_kills"],
                 "FD": data["first_deaths"],
                 "rating": rating,
-                "weapon_kills": weapon_kills,
+                "weapon_kills": weapon_kills,  # <-- для save_match / WeaponStat
             })
 
         players_list.sort(key=lambda x: x["rating"], reverse=True)
-
 
         # MR12 halftime (как у тебя)
         halftime_round = 12
