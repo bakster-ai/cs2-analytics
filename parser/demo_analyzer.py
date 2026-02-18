@@ -401,39 +401,39 @@ class CS2DemoAnalyzer:
     def _build_result(self, map_name: str) -> Dict[str, Any]:
         players_list = []
 
-        for sid, data in self.players.items():
-    rounds = data["rounds_played"]
-    if rounds <= 0:
-        continue
+                for sid, data in self.players.items():
+            rounds = data["rounds_played"]
+            if rounds <= 0:
+                continue
 
-    # 🚫 Убираем мусорных игроков навсегда
-    if not sid or str(sid).lower() in ("nan", "none", "0"):
-        continue
+            # 🚫 Убираем мусорных игроков навсегда
+            if not sid or str(sid).lower() in ("nan", "none", "0"):
+                continue
 
-    nickname_clean = (data["nickname"] or "").strip()
-    if not nickname_clean or nickname_clean.lower() in ("nan", "none", "undefined"):
-        continue
+            nickname_clean = (data["nickname"] or "").strip()
+            if not nickname_clean or nickname_clean.lower() in ("nan", "none", "undefined"):
+                continue
 
-    steamid_clean = (data["steamid"] or "").strip()
-    if not steamid_clean or steamid_clean.lower() in ("nan", "none", "0"):
-        continue
+            steamid_clean = (data["steamid"] or "").strip()
+            if not steamid_clean or steamid_clean.lower() in ("nan", "none", "0"):
+                continue
 
-    kills = data["kills"]
-    deaths = data["deaths"]
+            kills = data["kills"]
+            deaths = data["deaths"]
 
-    adr = round((data["damage"] / rounds), 1) if rounds > 0 else 0.0
-    kd = round(kills / deaths, 2) if deaths > 0 else kills
-    hs = round((data["headshots"] / kills * 100), 1) if kills > 0 else 0.0
+            adr = round((data["damage"] / rounds), 1) if rounds > 0 else 0.0
+            kd = round(kills / deaths, 2) if deaths > 0 else kills
+            hs = round((data["headshots"] / kills * 100), 1) if kills > 0 else 0.0
 
-    rating = round(
-        (
-            (kills / rounds) * 0.4 +
-            ((kills * 2 + data["assists"]) / rounds) * 0.3 +
-            ((rounds - deaths) / rounds) * 0.2 +
-            ((adr / 100) * 0.1)
-        ) * 1.3,
-        2
-    )
+            rating = round(
+                (
+                    (kills / rounds) * 0.4 +
+                    ((kills * 2 + data["assists"]) / rounds) * 0.3 +
+                    ((rounds - deaths) / rounds) * 0.2 +
+                    ((adr / 100) * 0.1)
+                ) * 1.3,
+                2
+            )
 
             # build weapon_kills list
             weapon_kills = []
@@ -449,7 +449,7 @@ class CS2DemoAnalyzer:
 
             players_list.append({
                 "nickname": nickname_clean,
-"steamid": steamid_clean,
+                "steamid": steamid_clean,
                 "team": data["team"] or "undefined",
                 "K": kills,
                 "D": deaths,
@@ -460,10 +460,11 @@ class CS2DemoAnalyzer:
                 "FK": data["first_kills"],
                 "FD": data["first_deaths"],
                 "rating": rating,
-                "weapon_kills": weapon_kills,  # <-- для save_match / WeaponStat
+                "weapon_kills": weapon_kills,
             })
 
         players_list.sort(key=lambda x: x["rating"], reverse=True)
+
 
         # MR12 halftime (как у тебя)
         halftime_round = 12
