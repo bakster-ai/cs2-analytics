@@ -1,5 +1,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
+import os
 
 from core.config import settings
 from core.database import engine
@@ -13,6 +16,9 @@ from routes.weapons import router as weapons_router
 from routes.admin import router as admin_router
 
 
+# ─────────────────────────────────────────────────────────────
+# Создаём таблицы
+# ─────────────────────────────────────────────────────────────
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
@@ -29,6 +35,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# ─────────────────────────────────────────────────────────────
+# Роуты API
+# ─────────────────────────────────────────────────────────────
 app.include_router(upload_router)
 app.include_router(players_router)
 app.include_router(matches_router)
@@ -36,10 +45,18 @@ app.include_router(leaderboard_router)
 app.include_router(weapons_router)
 app.include_router(admin_router)
 
+# ─────────────────────────────────────────────────────────────
+# ФРОНТ
+# ─────────────────────────────────────────────────────────────
 
-@app.get("/")
-def root():
-    return {"message": "CS2 Analytics API is running"}
+FRONTEND_DIR = "frontend"
+
+if os.path.exists(FRONTEND_DIR):
+    app.mount("/static", StaticFiles(directory=FRONTEND_DIR), name="static")
+
+    @app.get("/")
+    def serve_frontend():
+        return FileResponse(os.path.join(FRONTEND_DIR, "index.html"))
 
 
 @app.get("/api/health")
@@ -48,3 +65,15 @@ def health():
         "status": "ok",
         "version": settings.APP_VERSION,
     }
+
+
+# ─────────────────────────────────────────────────────────────
+# Railway start
+# ─────────────────────────────────────────────────────────────
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(
+        "main:app",
+        host="0.0.0.0",
+        port=int(os.environ.get("PORT", 8000)),
+    )
