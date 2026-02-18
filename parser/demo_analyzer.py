@@ -398,10 +398,10 @@ class CS2DemoAnalyzer:
         for sid in self.players:
             self.players[sid]["rounds_played"] = self.total_rounds
 
-    def _build_result(self, map_name: str) -> Dict[str, Any]:
+        def _build_result(self, map_name: str) -> Dict[str, Any]:
         players_list = []
 
-                for sid, data in self.players.items():
+        for sid, data in self.players.items():
             rounds = data["rounds_played"]
             if rounds <= 0:
                 continue
