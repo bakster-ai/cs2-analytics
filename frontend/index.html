@@ -1,0 +1,1698 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CS2 ANALYTICS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600;700;800;900&family=Barlow:wght@300;400;500;600&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════════════
+   TOKENS
+═══════════════════════════════════════════════════════ */
+:root {
+  --bg:       #080a0d;
+  --bg1:      #0d1117;
+  --bg2:      #111720;
+  --bg3:      #161e2a;
+  --border:   #1e2d40;
+  --border2:  #243347;
+  --txt:      #c8d6e5;
+  --txt2:     #7a8fa6;
+  --txt3:     #3d5068;
+  --orange:   #ff6a00;
+  --orange2:  #ff8c35;
+  --cyan:     #00d4ff;
+  --cyan2:    #00a8cc;
+  --green:    #00e676;
+  --red:      #ff3d3d;
+  --yellow:   #ffd600;
+  --font-hd:  'Barlow Condensed', sans-serif;
+  --font-bd:  'Barlow', sans-serif;
+  --font-mn:  'Share Tech Mono', monospace;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--txt);
+  font-family: var(--font-bd);
+  font-size: 14px;
+  line-height: 1.5;
+  overflow-x: hidden;
+}
+
+/* Noise texture overlay */
+body::before {
+  content:'';
+  position:fixed; inset:0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events:none; z-index:9999; opacity:.4;
+}
+
+/* ═══════════════════════════════════════════════════════
+   LAYOUT
+═══════════════════════════════════════════════════════ */
+.page { display:none; min-height:100vh; }
+.page.active { display:block; }
+
+/* ═══════════════════════════════════════════════════════
+   NAV
+═══════════════════════════════════════════════════════ */
+nav {
+  position: sticky; top:0; z-index:100;
+  background: rgba(8,10,13,.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 32px;
+  display: flex; align-items: center; gap: 0;
+  height: 56px;
+}
+
+.nav-logo {
+  font-family: var(--font-hd);
+  font-size: 22px; font-weight: 900;
+  letter-spacing: .12em;
+  color: var(--txt);
+  margin-right: 40px;
+  text-decoration: none;
+  cursor: pointer;
+}
+.nav-logo span { color: var(--orange); }
+
+.nav-links { display:flex; gap:2px; flex:1; }
+.nav-link {
+  font-family: var(--font-hd);
+  font-size: 13px; font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--txt2);
+  padding: 0 16px; height:56px;
+  display: flex; align-items: center;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all .15s;
+  text-decoration: none;
+}
+.nav-link:hover { color:var(--txt); }
+.nav-link.active { color:var(--orange); border-bottom-color:var(--orange); }
+
+.nav-status {
+  display:flex; align-items:center; gap:8px;
+  font-family: var(--font-mn);
+  font-size:11px; color:var(--txt3);
+}
+.status-dot {
+  width:7px; height:7px; border-radius:50%;
+  background:var(--green);
+  box-shadow: 0 0 8px var(--green);
+  animation: pulse-dot 2s infinite;
+}
+@keyframes pulse-dot { 0%,100%{opacity:1} 50%{opacity:.4} }
+
+/* ═══════════════════════════════════════════════════════
+   HERO / UPLOAD
+═══════════════════════════════════════════════════════ */
+.hero {
+  padding: 40px 32px 0;
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 24px;
+  max-width: 1400px; margin: 0 auto;
+}
+
+.hero-title {
+  font-family: var(--font-hd);
+  font-size: clamp(40px, 5vw, 72px);
+  font-weight: 900;
+  line-height: .9;
+  letter-spacing: -.01em;
+  text-transform: uppercase;
+  padding-top: 8px;
+}
+.hero-title .line2 { color: var(--orange); }
+.hero-title .line3 { color: var(--txt3); font-size:.45em; font-weight:400; letter-spacing:.12em; margin-top:12px; display:block; }
+
+.hero-meta {
+  margin-top: 24px;
+  display: flex; gap: 32px;
+}
+.hero-stat-item { }
+.hero-stat-val {
+  font-family: var(--font-hd);
+  font-size: 32px; font-weight: 800;
+  color: var(--cyan); line-height:1;
+}
+.hero-stat-lbl {
+  font-size:11px; font-weight:600;
+  letter-spacing:.1em; text-transform:uppercase;
+  color:var(--txt3); margin-top:2px;
+}
+
+/* Upload card */
+.upload-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 0 100%);
+  padding: 28px;
+}
+.upload-card-title {
+  font-family: var(--font-hd);
+  font-size: 16px; font-weight: 700;
+  letter-spacing: .08em; text-transform: uppercase;
+  color: var(--orange); margin-bottom: 16px;
+  display: flex; align-items: center; gap: 8px;
+}
+.upload-drop {
+  border: 1.5px dashed var(--border2);
+  background: var(--bg1);
+  padding: 32px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all .2s;
+  position: relative;
+  margin-bottom: 16px;
+}
+.upload-drop:hover, .upload-drop.drag { border-color:var(--orange); background: rgba(255,106,0,.04); }
+.upload-drop input { position:absolute; inset:0; opacity:0; cursor:pointer; width:100%; }
+.upload-icon { font-size:32px; margin-bottom:8px; }
+.upload-drop-text { font-family:var(--font-hd); font-size:14px; font-weight:600; letter-spacing:.06em; color:var(--txt2); }
+.upload-drop-sub { font-size:11px; color:var(--txt3); margin-top:4px; font-family:var(--font-mn); }
+
+.btn-upload {
+  width:100%;
+  background: var(--orange);
+  color: #fff;
+  border: none; cursor: pointer;
+  font-family: var(--font-hd);
+  font-size: 15px; font-weight: 800;
+  letter-spacing: .1em; text-transform: uppercase;
+  padding: 14px;
+  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%);
+  transition: all .15s;
+}
+.btn-upload:hover { background: var(--orange2); transform: translateY(-1px); }
+.btn-upload:disabled { opacity:.4; cursor:not-allowed; transform:none; }
+
+.upload-progress {
+  margin-top: 12px;
+  display: none;
+}
+.progress-bar-track {
+  height: 3px; background: var(--border);
+  overflow: hidden;
+}
+.progress-bar-fill {
+  height: 100%; width: 0%;
+  background: linear-gradient(90deg, var(--orange), var(--cyan));
+  transition: width .3s;
+  animation: progress-shimmer 1.5s infinite;
+}
+@keyframes progress-shimmer {
+  0%{filter:brightness(1)} 50%{filter:brightness(1.4)} 100%{filter:brightness(1)}
+}
+.progress-label {
+  font-family:var(--font-mn); font-size:11px; color:var(--txt3);
+  margin-top:6px; text-align:center;
+}
+
+/* ═══════════════════════════════════════════════════════
+   SECTION
+═══════════════════════════════════════════════════════ */
+.section {
+  max-width: 1400px; margin: 0 auto;
+  padding: 32px;
+}
+
+.section-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.section-title {
+  font-family: var(--font-hd);
+  font-size: 13px; font-weight: 700;
+  letter-spacing: .15em; text-transform: uppercase;
+  color: var(--txt2);
+  display: flex; align-items: center; gap: 10px;
+}
+.section-title::before {
+  content:''; display:block;
+  width:3px; height:16px;
+  background: var(--orange);
+}
+
+.section-actions { display:flex; gap:8px; }
+
+/* ═══════════════════════════════════════════════════════
+   TABLE  
+═══════════════════════════════════════════════════════ */
+.data-table-wrap { overflow-x:auto; }
+
+table {
+  width:100%; border-collapse:collapse;
+}
+
+thead tr {
+  border-bottom: 1px solid var(--border);
+}
+
+th {
+  font-family: var(--font-hd);
+  font-size: 12px;           /* Было 11px → стало 12px */
+  font-weight: 700;
+  letter-spacing: .14em;     /* Чуть шире */
+  text-transform: uppercase;
+  color: var(--txt2);        /* Было txt3 → стало txt2 (светлее) */
+  padding: 12px 12px;        /* Было 10px → стало 12px */
+  text-align: left;
+  white-space: nowrap;
+}
+th.num { text-align:right; }
+
+tbody tr {
+  border-bottom: 1px solid rgba(30,45,64,.6);
+  transition: background .18s ease, transform .18s ease, box-shadow .18s ease;
+}
+
+tbody tr:hover {
+  background: rgba(255,106,0,.035);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0,0,0,.35);
+  cursor: pointer;
+}
+
+td {
+  padding: 16px 12px;  /* Было 12px → стало 16px (больше пространства) */
+  font-size: 15px;     /* Было 13px → стало 15px */
+  white-space: nowrap;
+  font-weight: 500;    /* Добавили жирность */
+}
+td.num {
+  text-align:right;
+  font-family: var(--font-hd);  /* Было mono → стало Barlow Condensed (крупнее) */
+  font-size: 17px;               /* Было 12px → стало 17px */
+  font-weight: 700;              /* Жирный шрифт */
+  letter-spacing: .02em;
+}
+
+.rank-num {
+  font-family: var(--font-hd);
+  font-size: 20px; font-weight: 900;
+  color: var(--txt3); width: 36px;
+  display: inline-block; text-align: right;
+}
+.rank-num.top1 { color: var(--yellow); }
+.rank-num.top2 { color: var(--txt2); }
+.rank-num.top3 { color: #cd7f32; }
+
+.player-cell {
+  display: flex; align-items: center; gap: 10px;
+}
+.player-avatar {
+  width: 32px; height: 32px;
+  background: var(--bg3);
+  border: 1px solid var(--border2);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-hd); font-size:14px; font-weight:800;
+  color: var(--orange);
+  flex-shrink:0;
+  clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 0 100%);
+}
+.player-name {
+  font-family: var(--font-hd); font-size:16px; font-weight:700;
+  letter-spacing:.02em; color:var(--txt);
+}
+.player-steam {
+  font-family: var(--font-mn); font-size:10px; color:var(--txt3);
+}
+
+.rating-badge {
+  font-family: var(--font-hd);
+  font-size: 22px;
+  font-weight: 800;
+  display: inline-block;
+  padding: 4px 12px;
+  clip-path: polygon(4px 0%, 100% 0%, calc(100% - 4px) 100%, 0% 100%);
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+
+.rating-badge:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 14px rgba(0,230,118,.35);
+}
+
+.rating-high { 
+  background: rgba(0,230,118,.15); 
+  color: var(--green); 
+}
+
+.rating-mid  { 
+  background: rgba(255,214,0,.15);  
+  color: var(--yellow); 
+}
+
+.rating-low  { 
+  background: rgba(255,61,61,.15);  
+  color: var(--red); 
+}
+
+.kd-val {
+  font-family: var(--font-hd);  /* Было mono → Barlow Condensed */
+  font-size: 17px;              /* Было 13px → стало 17px */
+  font-weight: 700;             /* Жирнее */
+  color: var(--cyan);
+}
+
+/* Проценты (HS%, Entry% и т.д.) */
+.pct-val {
+  font-family: var(--font-hd);
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--orange2);  /* Оранжевый для яркости */
+}
+
+/* Большие числа (total kills и т.д.) */
+.big-num {
+  font-family: var(--font-hd);
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--txt);
+}
+
+.tag-ct { 
+  font-family:var(--font-hd); font-size:11px; font-weight:700;
+  letter-spacing:.06em;
+  background:rgba(0,212,255,.1); color:var(--cyan);
+  padding:2px 7px; border:1px solid rgba(0,212,255,.2);
+}
+.tag-t {
+  background:rgba(255,106,0,.12); color:var(--orange);
+  border:1px solid rgba(255,106,0,.2);
+  font-family:var(--font-hd); font-size:11px; font-weight:700;
+  letter-spacing:.06em; padding:2px 7px;
+}
+
+/* ═══════════════════════════════════════════════════════
+   MATCH CARDS
+═══════════════════════════════════════════════════════ */
+.matches-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 16px;
+}
+
+.match-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  padding: 20px;
+  cursor: pointer;
+  transition: all .2s;
+  clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 0 100%);
+  position: relative; overflow: hidden;
+}
+.match-card::after {
+  content:'';
+  position:absolute; top:0; left:0; right:0;
+  height:2px;
+  background:linear-gradient(90deg, var(--orange), transparent);
+  opacity:0; transition:opacity .2s;
+}
+.match-card:hover { border-color:var(--border2); transform:translateY(-2px); box-shadow:0 8px 32px rgba(0,0,0,.4); }
+.match-card:hover::after { opacity:1; }
+
+.match-card-header {
+  display:flex; justify-content:space-between; align-items:flex-start;
+  margin-bottom:16px;
+}
+.match-map {
+  font-family:var(--font-hd); font-size:22px; font-weight:800;
+  letter-spacing:.02em; color:var(--txt);
+  text-transform:uppercase;
+}
+.match-date {
+  font-family:var(--font-mn); font-size:10px; color:var(--txt3);
+  text-align:right; line-height:1.6;
+}
+
+.match-score {
+  display:flex; align-items:center; justify-content:center;
+  gap:16px; padding: 12px 0;
+  border-top: 1px solid var(--border); border-bottom:1px solid var(--border);
+  margin-bottom:14px;
+}
+.score-num {
+  font-family:var(--font-hd); font-size:40px; font-weight:900;
+  line-height:1;
+}
+.score-num.win  { color:var(--green); }
+.score-num.loss { color:var(--red); }
+.score-sep { font-family:var(--font-hd); font-size:20px; color:var(--txt3); }
+
+.match-card-footer {
+  display:flex; gap:16px; flex-wrap:wrap;
+}
+.match-meta-item {
+  font-family:var(--font-mn); font-size:10px; color:var(--txt3);
+}
+.match-meta-item strong { color:var(--txt2); }
+
+/* ═══════════════════════════════════════════════════════
+   MATCH DETAIL PAGE
+═══════════════════════════════════════════════════════ */
+.match-detail-hero {
+  background: var(--bg1);
+  border-bottom: 1px solid var(--border);
+  padding: 40px 32px 32px;
+}
+
+.mdhero-inner {
+  max-width:1400px; margin:0 auto;
+  display:grid; grid-template-columns:1fr auto 1fr;
+  align-items:center; gap:32px;
+}
+
+.team-block { }
+.team-block.right { text-align:right; }
+
+.team-side-tag {
+  font-family:var(--font-hd); font-size:11px; font-weight:700;
+  letter-spacing:.15em; text-transform:uppercase;
+  margin-bottom:6px;
+}
+.team-final-score {
+  font-family:var(--font-hd); font-size:80px; font-weight:900;
+  line-height:.85;
+}
+.score-center {
+  text-align:center;
+}
+.score-center-map {
+  font-family:var(--font-hd); font-size:28px; font-weight:800;
+  text-transform:uppercase; letter-spacing:.05em; color:var(--txt2);
+}
+.score-center-vs {
+  font-family:var(--font-hd); font-size:14px; font-weight:600;
+  color:var(--txt3); letter-spacing:.15em; margin:8px 0;
+}
+.score-center-meta {
+  font-family:var(--font-mn); font-size:10px; color:var(--txt3);
+  line-height:1.8; margin-top:8px;
+}
+
+.half-scores {
+  margin-top:16px;
+  display:flex; gap:8px;
+}
+.half-scores.right { justify-content:flex-end; }
+.half-score-pill {
+  font-family:var(--font-hd); font-size:13px; font-weight:700;
+  padding: 3px 10px;
+  background:var(--bg3); border:1px solid var(--border);
+  color:var(--txt2);
+}
+
+/* MVP banner */
+.mvp-banner {
+  max-width:1400px; margin:0 auto 0;
+  padding: 0 32px;
+}
+.mvp-inner {
+  margin-top: 24px;
+  background: linear-gradient(135deg, rgba(255,106,0,.08) 0%, rgba(255,106,0,.02) 100%);
+  border: 1px solid rgba(255,106,0,.2);
+  padding: 20px 28px;
+  display: flex; align-items:center; gap:28px;
+  clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 0 100%);
+}
+.mvp-label {
+  font-family:var(--font-hd); font-size:11px; font-weight:700;
+  letter-spacing:.2em; text-transform:uppercase;
+  color:var(--orange); white-space:nowrap;
+}
+.mvp-crown { font-size:28px; }
+.mvp-name {
+  font-family:var(--font-hd); font-size:36px; font-weight:900;
+  color:var(--txt); letter-spacing:.02em;
+}
+.mvp-stats {
+  display:flex; gap:24px; margin-left:auto;
+}
+.mvp-stat { text-align:center; }
+.mvp-stat-val {
+  font-family:var(--font-hd); font-size:24px; font-weight:800;
+  color:var(--cyan); line-height:1;
+}
+.mvp-stat-lbl {
+  font-family:var(--font-mn); font-size:9px; color:var(--txt3);
+  margin-top:2px; letter-spacing:.08em; text-transform:uppercase;
+}
+
+/* ═══════════════════════════════════════════════════════
+   PLAYER PROFILE PAGE
+═══════════════════════════════════════════════════════ */
+.profile-hero {
+  background: var(--bg1);
+  border-bottom: 1px solid var(--border);
+  padding: 40px 32px;
+}
+.profile-hero-inner {
+  max-width:1400px; margin:0 auto;
+  display:flex; gap:32px; align-items:flex-start;
+}
+.profile-avatar-lg {
+  width:88px; height:88px;
+  background:var(--bg3); border:2px solid var(--border2);
+  display:flex; align-items:center; justify-content:center;
+  font-family:var(--font-hd); font-size:40px; font-weight:900;
+  color:var(--orange); flex-shrink:0;
+  clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 0 100%);
+}
+.profile-name {
+  font-family:var(--font-hd); font-size:52px; font-weight:900;
+  line-height:.9; letter-spacing:-.01em; text-transform:uppercase;
+}
+.profile-steamid {
+  font-family:var(--font-mn); font-size:11px; color:var(--txt3); margin-top:6px;
+}
+.profile-kpis {
+  display:flex; gap:32px; margin-top:20px;
+}
+.kpi-block { }
+.kpi-val {
+  font-family:var(--font-hd); font-size:28px; font-weight:800;
+  line-height:1;
+}
+.kpi-lbl {
+  font-family:var(--font-mn); font-size:10px; color:var(--txt3);
+  letter-spacing:.1em; text-transform:uppercase; margin-top:3px;
+}
+
+/* Form chart */
+.form-chart {
+  display:flex; align-items:flex-end; gap:6px;
+  height:60px; padding-top:8px;
+}
+.form-bar {
+  flex:1; min-width:20px;
+  border-radius:1px 1px 0 0;
+  position:relative;
+  transition:opacity .2s;
+}
+.form-bar:hover { opacity:.8; }
+.form-bar-tooltip {
+  position:absolute; bottom:calc(100% + 4px);
+  left:50%; transform:translateX(-50%);
+  background:var(--bg3); border:1px solid var(--border2);
+  padding:4px 8px; white-space:nowrap;
+  font-family:var(--font-mn); font-size:10px; color:var(--txt);
+  pointer-events:none; opacity:0; transition:opacity .15s;
+  z-index:10;
+}
+.form-bar:hover .form-bar-tooltip { opacity:1; }
+
+/* ═══════════════════════════════════════════════════════
+   STATS CARDS GRID
+═══════════════════════════════════════════════════════ */
+.stats-cards {
+  display:grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap:12px;
+  margin-bottom:24px;
+}
+.stat-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  padding: 16px;
+  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%);
+}
+.stat-card-val {
+  font-family:var(--font-hd); font-size:28px; font-weight:800;
+  color:var(--cyan); line-height:1;
+}
+.stat-card-lbl {
+  font-family:var(--font-mn); font-size:10px; color:var(--txt3);
+  letter-spacing:.08em; text-transform:uppercase; margin-top:4px;
+}
+
+/* ═══════════════════════════════════════════════════════
+   ROUND HISTORY
+═══════════════════════════════════════════════════════ */
+.round-history {
+  display:flex; flex-wrap:wrap; gap:4px;
+  margin-top:16px;
+}
+.round-pip {
+  width:28px; height:28px;
+  display:flex; align-items:center; justify-content:center;
+  font-family:var(--font-mn); font-size:9px;
+  transition:transform .1s;
+  cursor:default;
+}
+.round-pip:hover { transform:scale(1.2); }
+.round-pip.ct { background:rgba(0,212,255,.15); border:1px solid rgba(0,212,255,.3); color:var(--cyan); }
+.round-pip.t  { background:rgba(255,106,0,.12); border:1px solid rgba(255,106,0,.25); color:var(--orange); }
+
+/* ═══════════════════════════════════════════════════════
+   FILTER BAR
+═══════════════════════════════════════════════════════ */
+.filter-bar {
+  display:flex; gap:8px; flex-wrap:wrap; margin-bottom:20px;
+}
+.filter-btn {
+  font-family:var(--font-hd); font-size:12px; font-weight:700;
+  letter-spacing:.08em; text-transform:uppercase;
+  color:var(--txt2);
+  background:var(--bg2); border:1px solid var(--border);
+  padding:6px 14px; cursor:pointer;
+  transition:all .15s;
+}
+.filter-btn:hover, .filter-btn.active {
+  background:rgba(255,106,0,.1);
+  border-color:rgba(255,106,0,.4);
+  color:var(--orange);
+}
+.filter-select {
+  font-family:var(--font-hd); font-size:12px; font-weight:700;
+  letter-spacing:.06em;
+  color:var(--txt); background:var(--bg2); border:1px solid var(--border);
+  padding:6px 14px; cursor:pointer; outline:none;
+}
+
+/* ═══════════════════════════════════════════════════════
+   WEAPON TABLE SPECIAL
+═══════════════════════════════════════════════════════ */
+.weapon-icon {
+  font-family: var(--font-hd);  /* Было mono → стало Barlow Condensed (читабельнее) */
+  font-size: 16px;              /* Было 11px → стало 16px */
+  font-weight: 700;             /* Жирный шрифт */
+  color: var(--orange);
+  background: rgba(255,106,0,.12);  /* Чуть ярче фон */
+  border: 1px solid rgba(255,106,0,.25);  /* Чуть ярче бордер */
+  padding: 5px 12px;            /* Больше padding */
+  display: inline-block;
+  letter-spacing: .06em;
+  text-transform: uppercase;    /* ЗАГЛАВНЫЕ буквы */
+}
+
+/* ═══════════════════════════════════════════════════════
+   BACK BUTTON
+═══════════════════════════════════════════════════════ */
+.btn-back {
+  display:inline-flex; align-items:center; gap:8px;
+  font-family:var(--font-hd); font-size:13px; font-weight:700;
+  letter-spacing:.08em; text-transform:uppercase;
+  color:var(--txt2);
+  background:none; border:1px solid var(--border);
+  padding:8px 16px; cursor:pointer;
+  transition:all .15s; margin:24px 32px 0;
+}
+.btn-back:hover { color:var(--txt); border-color:var(--border2); }
+
+/* ═══════════════════════════════════════════════════════
+   TOAST
+═══════════════════════════════════════════════════════ */
+.toast {
+  position:fixed; bottom:24px; right:24px;
+  background:var(--bg3); border:1px solid var(--border2);
+  border-left:3px solid var(--orange);
+  padding:14px 20px; z-index:999;
+  font-family:var(--font-hd); font-size:14px; font-weight:600;
+  letter-spacing:.04em;
+  transform:translateY(80px); opacity:0;
+  transition:all .25s cubic-bezier(.34,1.56,.64,1);
+  max-width:320px;
+}
+.toast.show { transform:translateY(0); opacity:1; }
+.toast.error { border-left-color:var(--red); }
+.toast.success { border-left-color:var(--green); }
+
+/* ═══════════════════════════════════════════════════════
+   EMPTY STATE
+═══════════════════════════════════════════════════════ */
+.empty-state {
+  text-align:center; padding:60px 32px;
+  color:var(--txt3);
+}
+.empty-state-icon { font-size:48px; margin-bottom:16px; }
+.empty-state-title {
+  font-family:var(--font-hd); font-size:24px; font-weight:700;
+  color:var(--txt2); margin-bottom:8px;
+}
+.empty-state-sub { font-size:13px; }
+
+/* ═══════════════════════════════════════════════════════
+   ANIMATIONS
+═══════════════════════════════════════════════════════ */
+@keyframes fadeSlideIn {
+  from { opacity:0; transform:translateY(12px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+.anim-in {
+  animation: fadeSlideIn .3s ease forwards;
+}
+.anim-in-d1 { animation-delay:.05s; opacity:0; }
+.anim-in-d2 { animation-delay:.10s; opacity:0; }
+.anim-in-d3 { animation-delay:.15s; opacity:0; }
+.anim-in-d4 { animation-delay:.20s; opacity:0; }
+
+/* ═══════════════════════════════════════════════════════
+   SCROLLBAR
+═══════════════════════════════════════════════════════ */
+::-webkit-scrollbar { width:6px; height:6px; }
+::-webkit-scrollbar-track { background:var(--bg1); }
+::-webkit-scrollbar-thumb { background:var(--border2); border-radius:3px; }
+::-webkit-scrollbar-thumb:hover { background:var(--txt3); }
+
+/* ═══════════════════════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════════════════════ */
+@media (max-width:900px) {
+  .hero { grid-template-columns:1fr; }
+  .mdhero-inner { grid-template-columns:1fr; text-align:center; }
+  .team-block.right { text-align:center; }
+  .half-scores.right { justify-content:center; }
+  .profile-hero-inner { flex-direction:column; }
+  .profile-kpis { flex-wrap:wrap; gap:20px; }
+  nav { padding:0 16px; }
+  .section { padding:20px 16px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ─── NAV ──────────────────────────────────────────────────── -->
+<nav>
+  <span class="nav-logo" onclick="showPage('home')">CS2<span>STATS</span></span>
+  <div class="nav-links">
+    <a class="nav-link active" id="nav-home"        onclick="showPage('home')">Leaderboard</a>
+    <a class="nav-link"       id="nav-matches"      onclick="showPage('matches')">Matches</a>
+    <a class="nav-link"       id="nav-weapons"      onclick="showPage('weapons')">Weapons</a>
+  </div>
+  <div class="nav-status">
+    <div class="status-dot" id="statusDot"></div>
+    <span id="statusLabel">connecting...</span>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════════════════════════════════
+     PAGE: HOME — Leaderboard
+══════════════════════════════════════════════════════════════ -->
+<div class="page active" id="page-home">
+
+  <div class="hero">
+    <div class="anim-in">
+      <div class="hero-title">
+        CS2<br>
+        <span class="line2">Analytics</span>
+        <span class="line3">Premier Match Statistics Platform</span>
+      </div>
+      <div class="hero-meta">
+        <div class="hero-stat-item">
+          <div class="hero-stat-val" id="stat-total-matches">—</div>
+          <div class="hero-stat-lbl">Matches</div>
+        </div>
+        <div class="hero-stat-item">
+          <div class="hero-stat-val" id="stat-total-players">—</div>
+          <div class="hero-stat-lbl">Players</div>
+        </div>
+        <div class="hero-stat-item">
+          <div class="hero-stat-val" id="stat-total-kills">—</div>
+          <div class="hero-stat-lbl">Total Kills</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="upload-card anim-in anim-in-d1">
+      <div class="upload-card-title">
+        <span>⬆</span> Upload Demo
+      </div>
+      <div class="upload-drop" id="uploadDrop">
+        <input type="file" id="fileInput" accept=".dem">
+        <div class="upload-icon">📁</div>
+        <div class="upload-drop-text">Drop .dem file here</div>
+        <div class="upload-drop-sub">or click to browse</div>
+      </div>
+      <button class="btn-upload" id="uploadBtn" disabled>Analyze Demo</button>
+      <div class="upload-progress" id="uploadProgress">
+        <div class="progress-bar-track"><div class="progress-bar-fill" id="progressFill"></div></div>
+        <div class="progress-label" id="progressLabel">Parsing demo...</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section anim-in anim-in-d2">
+    <div class="section-header">
+      <div class="section-title">Player Rankings</div>
+      <div class="section-actions">
+        <div class="filter-bar" style="margin:0">
+          <select class="filter-select" id="lbPeriod" onchange="loadLeaderboard()">
+            <option value="365">Last Year</option>
+            <option value="90">Last 90 days</option>
+            <option value="30">Last 30 days</option>
+          </select>
+          <select class="filter-select" id="lbMap" onchange="loadLeaderboard()">
+            <option value="">All Maps</option>
+            <option value="de_dust2">de_dust2</option>
+            <option value="de_mirage">de_mirage</option>
+            <option value="de_inferno">de_inferno</option>
+            <option value="de_nuke">de_nuke</option>
+            <option value="de_ancient">de_ancient</option>
+            <option value="de_anubis">de_anubis</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="data-table-wrap">
+      <table>
+        <thead><tr>
+          <th style="width:52px">#</th>
+          <th>Player</th>
+          <th class="num">Rating</th>
+          <th class="num">Matches</th>
+          <th class="num">K/D</th>
+          <th class="num">ADR</th>
+          <th class="num">HS%</th>
+          <th class="num">Entry%</th>
+        </tr></thead>
+        <tbody id="leaderboardBody"></tbody>
+      </table>
+    </div>
+    <div id="lbEmpty" style="display:none"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     PAGE: MATCHES
+══════════════════════════════════════════════════════════════ -->
+<div class="page" id="page-matches">
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title">Match History</div>
+    </div>
+    <div class="filter-bar">
+      <button class="filter-btn active" onclick="filterMatches(this,'')">All Maps</button>
+      <button class="filter-btn" onclick="filterMatches(this,'de_dust2')">dust2</button>
+      <button class="filter-btn" onclick="filterMatches(this,'de_mirage')">mirage</button>
+      <button class="filter-btn" onclick="filterMatches(this,'de_inferno')">inferno</button>
+      <button class="filter-btn" onclick="filterMatches(this,'de_nuke')">nuke</button>
+      <button class="filter-btn" onclick="filterMatches(this,'de_ancient')">ancient</button>
+    </div>
+    <div class="matches-grid" id="matchesGrid"></div>
+    <div id="matchesEmpty" style="display:none"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     PAGE: MATCH DETAIL
+══════════════════════════════════════════════════════════════ -->
+<div class="page" id="page-match-detail">
+  <button class="btn-back" onclick="showPage('matches')">← Back to Matches</button>
+
+  <div class="match-detail-hero">
+    <div class="mdhero-inner">
+      <div class="team-block">
+        <div class="team-side-tag" style="color:var(--cyan)">TEAM 1</div>
+        <div class="team-final-score" id="md-score1" style="color:var(--green)">—</div>
+        <div class="half-scores" id="md-halves1"></div>
+      </div>
+      <div class="score-center">
+        <div class="score-center-map" id="md-map">—</div>
+        <div class="score-center-vs">VS</div>
+        <div class="score-center-meta" id="md-meta">—</div>
+      </div>
+      <div class="team-block right">
+        <div class="team-side-tag" style="color:var(--orange)">TEAM 2</div>
+        <div class="team-final-score" id="md-score2" style="color:var(--red)">—</div>
+        <div class="half-scores right" id="md-halves2"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mvp-banner">
+    <div class="mvp-inner" id="mvpInner">
+      <div class="mvp-crown">👑</div>
+      <div>
+        <div class="mvp-label">MVP of the Match</div>
+        <div class="mvp-name" id="mvp-name">—</div>
+      </div>
+      <div class="mvp-stats" id="mvp-stats"></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div id="md-round-hist" style="margin-bottom:24px;display:none">
+      <div class="section-title" style="margin-bottom:12px">Round History</div>
+      <div class="round-history" id="roundHistoryPips"></div>
+    </div>
+
+    <div class="section-title" style="margin-bottom:16px">Scoreboard</div>
+    <div class="data-table-wrap">
+      <table>
+        <thead><tr>
+          <th>Player</th>
+          <th>Side</th>
+          <th class="num">K</th>
+          <th class="num">D</th>
+          <th class="num">A</th>
+          <th class="num">K/D</th>
+          <th class="num">HS%</th>
+          <th class="num">ADR</th>
+          <th class="num">FK</th>
+          <th class="num">FD</th>
+          <th class="num">Rating</th>
+        </tr></thead>
+        <tbody id="matchScoreboard"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     PAGE: PLAYER PROFILE
+══════════════════════════════════════════════════════════════ -->
+<div class="page" id="page-player">
+  <button class="btn-back" onclick="showPage('home')">← Back to Rankings</button>
+
+  <div class="profile-hero">
+    <div class="profile-hero-inner">
+      <div class="profile-avatar-lg" id="prof-avatar">—</div>
+      <div>
+        <div class="profile-name" id="prof-name">—</div>
+        <div class="profile-steamid" id="prof-steamid">—</div>
+        <div class="profile-kpis" id="prof-kpis"></div>
+      </div>
+      <div style="margin-left:auto; min-width:200px" id="prof-form-wrap">
+        <div style="font-family:var(--font-mn);font-size:10px;color:var(--txt3);letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px">Rating Form (6mo)</div>
+        <div class="form-chart" id="profFormChart"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="stats-cards" id="profStatsCards"></div>
+
+    <div class="section-title" style="margin-bottom:16px">Match History</div>
+    <div class="data-table-wrap">
+      <table>
+        <thead><tr>
+          <th>Date</th>
+          <th>Map</th>
+          <th>Side</th>
+          <th class="num">K</th>
+          <th class="num">D</th>
+          <th class="num">A</th>
+          <th class="num">ADR</th>
+          <th class="num">HS%</th>
+          <th class="num">Rating</th>
+        </tr></thead>
+        <tbody id="profMatchHistory"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     PAGE: WEAPONS
+══════════════════════════════════════════════════════════════ -->
+<div class="page" id="page-weapons">
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title">Weapon Rankings</div>
+    </div>
+    <div class="data-table-wrap">
+      <table>
+        <thead><tr>
+          <th>#</th>
+          <th>Weapon</th>
+          <th class="num">Total Kills</th>
+          <th class="num">HS%</th>
+          <th class="num">Avg DMG/Kill</th>
+          <th class="num">Usage Count</th>
+        </tr></thead>
+        <tbody id="weaponTableBody"></tbody>
+      </table>
+    </div>
+    <div id="weaponsEmpty" style="display:none"></div>
+  </div>
+</div>
+
+<!-- PAGE: WEAPON DETAIL -->
+<div class="page" id="page-weapon-detail">
+  <button class="btn-back" onclick="showPage('weapons')">← Back to Weapons</button>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title" id="weaponDetailTitle">Weapon Detail</div>
+    </div>
+
+    <div class="data-table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Player</th>
+            <th class="num">Kills</th>
+            <th class="num">HS%</th>
+            <th class="num">Avg DMG/Kill</th>
+            <th class="num">Matches Used</th>
+          </tr>
+        </thead>
+        <tbody id="weaponDetailBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ── TOAST ── -->
+<div class="toast" id="toast"></div>
+
+<script>
+/* ══════════════════════════════════════════════════════
+   CONFIG
+══════════════════════════════════════════════════════ */
+const API   = 'http://localhost:8000';  // ← Fixed: FastAPI runs on 8000 by default
+const KEY   = localStorage.getItem('apiKey') || 'changeme-set-in-dotenv';
+
+/* ══════════════════════════════════════════════════════
+   HELPERS
+══════════════════════════════════════════════════════ */
+const $ = id => document.getElementById(id);
+
+function ratingClass(r) {
+  if (r >= 1.20) return 'rating-high';
+  if (r >= 0.95) return 'rating-mid';
+  return 'rating-low';
+}
+
+function formatDate(iso) {
+  const d = new Date(iso);
+  return d.toLocaleDateString('ru-RU', {day:'2-digit',month:'2-digit',year:'2-digit'});
+}
+
+let toastTimer;
+function showToast(msg, type='info') {
+  const t = $('toast');
+  t.textContent = msg;
+  t.className = `toast show ${type}`;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 3500);
+}
+
+function initials(name) {
+  if (!name || name === 'undefined') return '?';
+  return name.slice(0,2).toUpperCase();
+}
+
+/* ══════════════════════════════════════════════════════
+   NAVIGATION
+══════════════════════════════════════════════════════ */
+let currentPage = 'home';
+const pageMap = {
+  'home':         'page-home',
+  'matches':      'page-matches',
+  'match-detail': 'page-match-detail',
+  'player':       'page-player',
+  'weapons':      'page-weapons',
+  'weapon-detail': 'page-weapon-detail',
+};
+const navMap = {
+  'home':    'nav-home',
+  'matches': 'nav-matches',
+  'weapons': 'nav-weapons',
+};
+
+function showPage(name) {
+  Object.values(pageMap).forEach(id => {
+    const el = $(id);
+    if (el) el.classList.remove('active');
+  });
+  const el = $(pageMap[name]);
+  if (el) el.classList.add('active');
+  currentPage = name;
+
+  // Update nav
+  document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+  if (navMap[name]) $(navMap[name])?.classList.add('active');
+
+  window.scrollTo({top:0, behavior:'smooth'});
+
+  // Lazy load data
+  if (name === 'home')    loadLeaderboard();
+  if (name === 'matches') loadMatches();
+  if (name === 'weapons') loadWeapons();
+}
+
+/* ══════════════════════════════════════════════════════
+   API
+══════════════════════════════════════════════════════ */
+async function apiFetch(path, options={}) {
+  const res = await fetch(API + path, {
+    headers: { 'X-API-Key': KEY, ...options.headers },
+    ...options
+  });
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  return res.json();
+}
+
+/* ── Backend status check ── */
+async function checkBackend() {
+  try {
+    await apiFetch('/api/health');
+    $('statusDot').style.background = 'var(--green)';
+    $('statusDot').style.boxShadow   = '0 0 8px var(--green)';
+    $('statusLabel').textContent = 'API online';
+    loadOverview();
+    loadLeaderboard();
+  } catch {
+    $('statusDot').style.background = 'var(--red)';
+    $('statusDot').style.boxShadow   = '0 0 8px var(--red)';
+    $('statusLabel').textContent = 'API offline';
+    showToast('Backend offline — start server on :5001', 'error');
+  }
+}
+
+/* ── Overview stats ── */
+async function loadOverview() {
+  try {
+    const matches = await apiFetch('/api/matches?limit=1000');
+    const players = await apiFetch('/api/players?limit=1000');
+    const totalKills = matches.reduce((s,m) => s + (m.total_kills||0), 0);
+    $('stat-total-matches').textContent = matches.length;
+    $('stat-total-players').textContent = players.length;
+    $('stat-total-kills').textContent   = totalKills.toLocaleString();
+  } catch {}
+}
+
+/* ══════════════════════════════════════════════════════
+   LEADERBOARD
+══════════════════════════════════════════════════════ */
+async function loadLeaderboard() {
+  const period = $('lbPeriod').value;
+  const map    = $('lbMap').value;
+  try {
+    let url = `/api/leaderboard?period_days=${period}&min_matches=1`;
+    if (map) url += `&map=${map}`;
+    const data = await apiFetch(url);
+    renderLeaderboard(data);
+  } catch (e) {
+    $('leaderboardBody').innerHTML = `<tr><td colspan="8" style="text-align:center;padding:40px;color:var(--txt3)">Failed to load — is the backend running?</td></tr>`;
+  }
+}
+
+function renderLeaderboard(data) {
+  const tbody = $('leaderboardBody');
+  if (!data.length) {
+    tbody.innerHTML = `<tr><td colspan="8"><div class="empty-state"><div class="empty-state-icon">🎯</div><div class="empty-state-title">No data yet</div><div class="empty-state-sub">Upload a demo to get started</div></div></td></tr>`;
+    return;
+  }
+  tbody.innerHTML = data.map((p,i) => `
+    <tr onclick="loadPlayer('${p.steam_id}')" style="animation:fadeSlideIn .25s ${i*.03}s ease both">
+      <td><span class="rank-num ${i===0?'top1':i===1?'top2':i===2?'top3':''}">${p.rank}</span></td>
+      <td>
+        <div class="player-cell">
+          <div class="player-avatar">${initials(p.nickname)}</div>
+          <div>
+            <div class="player-name">${p.nickname}</div>
+            <div class="player-steam">${p.steam_id?.slice(-8)||''}</div>
+          </div>
+        </div>
+      </td>
+      <td class="num"><span class="rating-badge ${ratingClass(p.avg_rating)}">${p.avg_rating?.toFixed(2)}</span></td>
+      <td class="num">${p.matches}</td>
+      <td class="num"><span class="kd-val">${p.kd_ratio?.toFixed(2)}</span></td>
+      <td class="num">${p.avg_adr?.toFixed(0)}</td>
+      <td class="num"><span class="pct-val">${p.avg_hs?.toFixed(0)}%</span></td>
+      <td class="num"><span class="pct-val">${p.entry_rate?.toFixed(0)}%</span></td>
+    </tr>
+  `).join('');
+}
+
+/* ══════════════════════════════════════════════════════
+   MATCHES
+══════════════════════════════════════════════════════ */
+let allMatches = [];
+let matchMapFilter = '';
+
+async function loadMatches() {
+  try {
+    allMatches = await apiFetch('/api/matches?limit=100');
+    renderMatches();
+  } catch {
+    $('matchesGrid').innerHTML = '';
+    showToast('Could not load matches', 'error');
+  }
+}
+
+function filterMatches(btn, map) {
+  document.querySelectorAll('#page-matches .filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  matchMapFilter = map;
+  renderMatches();
+}
+
+function renderMatches() {
+  const grid = $('matchesGrid');
+  const list = matchMapFilter ? allMatches.filter(m=>m.map===matchMapFilter) : allMatches;
+  if (!list.length) {
+    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><div class="empty-state-icon">📂</div><div class="empty-state-title">No matches found</div><div class="empty-state-sub">Upload a demo to see match history</div></div>`;
+    return;
+  }
+  const [a,b] = (list[0]?.score||'0-0').split('-').map(Number);
+  grid.innerHTML = list.map(m => {
+    const [s1,s2] = (m.score||'0-0').split('-').map(Number);
+    const win  = s1 > s2;
+    const draw = s1 === s2;
+    return `
+    <div class="match-card anim-in" onclick="loadMatchDetail(${m.id})">
+      <div class="match-card-header">
+        <div class="match-map">${m.map?.replace('de_','')}</div>
+        <div class="match-date">
+          ${formatDate(m.played_at)}<br>
+          <span style="color:var(--txt3)">${m.map}</span>
+        </div>
+      </div>
+      <div class="match-score">
+        <div class="score-num ${win?'win':draw?'':''}" style="${win?'':'color:var(--txt)'}">${s1}</div>
+        <div class="score-sep">:</div>
+        <div class="score-num ${!win&&!draw?'loss':''}" style="${!win&&!draw?'':'color:var(--txt)'}">${s2}</div>
+      </div>
+      <div class="match-card-footer">
+        <div class="match-meta-item">Rounds: <strong>${m.total_rounds}</strong></div>
+        <div class="match-meta-item">Kills: <strong>${m.total_kills||0}</strong></div>
+      </div>
+    </div>
+    `;
+  }).join('');
+}
+
+/* ══════════════════════════════════════════════════════
+   MATCH DETAIL
+══════════════════════════════════════════════════════ */
+async function loadMatchDetail(id) {
+  try {
+    const m = await apiFetch(`/api/matches/${id}`);
+    renderMatchDetail(m);
+    showPage('match-detail');
+  } catch {
+    showToast('Could not load match', 'error');
+  }
+}
+
+function renderMatchDetail(m) {
+  $('md-map').textContent  = m.map?.toUpperCase() || '—';
+  $('md-score1').textContent = m.team1_score ?? m.ct_score ?? '—';
+  $('md-score2').textContent = m.team2_score ?? m.t_score  ?? '—';
+
+  const s1 = m.team1_score ?? m.ct_score ?? 0;
+  const s2 = m.team2_score ?? m.t_score  ?? 0;
+  $('md-score1').style.color = s1>s2 ? 'var(--green)' : s1===s2 ? 'var(--yellow)' : 'var(--red)';
+  $('md-score2').style.color = s2>s1 ? 'var(--green)' : s1===s2 ? 'var(--yellow)' : 'var(--red)';
+
+  $('md-meta').innerHTML = `
+    ${formatDate(m.played_at)}<br>
+    ${m.total_rounds} rounds &nbsp;·&nbsp; ${m.total_kills||0} kills
+  `;
+
+  // Halves
+  const fh = m.first_half  || {};
+  const sh = m.second_half || {};
+  $('md-halves1').innerHTML = `
+    <div class="half-score-pill">1H: ${fh.ct??'?'}</div>
+    <div class="half-score-pill">2H: ${sh.t??'?'}</div>
+  `;
+  $('md-halves2').innerHTML = `
+    <div class="half-score-pill">1H: ${fh.t??'?'}</div>
+    <div class="half-score-pill">2H: ${sh.ct??'?'}</div>
+  `;
+
+  // MVP
+  const mvp = m.players?.[0];
+  if (mvp) {
+    $('mvp-name').textContent = mvp.nickname;
+    $('mvp-stats').innerHTML = [
+      {v: mvp.rating?.toFixed(2), l:'Rating'},
+      {v: mvp.K, l:'Kills'},
+      {v: (mvp.K/Math.max(mvp.D,1)).toFixed(2), l:'K/D'},
+      {v: mvp.ADR?.toFixed(0), l:'ADR'},
+      {v: mvp.HS?.toFixed(0)+'%', l:'HS%'},
+    ].map(s=>`
+      <div class="mvp-stat">
+        <div class="mvp-stat-val">${s.v}</div>
+        <div class="mvp-stat-lbl">${s.l}</div>
+      </div>
+    `).join('');
+  }
+
+  // Scoreboard
+  const tbody = $('matchScoreboard');
+  if (!m.players?.length) {
+    tbody.innerHTML = `<tr><td colspan="11" style="text-align:center;color:var(--txt3);padding:32px">No player data</td></tr>`;
+    return;
+  }
+  tbody.innerHTML = m.players.map((p,i) => `
+    <tr onclick="loadPlayer('${p.steam_id}')" style="animation:fadeSlideIn .2s ${i*.04}s both">
+      <td>
+        <div class="player-cell">
+          <div class="player-avatar">${initials(p.nickname)}</div>
+          <div>
+            <div class="player-name">${p.nickname}</div>
+            <div class="player-steam">${p.steam_id?.slice(-8)||''}</div>
+          </div>
+        </div>
+      </td>
+      <td><span class="${p.team?.includes('CT')?'tag-ct':'tag-t'}">${p.team?.includes('CT')?'CT':'T'}</span></td>
+      <td class="num">${p.K}</td>
+      <td class="num">${p.D}</td>
+      <td class="num">${p.A}</td>
+      <td class="num"><span class="kd-val">${(p.K/Math.max(p.D,1)).toFixed(2)}</span></td>
+      <td class="num">${p.HS?.toFixed(0)}%</td>
+      <td class="num">${p.ADR?.toFixed(0)}</td>
+      <td class="num">${p.FK}</td>
+      <td class="num">${p.FD}</td>
+      <td class="num"><span class="rating-badge ${ratingClass(p.rating)}">${p.rating?.toFixed(2)}</span></td>
+    </tr>
+  `).join('');
+}
+
+/* ══════════════════════════════════════════════════════
+   PLAYER PROFILE
+══════════════════════════════════════════════════════ */
+async function loadPlayer(steamId) {
+  try {
+    // 1️⃣ Основные данные игрока
+    const p = await apiFetch(`/api/players/${steamId}`);
+
+    // 2️⃣ История матчей игрока
+    const matches = await apiFetch(`/api/players/${steamId}/matches`);
+
+    // 3️⃣ Добавляем матчи в объект игрока
+    p.matches = matches;
+
+    renderPlayer(p);
+    showPage('player');
+
+  } catch (err) {
+    console.error(err);
+    showToast('Could not load player', 'error');
+  }
+}
+
+
+function renderPlayer(p) {
+  const nick = p.nickname || 'Unknown';
+  $('prof-avatar').textContent = initials(nick);
+  $('prof-name').textContent   = nick.toUpperCase();
+  $('prof-steamid').textContent = `SteamID: ${p.steam_id}`;
+
+  const a = p.annual || {};
+
+  // ───── KPIs ─────
+  $('prof-kpis').innerHTML = [
+    {v: a.avg_rating?.toFixed(2)||'—', l:'Avg Rating', c:'var(--orange)'},
+    {v: a.kd_ratio?.toFixed(2)||'—',   l:'K/D Ratio',  c:'var(--cyan)'},
+    {v: a.avg_adr?.toFixed(0)||'—',    l:'Avg ADR',    c:'var(--txt)'},
+    {v: (a.avg_hs_pct?.toFixed(0)||'—')+'%', l:'HS%', c:'var(--txt)'},
+    {v: a.matches||0,                  l:'Matches',    c:'var(--txt)'},
+    {v: a.total_kills||0,              l:'Total Kills', c:'var(--txt)'},
+  ].map(k=>`
+    <div class="kpi-block">
+      <div class="kpi-val" style="color:${k.c}">${k.v}</div>
+      <div class="kpi-lbl">${k.l}</div>
+    </div>
+  `).join('');
+
+  // ───── Stats cards ─────
+  $('profStatsCards').innerHTML = [
+    {v: a.best_rating?.toFixed(2)||'—', l:'Best Rating'},
+    {v: a.worst_rating?.toFixed(2)||'—', l:'Worst Rating'},
+    {v: a.median_rating?.toFixed(2)||'—', l:'Median'},
+    {v: a.std_rating?.toFixed(2)||'—', l:'Consistency (σ)'},
+    {v: a.fk_total||0, l:'Total First Kills'},
+    {v: (a.entry_success_rate?.toFixed(0)||'—')+'%', l:'Entry Success'},
+    {v: a.favorite_map||'—', l:'Fav Map'},
+    {v: a.favorite_weapon||'—', l:'Fav Weapon'},
+  ].map(s=>`
+    <div class="stat-card">
+      <div class="stat-card-val">${s.v}</div>
+      <div class="stat-card-lbl">${s.l}</div>
+    </div>
+  `).join('');
+
+  // ───── Form chart ─────
+  const form = p.monthly_form || [];
+  if (form.length) {
+    const maxR = Math.max(...form.map(f=>f.avg_rating));
+    $('profFormChart').innerHTML = form.map(f => {
+      const h = Math.max(6, (f.avg_rating / maxR) * 100);
+      const col = f.avg_rating >= 1.1 ? 'var(--green)' :
+                  f.avg_rating >= 0.95 ? 'var(--yellow)' :
+                  'var(--red)';
+      return `
+        <div class="form-bar" style="height:${h}%;background:${col};opacity:.85">
+          <div class="form-bar-tooltip">
+            ${f.period}<br>
+            Rating: ${f.avg_rating}<br>
+            Matches: ${f.matches}
+          </div>
+        </div>
+      `;
+    }).join('');
+  } else {
+    $('profFormChart').innerHTML =
+      `<span style="font-family:var(--font-mn);font-size:10px;color:var(--txt3)">
+         No form data
+       </span>`;
+  }
+
+  // ───── Match history ─────
+  const hist = p.matches || [];
+  const tbody = $('profMatchHistory');
+
+  if (!hist.length) {
+    tbody.innerHTML =
+      `<tr>
+         <td colspan="9"
+             style="text-align:center;color:var(--txt3);padding:32px">
+           No match history
+         </td>
+       </tr>`;
+    return;
+  }
+
+  tbody.innerHTML = hist.map((m,i) => `
+    <tr onclick="loadMatchDetail(${m.match_id})"
+        style="animation:fadeSlideIn .2s ${i*.03}s both">
+
+      <td style="font-family:var(--font-mn);
+                 font-size:11px;
+                 color:var(--txt3)">
+        ${formatDate(m.played_at)}
+      </td>
+
+      <td style="font-family:var(--font-hd);
+                 font-weight:700">
+        ${m.map?.replace('de_','').toUpperCase()}
+      </td>
+
+      <td>
+        <span class="${m.team?.includes('CT')?'tag-ct':'tag-t'}">
+          ${m.team?.includes('CT')?'CT':'T'}
+        </span>
+      </td>
+
+      <td class="num">${m.K}</td>
+      <td class="num">${m.D}</td>
+      <td class="num">${m.A}</td>
+      <td class="num">${m.ADR?.toFixed(0)}</td>
+      <td class="num">${m.HS?.toFixed(0)}%</td>
+      <td class="num">
+        <span class="rating-badge ${ratingClass(m.rating)}">
+          ${m.rating?.toFixed(2)}
+        </span>
+      </td>
+
+    </tr>
+  `).join('');
+}
+
+/* ══════════════════════════════════════════════════════
+   WEAPONS
+══════════════════════════════════════════════════════ */
+async function loadWeapons() {
+  try {
+    const data = await apiFetch('/api/leaderboard/weapons?min_kills=1');
+    renderWeapons(data);
+  } catch {
+    $('weaponTableBody').innerHTML = `<tr><td colspan="6" style="text-align:center;padding:40px;color:var(--txt3)">No weapon data yet — upload a demo with weapon tracking</td></tr>`;
+  }
+}
+
+function renderWeapons(data) {
+  const tbody = $('weaponTableBody');
+  if (!data.length) {
+    tbody.innerHTML = `<tr><td colspan="6"><div class="empty-state"><div class="empty-state-icon">🔫</div><div class="empty-state-title">No weapon data</div><div class="empty-state-sub">Weapon stats will appear after uploading demos</div></div></td></tr>`;
+    return;
+  }
+  tbody.innerHTML = data.map((w,i) => `
+    <tr style="animation:fadeSlideIn .2s ${i*.03}s both">
+      <td><span class="rank-num ${i===0?'top1':i===1?'top2':i===2?'top3':''}">${i+1}</span></td>
+      <td>
+  <span class="weapon-icon"
+        onclick="loadWeaponDetail('${w.weapon}')"
+        style="cursor:pointer">
+    ${w.weapon}
+  </span>
+</td>
+      <td class="num"><span class="big-num">${w.total_kills.toLocaleString()}</span></td>
+      <td class="num"><span class="pct-val">${w.hs_pct?.toFixed(1)}%</span></td>
+      <td class="num">${w.avg_damage_per_kill?.toFixed(0)}</td>
+      <td class="num">${w.usage_count}</td>
+    </tr>
+  `).join('');
+}
+
+/* ══════════════════════════════════════════════════════
+   UPLOAD
+══════════════════════════════════════════════════════ */
+const fileInput = $('fileInput');
+const uploadBtn = $('uploadBtn');
+const uploadDrop = $('uploadDrop');
+
+fileInput.addEventListener('change', () => {
+  const f = fileInput.files[0];
+  if (f) {
+    uploadDrop.querySelector('.upload-drop-text').textContent = f.name;
+    uploadDrop.querySelector('.upload-drop-sub').textContent  = (f.size/1024/1024).toFixed(1)+' MB';
+    uploadBtn.disabled = false;
+  }
+});
+
+// Drag and drop
+uploadDrop.addEventListener('dragover', e => { e.preventDefault(); uploadDrop.classList.add('drag'); });
+uploadDrop.addEventListener('dragleave', () => uploadDrop.classList.remove('drag'));
+uploadDrop.addEventListener('drop', e => {
+  e.preventDefault(); uploadDrop.classList.remove('drag');
+  const f = e.dataTransfer.files[0];
+  if (f?.name.endsWith('.dem')) {
+    const dt = new DataTransfer();
+    dt.items.add(f);
+    fileInput.files = dt.files;
+    fileInput.dispatchEvent(new Event('change'));
+  } else {
+    showToast('Only .dem files supported', 'error');
+  }
+});
+
+uploadBtn.addEventListener('click', async () => {
+  const f = fileInput.files[0];
+  if (!f) return;
+
+  uploadBtn.disabled = true;
+  const prog = $('uploadProgress');
+  const fill = $('progressFill');
+  const label = $('progressLabel');
+  prog.style.display = 'block';
+
+  // Animate progress
+  let pct = 0;
+  const tick = setInterval(() => {
+    pct = Math.min(pct + (Math.random() * 8), 88);
+    fill.style.width = pct + '%';
+  }, 200);
+
+  try {
+    label.textContent = 'Uploading demo...';
+    const fd = new FormData();
+    fd.append('demo', f);
+
+    const res = await fetch(`${API}/api/upload`, {
+      method: 'POST',
+      headers: { 'X-API-Key': KEY },
+      body: fd,
+    });
+
+    clearInterval(tick);
+    fill.style.width = '100%';
+
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error(err.detail || 'Upload failed');
+    }
+
+    const data = await res.json();
+    label.textContent = `✓ Match saved — ${data.map} ${data.score}`;
+    showToast(`✓ Demo parsed: ${data.map} ${data.score} (${data.players} players)`, 'success');
+
+    // Reset
+    setTimeout(() => {
+      prog.style.display = 'none';
+      fill.style.width = '0';
+      uploadBtn.disabled = false;
+      fileInput.value = '';
+      uploadDrop.querySelector('.upload-drop-text').textContent = 'Drop .dem file here';
+      uploadDrop.querySelector('.upload-drop-sub').textContent  = 'or click to browse';
+    }, 2500);
+
+    // Refresh data
+    loadOverview();
+    loadLeaderboard();
+
+  } catch (err) {
+    clearInterval(tick);
+    fill.style.width = '0';
+    prog.style.display = 'none';
+    uploadBtn.disabled = false;
+    showToast(err.message, 'error');
+  }
+});
+
+/* ══════════════════════════════════════════════════════
+   INIT
+══════════════════════════════════════════════════════ */
+async function loadWeaponDetail(weaponName) {
+  try {
+    const data = await apiFetch(`/api/weapons/${weaponName}`);
+    renderWeaponDetail(weaponName, data);
+    showPage('weapon-detail');
+  } catch (e) {
+    showToast('Failed to load weapon detail', 'error');
+  }
+}
+
+function renderWeaponDetail(weaponName, data) {
+  $('weaponDetailTitle').textContent = `Top Players — ${weaponName.toUpperCase()}`;
+
+  const tbody = $('weaponDetailBody');
+
+  if (!data.length) {
+    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:40px;color:var(--txt3)">No data</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = data.map((p,i) => `
+    <tr onclick="loadPlayer('${p.steam_id}')" style="animation:fadeSlideIn .2s ${i*.03}s both">
+      <td>${i+1}</td>
+      <td>
+        <div class="player-cell">
+          <div class="player-avatar">${initials(p.nickname)}</div>
+          <div>
+            <div class="player-name">${p.nickname}</div>
+          </div>
+        </div>
+      </td>
+      <td class="num">${p.kills}</td>
+      <td class="num">${p.hs_percent?.toFixed(1)}%</td>
+      <td class="num">${p.avg_dmg_per_kill?.toFixed(0)}</td>
+      <td class="num">${p.matches_used}</td>
+    </tr>
+  `).join('');
+}
+checkBackend();
+</script>
+</body>
+</html>
