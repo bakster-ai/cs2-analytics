@@ -406,6 +406,19 @@ class CS2DemoAnalyzer:
             if rounds <= 0:
                 continue
 
+            # 🚫 фильтр мусора (nan/none/undefined/пустые)
+            sid_str = str(sid).strip().lower() if sid is not None else ""
+            if not sid_str or sid_str in ("nan", "none", "0"):
+                continue
+
+            nickname_clean = str(data.get("nickname") or "").strip()
+            if not nickname_clean or nickname_clean.lower() in ("nan", "none", "undefined"):
+                continue
+
+            steamid_clean = str(data.get("steamid") or "").strip()
+            if not steamid_clean or steamid_clean.lower() in ("nan", "none", "0"):
+                continue
+
             kills = data["kills"]
             deaths = data["deaths"]
 
@@ -436,9 +449,9 @@ class CS2DemoAnalyzer:
             weapon_kills.sort(key=lambda x: x["kills"], reverse=True)
 
             players_list.append({
-                "nickname": data["nickname"] or "undefined",
-                "steamid": data["steamid"] or str(sid),
-                "team": data["team"] or "undefined",
+                "nickname": (data["nickname"] or "").strip() if str(data["nickname"]).lower() not in ("nan", "none", "undefined") else "undefined",
+                "steamid": (data["steamid"] or "").strip() if str(data["steamid"]).lower() not in ("nan", "none", "0") else str(sid),
+                "team": (data["team"] or "").strip() or "undefined",
                 "K": kills,
                 "D": deaths,
                 "A": data["assists"],
@@ -448,7 +461,7 @@ class CS2DemoAnalyzer:
                 "FK": data["first_kills"],
                 "FD": data["first_deaths"],
                 "rating": rating,
-                "weapon_kills": weapon_kills,  # <-- для save_match / WeaponStat
+                "weapon_kills": weapon_kills,
             })
 
         players_list.sort(key=lambda x: x["rating"], reverse=True)
