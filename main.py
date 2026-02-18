@@ -1,6 +1,5 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-import os
 
 from core.config import settings
 from core.database import engine
@@ -14,11 +13,7 @@ from routes.weapons import router as weapons_router
 from routes.admin import router as admin_router
 
 
-# ─────────────────────────────────────────────────────────────
-# Создаём таблицы при старте
-# ─────────────────────────────────────────────────────────────
 Base.metadata.create_all(bind=engine)
-
 
 app = FastAPI(
     title=settings.APP_TITLE,
@@ -34,9 +29,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# ─────────────────────────────────────────────────────────────
-# Роуты
-# ─────────────────────────────────────────────────────────────
 app.include_router(upload_router)
 app.include_router(players_router)
 app.include_router(matches_router)
@@ -55,20 +47,4 @@ def health():
     return {
         "status": "ok",
         "version": settings.APP_VERSION,
-        "port": os.environ.get("PORT"),
     }
-
-
-# ─────────────────────────────────────────────────────────────
-# ВАЖНО: правильный запуск для Railway
-# ─────────────────────────────────────────────────────────────
-if __name__ == "__main__":
-    import uvicorn
-
-    port = int(os.environ.get("PORT", 8000))
-
-    uvicorn.run(
-        "main:app",
-        host="0.0.0.0",
-        port=port,
-    )
