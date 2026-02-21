@@ -10,7 +10,7 @@ from services.match_service import save_match
 # Analyzer
 import sys
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "parser"))
-from parser.CS2DemoAnalyzer import CS2DemoAnalyzer
+from parser.demo_analyzer import CS2DemoAnalyzer
 
 # Models
 from models.match_player import MatchPlayer
