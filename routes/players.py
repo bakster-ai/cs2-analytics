@@ -2,6 +2,8 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from typing import Optional
 from core.database import get_db
+from sqlalchemy import func
+
 from models.models import Player, Match, MatchPlayer
 from analytics.player_stats import get_player_annual_stats, get_player_monthly_form
 from analytics.weapon_stats import get_player_weapon_stats
@@ -59,7 +61,11 @@ def player_matches(
         raise HTTPException(status_code=404, detail="Player not found")
 
     rows = (
-        db.query(MatchPlayer, Match)
+        db.query(
+            MatchPlayer,
+            Match,
+            func.coalesce(MatchPlayer.impact_rating, MatchPlayer.rating).label("final_rating")
+        )
         .join(Match, Match.id == MatchPlayer.match_id)
         .filter(MatchPlayer.player_id == player.id)
         .order_by(Match.played_at.desc())
@@ -81,7 +87,7 @@ def player_matches(
             "ADR": mp.adr,
             "HS":  mp.hs_pct,
             "FK":  mp.fk,
-            "rating": mp.rating,
+            "rating": float(final_rating) if final_rating is not None else None,
         }
-        for mp, m in rows
+        for mp, m, final_rating in rows
     ]
