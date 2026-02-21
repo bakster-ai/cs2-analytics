@@ -14,15 +14,22 @@ def get_leaderboard(
 ) -> list[dict]:
     """
     Топ игроков за период.
-    Сортировка по avg_rating, минимум min_matches матчей.
+    Использует impact_rating (fallback на старый rating).
     """
+
+    # 🔥 Главное изменение — coalesce
+    rating_expr = func.coalesce(
+        MatchPlayer.impact_rating,
+        MatchPlayer.rating
+    )
+
     query = (
         db.query(
             Player.id,
             Player.steam_id,
             Player.nickname,
             func.count(MatchPlayer.id).label("matches"),
-            func.avg(MatchPlayer.rating).label("avg_rating"),
+            func.avg(rating_expr).label("avg_rating"),
             func.avg(MatchPlayer.adr).label("avg_adr"),
             func.avg(MatchPlayer.hs_pct).label("avg_hs"),
             func.sum(MatchPlayer.kills).label("kills"),
@@ -45,7 +52,7 @@ def get_leaderboard(
         query
         .group_by(Player.id)
         .having(func.count(MatchPlayer.id) >= min_matches)
-        .order_by(func.avg(MatchPlayer.rating).desc())
+        .order_by(func.avg(rating_expr).desc())   # 🔥 сортировка тоже через impact
         .limit(limit)
         .all()
     )
@@ -60,9 +67,15 @@ def get_leaderboard(
             "avg_rating": round(float(r.avg_rating or 0), 3),
             "avg_adr":    round(float(r.avg_adr or 0), 1),
             "avg_hs":     round(float(r.avg_hs or 0), 1),
-            "kd_ratio":   round(float(r.kills or 0) / max(float(r.deaths or 1), 1), 2),
+            "kd_ratio":   round(
+                float(r.kills or 0) / max(float(r.deaths or 1), 1),
+                2
+            ),
             "entry_rate": round(
-                float(r.fk or 0) / max(float(r.fk or 0) + float(r.fd or 0), 1) * 100, 1
+                float(r.fk or 0)
+                / max(float(r.fk or 0) + float(r.fd or 0), 1)
+                * 100,
+                1
             ),
         }
         for i, r in enumerate(rows)
