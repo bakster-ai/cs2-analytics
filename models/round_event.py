@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, Float, Boolean, ForeignKey
 from sqlalchemy.orm import relationship
-from core.database import Base
+from models.base import Base
 
 class RoundEvent(Base):
     __tablename__ = "round_events"
