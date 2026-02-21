@@ -2,20 +2,19 @@ import tempfile
 import os
 from fastapi import APIRouter, UploadFile, File, Depends, HTTPException
 from sqlalchemy.orm import Session
+
 from core.database import get_db
 from core.security import require_api_key
 from core.config import settings
-from services.match_service import save_match
 
-# Analyzer
+from services.match_service import save_match
+from services.impact_rating_v3 import compute_impact_rating
+
 from parser.demo_analyzer import CS2DemoAnalyzer
 
-# Models
 from models.models import MatchPlayer, Player
 from models.round_event import RoundEvent
 
-# Rating engine
-from services.impact_rating_v3 import compute_impact_rating
 
 router = APIRouter(prefix="/api", tags=["upload"])
 
@@ -40,7 +39,9 @@ async def upload_demo(
             detail=f"File too large (max {settings.MAX_DEMO_SIZE_MB} MB)"
         )
 
-    # --- Save temp file ---
+    # ------------------------------
+    # Save temp file
+    # ------------------------------
     with tempfile.NamedTemporaryFile(delete=False, suffix=".dem") as tmp:
         tmp.write(content)
         tmp_path = tmp.name
@@ -59,7 +60,9 @@ async def upload_demo(
     if "error" in raw and not raw.get("players"):
         raise HTTPException(status_code=422, detail=raw["error"])
 
-    # --- Save match ---
+    # ------------------------------
+    # Save match
+    # ------------------------------
     try:
         match = save_match(db, raw, demo_filename=file.filename)
     except Exception as e:
@@ -73,7 +76,9 @@ async def upload_demo(
 
     try:
 
-        # --- Build steamid → player_id map ---
+        # ------------------------------
+        # Build steamid → player_id map
+        # ------------------------------
         steamid_map = {}
 
         db_players = (
@@ -86,7 +91,9 @@ async def upload_demo(
         for p in db_players:
             steamid_map[str(p.steam_id)] = p.id
 
-        # --- Save round_events ---
+        # ------------------------------
+        # Save round_events
+        # ------------------------------
         events = raw.get("round_events", [])
         bulk_events = []
 
@@ -122,17 +129,28 @@ async def upload_demo(
 
         print(f"Saved {len(bulk_events)} round events")
 
-        # --- Compute HLTV-style rating ---
+        # ------------------------------
+        # Compute HLTV-style Impact Rating
+        # ------------------------------
         db_events = db.query(RoundEvent).filter(
             RoundEvent.match_id == match.id
         ).all()
 
+        # ВАЖНО: формируем player_id → steamid
+        player_id_to_steamid = {
+            p.id: str(p.steam_id)
+            for p in db_players
+        }
+
         ratings = compute_impact_rating(
             db_events,
-            raw.get("total_rounds", 0)
+            raw.get("total_rounds", 0),
+            player_id_to_steamid
         )
 
-        # --- Update match_player with impact_rating ---
+        # ------------------------------
+        # Update match_player
+        # ------------------------------
         for steamid, rating in ratings.items():
 
             player_id = steamid_map.get(str(steamid))
