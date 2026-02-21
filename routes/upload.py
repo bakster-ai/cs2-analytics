@@ -8,13 +8,10 @@ from core.config import settings
 from services.match_service import save_match
 
 # Analyzer
-import sys
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "parser"))
 from parser.demo_analyzer import CS2DemoAnalyzer
 
 # Models
-from models.match_player import MatchPlayer
-from models.player import Player
+from models.models import MatchPlayer, Player
 from models.round_event import RoundEvent
 
 # Rating engine
@@ -28,12 +25,6 @@ async def upload_demo(
     file: UploadFile = File(...),
     db: Session = Depends(get_db),
 ):
-    """
-    Загрузить .dem файл, спарсить, сохранить матч,
-    сохранить round_events,
-    посчитать HLTV-style Impact Rating 3.0,
-    записать его в match_player.
-    """
 
     print("=== UPLOAD STARTED ===")
 
@@ -57,10 +48,8 @@ async def upload_demo(
     try:
         analyzer = CS2DemoAnalyzer(tmp_path)
         raw = analyzer.parse()
-
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Analyzer crash: {str(e)}")
-
     finally:
         os.unlink(tmp_path)
 
@@ -70,7 +59,7 @@ async def upload_demo(
     if "error" in raw and not raw.get("players"):
         raise HTTPException(status_code=422, detail=raw["error"])
 
-    # --- Save match (existing logic) ---
+    # --- Save match ---
     try:
         match = save_match(db, raw, demo_filename=file.filename)
     except Exception as e:
@@ -79,7 +68,7 @@ async def upload_demo(
     print("MATCH SAVED:", match.id)
 
     # ============================================================
-    # 🔥 HLTV 3.0 BLOCK START
+    # 🔥 HLTV 3.0 BLOCK
     # ============================================================
 
     try:
@@ -95,7 +84,7 @@ async def upload_demo(
         )
 
         for p in db_players:
-            steamid_map[str(p.steamid)] = p.id
+            steamid_map[str(p.steam_id)] = p.id
 
         # --- Save round_events ---
         events = raw.get("round_events", [])
@@ -116,12 +105,12 @@ async def upload_demo(
                     attacker_id=attacker_id,
                     victim_id=victim_id,
                     weapon=e.get("weapon"),
-                    is_headshot=e.get("headshot"),
-                    damage=e.get("damage"),
+                    is_headshot=e.get("headshot", False),
+                    damage=e.get("damage", 0),
                     alive_t=e.get("alive_t"),
                     alive_ct=e.get("alive_ct"),
-                    eco_t=e.get("eco_t"),
-                    eco_ct=e.get("eco_ct"),
+                    eco_t=e.get("eco_t", False),
+                    eco_ct=e.get("eco_ct", False),
                     score_t=e.get("score_t"),
                     score_ct=e.get("score_ct"),
                 )
@@ -165,10 +154,6 @@ async def upload_demo(
     except Exception as e:
         print("HLTV BLOCK ERROR:", str(e))
         raise HTTPException(status_code=500, detail=f"Impact rating crash: {str(e)}")
-
-    # ============================================================
-    # 🔥 HLTV 3.0 BLOCK END
-    # ============================================================
 
     print("=== UPLOAD FINISHED SUCCESSFULLY ===")
 
