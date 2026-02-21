@@ -30,7 +30,7 @@ class Match(Base, TimestampMixin):
     total_rounds  = Column(Integer, nullable=False)
     ct_score      = Column(Integer, nullable=False)
     t_score       = Column(Integer, nullable=False)
-    team1_score   = Column(Integer, nullable=False)   # с учётом смены сторон
+    team1_score   = Column(Integer, nullable=False)
     team2_score   = Column(Integer, nullable=False)
     duration_sec  = Column(Integer)
     total_kills   = Column(Integer)
@@ -47,6 +47,7 @@ class MatchPlayer(Base):
     __table_args__ = (
         UniqueConstraint("match_id", "player_id", name="uq_match_player"),
         Index("idx_mp_rating", "rating"),
+        Index("idx_mp_impact_rating", "impact_rating"),  # 🔥 новый индекс
     )
 
     id         = Column(Integer, primary_key=True)
@@ -63,6 +64,9 @@ class MatchPlayer(Base):
     fk         = Column(Integer, nullable=False, default=0)
     fd         = Column(Integer, nullable=False, default=0)
     rating     = Column(Float,   nullable=False, default=0.0)
+
+    # 🔥 HLTV 3.0 rating
+    impact_rating = Column(Float, nullable=False, default=1.0)
 
     match  = relationship("Match",  back_populates="match_players")
     player = relationship("Player", back_populates="match_players")

@@ -2,7 +2,7 @@
 from demoparser2 import DemoParser
 import pandas as pd
 from collections import defaultdict
-from typing import Dict, Any, Optional
+from typing import Dict, Any, Optional, List
 
 
 class CS2DemoAnalyzer:
@@ -11,6 +11,14 @@ class CS2DemoAnalyzer:
         "butterfly", "m9", "tactical", "kukri", "ursus",
         "stiletto", "navaja", "skeleton", "survival", "paracord",
         "nomad", "classic"
+    )
+
+    # оружие, которое считаем "эко/форс" (proxy) — без экономических данных
+    ECO_WEAPONS_PREFIX = (
+        "glock", "hkp2000", "usp", "p250", "cz75", "fiveseven", "tec9", "deagle", "revolver",
+        "mp9", "mac10", "mp7", "mp5", "ump", "p90", "bizon",
+        "nova", "xm1014", "mag7", "sawedoff",
+        "zeus"
     )
 
     def __init__(self, demo_path: str, *, verbose: bool = False):
@@ -43,6 +51,11 @@ class CS2DemoAnalyzer:
         self.t_score = 0
         self.round_winners = []  # победители раундов (CT/T)
 
+        # NEW: round events for HLTV-style rating
+        # Each item: dict(event_type, round_number, tick, attacker_id, victim_id, weapon, headshot, damage,
+        #                alive_t, alive_ct, eco_t, eco_ct, score_t, score_ct)
+        self.round_events: List[Dict[str, Any]] = []
+
     def _log(self, msg: str) -> None:
         if self.verbose:
             print(msg)
@@ -73,6 +86,38 @@ class CS2DemoAnalyzer:
             return False
         return any(k in w for k in self.KNIFE_KEYWORDS)
 
+    def _weapon_is_eco_proxy(self, weapon: str) -> bool:
+        """
+        Proxy-eco классификация по оружию (без данных по деньгам/брони).
+        Это не идеально, но уже режет анти-эко фарм и даёт базовый eco-adjustment.
+        """
+        w = (weapon or "").strip().lower()
+        if not w or w in ("none", "nan"):
+            return False
+        if self._is_knife_weapon(w):
+            return True
+        return any(w.startswith(p) for p in self.ECO_WEAPONS_PREFIX)
+
+    def _teamname_to_side(self, team_name: str) -> Optional[str]:
+        """
+        Пробуем понять сторону (CT/T) из team_name.
+        """
+        t = (team_name or "").strip().upper()
+        if not t:
+            return None
+        if "CT" in t or "COUNTER" in t:
+            return "CT"
+        # важно: чтобы "CT" не матчился в "T" — поэтому проверка T отдельно
+        if t == "T" or "TERROR" in t or "TERRORIST" in t:
+            return "T"
+        # иногда бывает "TERRORISTS" и т.п.
+        if "TERROR" in t:
+            return "T"
+        # fallback: если просто "T" где-то встречается
+        if " T" in f" {t} ":
+            return "T"
+        return None
+
     def _ensure_player(self, steamid: str, row, role: str):
         p = self.players[steamid]
         if not p["steamid"]:
@@ -93,6 +138,29 @@ class CS2DemoAnalyzer:
 
         if team and not p["team"]:
             p["team"] = str(team)
+
+    def _player_side(self, steamid: str, row, role: str) -> Optional[str]:
+        """
+        Возвращает сторону игрока CT/T если можно понять.
+        Берём сначала из self.players, иначе из row-полей.
+        """
+        if not steamid:
+            return None
+
+        sid = str(steamid)
+        known_team = self._norm_team(self.players.get(sid, {}).get("team"))
+        side = self._teamname_to_side(known_team)
+        if side:
+            return side
+
+        if role == "victim":
+            team = self._norm_team(row.get("user_team_name") or row.get("team_name"))
+        elif role == "attacker":
+            team = self._norm_team(row.get("attacker_team_name"))
+        else:
+            team = self._norm_team(row.get("assister_team_name"))
+
+        return self._teamname_to_side(team)
 
     def _is_teammate(self, attacker: str, victim: str, row) -> bool:
         at = self._norm_team(self.players.get(attacker, {}).get("team"))
@@ -139,12 +207,61 @@ class CS2DemoAnalyzer:
 
         return None
 
-    def _apply_death(self, row, first_kill_done: bool) -> bool:
+    def _push_event(self,
+                    event_type: str,
+                    round_number: int,
+                    tick: Any,
+                    attacker_id: Optional[str],
+                    victim_id: Optional[str],
+                    weapon: str,
+                    headshot: bool,
+                    damage: float,
+                    alive_t_before: int,
+                    alive_ct_before: int,
+                    eco_t: bool,
+                    eco_ct: bool,
+                    score_t_before_round: int,
+                    score_ct_before_round: int):
+        """
+        Сохраняем событие для HLTV-style impact rating.
+        """
+        try:
+            tick_i = int(tick) if tick is not None and str(tick).strip().isdigit() else None
+        except Exception:
+            tick_i = None
+
+        self.round_events.append({
+            "event_type": event_type,
+            "round_number": int(round_number),
+            "tick": tick_i,
+            "attacker_id": str(attacker_id) if attacker_id else None,
+            "victim_id": str(victim_id) if victim_id else None,
+            "weapon": (weapon or "").strip().lower(),
+            "headshot": bool(headshot),
+            "damage": float(damage) if damage is not None else 0.0,
+            "alive_t": int(alive_t_before),
+            "alive_ct": int(alive_ct_before),
+            "eco_t": bool(eco_t),
+            "eco_ct": bool(eco_ct),
+            "score_t": int(score_t_before_round),
+            "score_ct": int(score_ct_before_round),
+        })
+
+    def _apply_death(self,
+                    row,
+                    first_kill_done: bool,
+                    *,
+                    round_number: int,
+                    alive_state: Dict[str, int],
+                    score_t_before_round: int,
+                    score_ct_before_round: int) -> bool:
+
         victim = row.get("user_steamid") or row.get("steamid")
         attacker = row.get("attacker_steamid")
         assister = row.get("assister_steamid")
         headshot = row.get("headshot", False)
         weapon = self._norm_str(row.get("weapon")).lower()
+        tick = row.get("tick")
 
         if not victim:
             return first_kill_done
@@ -153,29 +270,70 @@ class CS2DemoAnalyzer:
         self._ensure_player(victim, row, "victim")
         self.players[victim]["deaths"] += 1
 
+        # определяем сторону victim (для alive state)
+        victim_side = self._player_side(victim, row, "victim")
+
+        # kill event
         if attacker and str(attacker) != "0":
             attacker = str(attacker)
 
             if attacker != victim:
                 self._ensure_player(attacker, row, "attacker")
-                self.players[attacker]["kills"] += 1
 
-                if bool(headshot):
-                    self.players[attacker]["headshots"] += 1
+                # teamkill фильтр
+                if not self._is_teammate(attacker, victim, row):
+                    self.players[attacker]["kills"] += 1
 
-                # weapon kill stats
-                if weapon:
-                    ws = self._weapon_stats[attacker][weapon]
-                    ws["kills"] += 1
                     if bool(headshot):
-                        ws["headshots"] += 1
+                        self.players[attacker]["headshots"] += 1
 
-                # first kill / first death
-                if (not first_kill_done) and (not self._is_teammate(attacker, victim, row)):
-                    self.players[attacker]["first_kills"] += 1
-                    self.players[victim]["first_deaths"] += 1
-                    first_kill_done = True
+                    # weapon kill stats
+                    if weapon:
+                        ws = self._weapon_stats[attacker][weapon]
+                        ws["kills"] += 1
+                        if bool(headshot):
+                            ws["headshots"] += 1
 
+                    # first kill / first death
+                    if not first_kill_done:
+                        self.players[attacker]["first_kills"] += 1
+                        self.players[victim]["first_deaths"] += 1
+                        first_kill_done = True
+
+                    # NEW: store kill event with context (alive before kill)
+                    attacker_side = self._player_side(attacker, row, "attacker")
+
+                    alive_t_before = alive_state.get("T", 5)
+                    alive_ct_before = alive_state.get("CT", 5)
+
+                    # eco proxy for each side based on attacker's weapon only (baseline)
+                    eco_proxy = self._weapon_is_eco_proxy(weapon)
+                    eco_t = eco_proxy if attacker_side == "T" else False
+                    eco_ct = eco_proxy if attacker_side == "CT" else False
+
+                    self._push_event(
+                        event_type="kill",
+                        round_number=round_number,
+                        tick=tick,
+                        attacker_id=attacker,
+                        victim_id=victim,
+                        weapon=weapon,
+                        headshot=bool(headshot),
+                        damage=100.0,
+                        alive_t_before=alive_t_before,
+                        alive_ct_before=alive_ct_before,
+                        eco_t=eco_t,
+                        eco_ct=eco_ct,
+                        score_t_before_round=score_t_before_round,
+                        score_ct_before_round=score_ct_before_round
+                    )
+
+                    # обновляем alive_state ПОСЛЕ килла
+                    # умирает victim_side
+                    if victim_side in ("T", "CT"):
+                        alive_state[victim_side] = max(0, alive_state.get(victim_side, 5) - 1)
+
+        # assists
         if assister and str(assister) != "0":
             assister = str(assister)
             if assister not in (victim, str(attacker) if attacker else None):
@@ -184,11 +342,18 @@ class CS2DemoAnalyzer:
 
         return first_kill_done
 
-    def _apply_damage(self, row):
+    def _apply_damage(self,
+                      row,
+                      *,
+                      round_number: int,
+                      alive_state: Dict[str, int],
+                      score_t_before_round: int,
+                      score_ct_before_round: int):
         victim = row.get("user_steamid") or row.get("steamid")
         attacker = row.get("attacker_steamid")
         damage = row.get("dmg_health", 0)
         weapon = self._norm_str(row.get("weapon")).lower()
+        tick = row.get("tick")
 
         if not attacker or not victim:
             return
@@ -225,6 +390,33 @@ class CS2DemoAnalyzer:
         # weapon damage stats (using capped damage too)
         if weapon:
             self._weapon_stats[attacker][weapon]["damage"] += int(round(real))
+
+        # NEW: store damage event with context (alive before damage)
+        attacker_side = self._player_side(attacker, row, "attacker")
+
+        alive_t_before = alive_state.get("T", 5)
+        alive_ct_before = alive_state.get("CT", 5)
+
+        eco_proxy = self._weapon_is_eco_proxy(weapon)
+        eco_t = eco_proxy if attacker_side == "T" else False
+        eco_ct = eco_proxy if attacker_side == "CT" else False
+
+        self._push_event(
+            event_type="damage",
+            round_number=round_number,
+            tick=tick,
+            attacker_id=attacker,
+            victim_id=victim,
+            weapon=weapon,
+            headshot=False,
+            damage=float(real),
+            alive_t_before=alive_t_before,
+            alive_ct_before=alive_ct_before,
+            eco_t=eco_t,
+            eco_ct=eco_ct,
+            score_t_before_round=score_t_before_round,
+            score_ct_before_round=score_ct_before_round
+        )
 
     def _finalize_round_damage(self):
         for attacker in self._round_damage_by_attacker:
@@ -372,6 +564,11 @@ class CS2DemoAnalyzer:
         for i in range(match_start_idx, len(all_rounds)):
             round_data = all_rounds[i]
             self.total_rounds += 1
+            round_number = self.total_rounds
+
+            # score BEFORE round (для leverage)
+            score_ct_before_round = self.ct_score
+            score_t_before_round = self.t_score
 
             winner = round_data["winner"]
             if winner == "CT":
@@ -381,12 +578,27 @@ class CS2DemoAnalyzer:
 
             self.round_winners.append(winner)
 
+            # alive state resets every round
+            alive_state = {"T": 5, "CT": 5}
+
             first_kill_done = False
             for r in round_data["events"]:
                 if r.get("event_name") == "player_death":
-                    first_kill_done = self._apply_death(r, first_kill_done)
+                    first_kill_done = self._apply_death(
+                        r, first_kill_done,
+                        round_number=round_number,
+                        alive_state=alive_state,
+                        score_t_before_round=score_t_before_round,
+                        score_ct_before_round=score_ct_before_round
+                    )
                 elif r.get("event_name") == "player_hurt":
-                    self._apply_damage(r)
+                    self._apply_damage(
+                        r,
+                        round_number=round_number,
+                        alive_state=alive_state,
+                        score_t_before_round=score_t_before_round,
+                        score_ct_before_round=score_ct_before_round
+                    )
 
             self._finalize_round_damage()
 
@@ -426,6 +638,8 @@ class CS2DemoAnalyzer:
             kd = round(kills / deaths, 2) if deaths > 0 else kills
             hs = round((data["headshots"] / kills * 100), 1) if kills > 0 else 0.0
 
+            # текущий rating оставляем (для совместимости фронта),
+            # HLTV-style 3.0 будет считаться уже в backend по self.round_events
             rating = round(
                 (
                     (kills / rounds) * 0.4 +
@@ -516,8 +730,11 @@ class CS2DemoAnalyzer:
             "first_half": {"ct": first_half_ct, "t": first_half_t},
             "second_half": {"ct": second_half_ct, "t": second_half_t},
             "players": players_list,
-            "mvp": players_list[0] if players_list else None
+            "mvp": players_list[0] if players_list else None,
+
+            # NEW: вот это нужно для HLTV 3.0 расчёта в backend
+            "round_events": self.round_events
         }
 
     def _error(self, message: str) -> Dict[str, Any]:
-        return {"error": message, "map": "Unknown", "total_rounds": 0, "players": [], "mvp": None}
+        return {"error": message, "map": "Unknown", "total_rounds": 0, "players": [], "mvp": None, "round_events": []}
