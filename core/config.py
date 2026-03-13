@@ -16,7 +16,7 @@ class Settings(BaseSettings):
     DEBUG: bool = False
 
     # Upload
-    MAX_DEMO_SIZE_MB: int = 500
+    MAX_DEMO_SIZE_MB: int = 2000
 
     class Config:
         env_file = ".env"

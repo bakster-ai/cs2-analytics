@@ -1,7 +1,8 @@
 from datetime import datetime, timedelta
 from typing import Optional
-from sqlalchemy import func
+from sqlalchemy import func, case
 from sqlalchemy.orm import Session
+
 from models.models import Player, Match, MatchPlayer
 
 
@@ -12,15 +13,13 @@ def get_leaderboard(
     min_matches: int = 3,
     limit: int = 50,
 ) -> list[dict]:
-    """
-    Топ игроков за период.
-    Использует impact_rating (fallback на старый rating).
-    """
 
-    # 🔥 Главное изменение — coalesce
-    rating_expr = func.coalesce(
-        MatchPlayer.impact_rating,
-        MatchPlayer.rating
+    rating_expr = MatchPlayer.impact_rating
+
+    # ✅ ПРАВИЛЬНО: Применяем формулу к каждому матчу, потом берём среднее!
+    swing_formula = (
+        (MatchPlayer.swing * 50) 
+        - ((MatchPlayer.deaths - MatchPlayer.kills) * 1.2)
     )
 
     query = (
@@ -28,14 +27,24 @@ def get_leaderboard(
             Player.id,
             Player.steam_id,
             Player.nickname,
+
             func.count(MatchPlayer.id).label("matches"),
+
             func.avg(rating_expr).label("avg_rating"),
+
             func.avg(MatchPlayer.adr).label("avg_adr"),
             func.avg(MatchPlayer.hs_pct).label("avg_hs"),
+
             func.sum(MatchPlayer.kills).label("kills"),
             func.sum(MatchPlayer.deaths).label("deaths"),
+
             func.sum(MatchPlayer.fk).label("fk"),
             func.sum(MatchPlayer.fd).label("fd"),
+
+            func.avg(MatchPlayer.kast_pct).label("avg_kast"),
+            
+            # ✅ КЛЮЧЕВОЕ ИЗМЕНЕНИЕ: среднее от формулы по каждому матчу
+            func.avg(swing_formula).label("avg_swing_display"),
         )
         .join(MatchPlayer, MatchPlayer.player_id == Player.id)
         .join(Match, Match.id == MatchPlayer.match_id)
@@ -52,31 +61,50 @@ def get_leaderboard(
         query
         .group_by(Player.id)
         .having(func.count(MatchPlayer.id) >= min_matches)
-        .order_by(func.avg(rating_expr).desc())   # 🔥 сортировка тоже через impact
+        .order_by(func.avg(rating_expr).desc())
         .limit(limit)
         .all()
     )
 
-    return [
-        {
-            "rank":       i + 1,
-            "player_id":  r.id,
-            "steam_id":   r.steam_id,
-            "nickname":   r.nickname,
-            "matches":    r.matches,
-            "avg_rating": round(float(r.avg_rating or 0), 3),
-            "avg_adr":    round(float(r.avg_adr or 0), 1),
-            "avg_hs":     round(float(r.avg_hs or 0), 1),
-            "kd_ratio":   round(
-                float(r.kills or 0) / max(float(r.deaths or 1), 1),
+    leaderboard = []
+
+    for i, r in enumerate(rows):
+
+        deaths = float(r.deaths or 0)
+        kills = float(r.kills or 0)
+
+        # ✅ ПРОСТО БЕРЁМ УЖЕ ПОСЧИТАННОЕ СРЕДНЕЕ
+        display_swing = float(r.avg_swing_display or 0)
+
+        leaderboard.append({
+            "rank": i + 1,
+            "player_id": r.id,
+            "steam_id": r.steam_id,
+            "nickname": r.nickname,
+
+            "matches": r.matches,
+
+            "avg_rating": round(float(r.avg_rating or 0), 2),
+
+            "avg_adr": round(float(r.avg_adr or 0), 1),
+            "avg_hs": round(float(r.avg_hs or 0), 1),
+
+            "kd_ratio": round(
+                kills / max(float(r.deaths or 1), 1),
                 2
             ),
+
             "entry_rate": round(
                 float(r.fk or 0)
                 / max(float(r.fk or 0) + float(r.fd or 0), 1)
                 * 100,
                 1
             ),
-        }
-        for i, r in enumerate(rows)
-    ]
+
+            "kast": round(float(r.avg_kast or 0), 1),
+
+            # среднее swing по матчам
+            "swing": round(display_swing, 2),
+        })
+
+    return leaderboard

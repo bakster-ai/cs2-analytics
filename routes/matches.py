@@ -45,7 +45,7 @@ def get_match(match_id: int, db: Session = Depends(get_db)):
         db.query(MatchPlayer, Player)
         .join(Player, Player.id == MatchPlayer.player_id)
         .filter(MatchPlayer.match_id == match_id)
-        .order_by(MatchPlayer.rating.desc())
+        .order_by(MatchPlayer.impact_rating.desc())
         .all()
     )
 
@@ -61,7 +61,17 @@ def get_match(match_id: int, db: Session = Depends(get_db)):
             "HS":       mp.hs_pct,
             "FK":       mp.fk,
             "FD":       mp.fd,
-            "rating":   mp.rating,
+            
+            "kast_pct": mp.kast_pct,
+            
+            # ✅ АГРЕССИВНЫЙ штраф: коэффициент 1.2
+            "swing": round(
+                (float(mp.swing or 0) * 50)
+                - ((float(mp.deaths or 0) - float(mp.kills or 0)) * 1.2),
+                2
+            ),
+            
+            "rating":   float(mp.impact_rating) if mp.impact_rating is not None else None,
         }
         for mp, p in rows
     ]

@@ -47,13 +47,13 @@ class MatchPlayer(Base):
     __table_args__ = (
         UniqueConstraint("match_id", "player_id", name="uq_match_player"),
         Index("idx_mp_rating", "rating"),
-        Index("idx_mp_impact_rating", "impact_rating"),  # 🔥 новый индекс
+        Index("idx_mp_impact_rating", "impact_rating"),
     )
 
     id         = Column(Integer, primary_key=True)
     match_id   = Column(Integer, ForeignKey("matches.id",  ondelete="CASCADE"), nullable=False, index=True)
     player_id  = Column(Integer, ForeignKey("players.id",  ondelete="CASCADE"), nullable=False, index=True)
-    team       = Column(String(16), nullable=False)    # 'CT' or 'TERRORIST'
+    team       = Column(String(16), nullable=False)
     kills      = Column(Integer, nullable=False, default=0)
     deaths     = Column(Integer, nullable=False, default=0)
     assists    = Column(Integer, nullable=False, default=0)
@@ -65,8 +65,11 @@ class MatchPlayer(Base):
     fd         = Column(Integer, nullable=False, default=0)
     rating     = Column(Float,   nullable=False, default=0.0)
 
-    # 🔥 HLTV 3.0 rating
-    impact_rating = Column(Float, nullable=False, default=1.0)
+    # 🔥 HLTV 3.0 metrics
+    impact_rating  = Column(Float,   nullable=False, default=1.0)
+    kast_pct       = Column(Float,   nullable=False, default=0.0)  # ← НОВОЕ
+    swing          = Column(Float,   nullable=False, default=0.0)  # ← НОВОЕ
+    rounds_played  = Column(Integer, nullable=False, default=0)    # ← НОВОЕ
 
     match  = relationship("Match",  back_populates="match_players")
     player = relationship("Player", back_populates="match_players")

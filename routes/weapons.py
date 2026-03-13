@@ -31,12 +31,37 @@ def get_weapons(db: Session = Depends(get_db)):
         headshots = w.headshots or 0
         damage = w.damage or 0
 
+        # ✅ НОВОЕ: Находим лучшего игрока для этого оружия
+        top_player_query = (
+            db.query(
+                Player.nickname,
+                Player.steam_id,
+                func.sum(WeaponStat.kills).label("player_kills")
+            )
+            .join(Player, Player.id == WeaponStat.player_id)
+            .filter(WeaponStat.weapon == w.weapon)
+            .group_by(Player.id)
+            .order_by(func.sum(WeaponStat.kills).desc())
+            .first()
+        )
+
+        # Если нашли топ игрока
+        top_player = None
+        top_player_steamid = None
+        if top_player_query:
+            top_player = top_player_query.nickname
+            top_player_steamid = top_player_query.steam_id
+
         result.append({
             "weapon": w.weapon,
             "total_kills": kills,
             "hs_pct": round((headshots / kills * 100), 1) if kills > 0 else 0,
             "avg_damage_per_kill": round((damage / kills), 1) if kills > 0 else 0,
-            "usage_count": kills  # если нет отдельного usage, временно равен kills
+            "usage_count": kills,
+            
+            # ✅ НОВОЕ: Добавили MVP колонку
+            "top_player": top_player,
+            "top_player_steamid": top_player_steamid,
         })
 
     return result

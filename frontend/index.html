@@ -6,6 +6,8 @@
 <title>CS2 ANALYTICS</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600;700;800;900&family=Barlow:wght@300;400;500;600&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<!-- Chart.js for graphs -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
 /* ═══════════════════════════════════════════════════════
    TOKENS
@@ -780,6 +782,789 @@ td.num {
   nav { padding:0 16px; }
   .section { padding:20px 16px; }
 }
+
+/* ═══════════════════════════════════════════════════════
+   FAQ PAGE STYLES
+═══════════════════════════════════════════════════════ */
+.faq-container {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.faq-block {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  padding: 32px;
+  margin-bottom: 24px;
+  clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 0 100%);
+}
+
+.faq-title {
+  font-family: var(--font-hd);
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--orange);
+  margin-bottom: 20px;
+  letter-spacing: 0.02em;
+}
+
+.faq-text {
+  font-size: 17px;
+  line-height: 2.0;
+  color: var(--txt);
+  margin-bottom: 20px;
+}
+
+.faq-text strong {
+  color: var(--orange2);
+  font-weight: 600;
+}
+
+.faq-components {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-top: 24px;
+}
+
+.faq-component {
+  background: var(--bg3);
+  border-left: 3px solid var(--orange);
+  padding: 20px;
+}
+
+.faq-component-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.faq-component-icon {
+  font-size: 24px;
+}
+
+.faq-component-name {
+  font-family: var(--font-hd);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--cyan);
+  flex: 1;
+}
+
+.faq-component-weight {
+  font-family: var(--font-mn);
+  font-size: 11px;
+  color: var(--txt3);
+  background: var(--bg);
+  padding: 4px 10px;
+  border-radius: 2px;
+}
+
+.faq-component-desc {
+  font-size: 16px;
+  line-height: 1.9;
+  color: var(--txt);
+  margin-bottom: 18px;
+}
+
+.faq-component-desc code {
+  background: var(--bg);
+  padding: 2px 8px;
+  font-family: var(--font-mn);
+  font-size: 12px;
+  color: var(--orange2);
+  border: 1px solid var(--border);
+}
+
+.faq-example {
+  background: var(--bg);
+  padding: 16px;
+  margin-top: 12px;
+  border: 1px solid var(--border);
+}
+
+.faq-example-title {
+  font-family: var(--font-hd);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--txt3);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 8px;
+}
+
+.faq-example-text {
+  font-family: var(--font-mn);
+  font-size: 14px;
+  line-height: 1.8;
+  color: var(--txt);
+}
+
+.faq-example-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+.swing-example {
+  background: var(--bg1);
+  padding: 12px;
+  border: 1px solid var(--border);
+  text-align: center;
+}
+
+.swing-label {
+  font-size: 13px;
+  color: var(--txt2);
+  margin-bottom: 8px;
+  font-family: var(--font-mn);
+}
+
+.swing-value {
+  font-family: var(--font-hd);
+  font-size: 20px;
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+
+.swing-high .swing-value { color: var(--green); }
+.swing-med .swing-value { color: var(--cyan); }
+.swing-low .swing-value { color: var(--txt3); }
+.swing-clutch .swing-value { color: var(--yellow); }
+
+.swing-desc {
+  font-size: 12px;
+  color: var(--txt2);
+  font-style: italic;
+}
+
+.multikill-ex {
+  background: var(--bg1);
+  padding: 8px 12px;
+  text-align: center;
+  font-family: var(--font-hd);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--orange2);
+  border: 1px solid var(--border);
+}
+
+.highlight-green { color: var(--green); font-weight: 700; }
+.highlight-cyan { color: var(--cyan); font-weight: 700; }
+.highlight-yellow { color: var(--yellow); font-weight: 700; }
+.highlight-red { color: var(--red); font-weight: 700; }
+.highlight-low { color: var(--txt3); font-weight: 700; }
+
+.faq-scenarios {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.scenario-card {
+  background: var(--bg3);
+  border: 1px solid var(--border2);
+  overflow: hidden;
+}
+
+.scenario-header {
+  background: var(--bg1);
+  padding: 12px 16px;
+  font-family: var(--font-hd);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--orange);
+  border-bottom: 1px solid var(--border);
+}
+
+.scenario-body {
+  padding: 16px;
+}
+
+.scenario-body p {
+  font-size: 15px;
+  line-height: 1.8;
+  color: var(--txt);
+  margin-bottom: 12px;
+}
+
+.scenario-impact {
+  background: var(--bg);
+  padding: 14px;
+  margin: 14px 0;
+  border-left: 3px solid var(--cyan);
+  font-size: 15px;
+  line-height: 2.0;
+  color: var(--txt);
+}
+
+.scenario-desc {
+  font-style: italic;
+  font-size: 14px;
+  color: var(--txt2);
+}
+
+.rating-examples {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.rating-ex-card {
+  background: var(--bg3);
+  border: 2px solid var(--border);
+  padding: 20px;
+  text-align: center;
+}
+
+.rating-ex-badge {
+  font-family: var(--font-hd);
+  font-size: 48px;
+  font-weight: 900;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+
+.rating-top .rating-ex-badge { color: var(--green); }
+.rating-good .rating-ex-badge { color: var(--cyan); }
+.rating-avg .rating-ex-badge { color: var(--yellow); }
+.rating-low .rating-ex-badge { color: var(--red); }
+
+.rating-ex-player {
+  font-family: var(--font-hd);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--txt2);
+  margin-bottom: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.rating-ex-stats {
+  background: var(--bg);
+  padding: 14px;
+  margin-bottom: 14px;
+  font-family: var(--font-mn);
+  font-size: 13px;
+  line-height: 2.0;
+  color: var(--txt);
+  text-align: left;
+}
+
+.rating-ex-desc {
+  font-size: 14px;
+  color: var(--txt);
+  font-style: italic;
+}
+
+.comparison-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.comparison-item {
+  background: var(--bg3);
+  padding: 20px;
+  border: 1px solid var(--border);
+}
+
+.comparison-label {
+  font-family: var(--font-hd);
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--orange);
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.comparison-pro, .comparison-con {
+  padding: 8px 12px;
+  margin-bottom: 8px;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.comparison-pro {
+  background: rgba(0, 230, 118, 0.1);
+  border-left: 3px solid var(--green);
+  color: var(--txt);
+}
+
+.comparison-con {
+  background: rgba(255, 61, 61, 0.1);
+  border-left: 3px solid var(--red);
+  color: var(--txt);
+}
+
+.faq-final {
+  border: 2px solid var(--orange);
+  background: linear-gradient(135deg, rgba(255,106,0,0.05) 0%, var(--bg2) 100%);
+}
+
+.faq-text-large {
+  font-size: 16px;
+  line-height: 1.9;
+  color: var(--txt);
+  margin-bottom: 20px;
+}
+
+.faq-cta {
+  background: var(--bg3);
+  padding: 20px;
+  text-align: center;
+  border: 1px solid var(--orange);
+  margin-top: 20px;
+}
+
+.faq-cta p {
+  font-family: var(--font-hd);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--orange);
+  margin: 0;
+}
+
+.swing-val {
+  font-family: var(--font-hd);
+  font-size: 17px;
+  font-weight: 700;
+}
+
+/* SWING COLOR CLASSES - MUST BE LAST FOR PRIORITY! */
+/* ULTRA PRIORITY - OVERRIDE EVERYTHING! */
+span.swing-positive,
+.swing-positive,
+td .swing-positive {
+  color: var(--green) !important;
+}
+
+span.swing-neutral,
+.swing-neutral,
+td .swing-neutral {
+  color: var(--yellow) !important;
+}
+
+span.swing-negative,
+.swing-negative,
+td .swing-negative {
+  color: var(--red) !important;
+}
+
+/* Player Comparison Styles */
+.comparison-players {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 24px;
+  margin: 24px 0;
+}
+
+.player-comparison {
+  background: var(--bg3);
+  border: 2px solid var(--border2);
+  padding: 24px;
+  position: relative;
+}
+
+.player-comparison-header {
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.player-comparison-name {
+  font-family: var(--font-hd);
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--txt);
+  margin-bottom: 12px;
+}
+
+.player-comparison-rating {
+  display: inline-block;
+  font-family: var(--font-hd);
+  font-size: 16px;
+  font-weight: 800;
+  padding: 8px 16px;
+  border-radius: 4px;
+}
+
+.player-comparison-rating.rating-top {
+  background: rgba(0, 230, 118, 0.15);
+  color: var(--green);
+  border: 1px solid var(--green);
+}
+
+.player-comparison-rating.rating-good {
+  background: rgba(0, 212, 255, 0.15);
+  color: var(--cyan);
+  border: 1px solid var(--cyan);
+}
+
+.player-comparison-stats {
+  margin-bottom: 20px;
+}
+
+.stat-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+  font-family: var(--font-mn);
+  font-size: 13px;
+}
+
+.stat-label {
+  color: var(--txt2);
+}
+
+.stat-value {
+  color: var(--txt);
+  font-weight: 600;
+}
+
+.player-comparison-breakdown {
+  background: var(--bg);
+  padding: 16px;
+  border-left: 3px solid var(--orange);
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--txt2);
+}
+
+.player-comparison-breakdown strong {
+  color: var(--orange);
+  display: block;
+  margin-bottom: 8px;
+}
+
+.faq-conclusion {
+  background: var(--bg2);
+  border: 2px solid var(--cyan);
+  padding: 24px;
+  margin: 24px 0;
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.conclusion-icon {
+  font-size: 40px;
+  line-height: 1;
+}
+
+.conclusion-text {
+  flex: 1;
+  font-size: 15px;
+  line-height: 1.8;
+  color: var(--txt);
+}
+
+.real-world-example {
+  background: var(--bg3);
+  border-left: 4px solid var(--yellow);
+  padding: 20px;
+  margin-top: 24px;
+}
+
+.real-world-header {
+  font-family: var(--font-hd);
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--yellow);
+  margin-bottom: 12px;
+}
+
+.real-world-text {
+  font-size: 15px;
+  line-height: 1.9;
+  color: var(--txt);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   ENHANCED PLAYER PROFILE STYLES
+══════════════════════════════════════════════════════════════ */
+
+.profile-hero {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  padding: 32px;
+  margin-bottom: 24px;
+}
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-bottom: 32px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--border);
+}
+
+.profile-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--orange), var(--orange2));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-hd);
+  font-size: 32px;
+  font-weight: 900;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.profile-info {
+  flex: 1;
+}
+
+.profile-name {
+  font-family: var(--font-hd);
+  font-size: 32px;
+  font-weight: 900;
+  color: var(--txt);
+  margin: 0 0 8px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.profile-steam {
+  font-family: var(--font-mn);
+  font-size: 13px;
+  color: var(--txt3);
+}
+
+.profile-rating-badge {
+  text-align: center;
+  padding: 16px 24px;
+  background: var(--bg3);
+  border: 2px solid var(--border2);
+  border-radius: 8px;
+}
+
+.rating-badge-label {
+  font-family: var(--font-hd);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--txt3);
+  margin-bottom: 8px;
+}
+
+.rating-badge-value {
+  font-family: var(--font-hd);
+  font-size: 48px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.rating-badge-value.rating-god { color: var(--green); }
+.rating-badge-value.rating-pro { color: var(--cyan); }
+.rating-badge-value.rating-good { color: var(--yellow); }
+.rating-badge-value.rating-avg { color: var(--txt); }
+.rating-badge-value.rating-low { color: var(--red); }
+
+.profile-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 16px;
+}
+
+.profile-stat-card {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  padding: 20px;
+  text-align: center;
+  transition: all 0.2s;
+}
+
+.profile-stat-card:hover {
+  border-color: var(--orange);
+  transform: translateY(-2px);
+}
+
+.stat-card-value {
+  font-family: var(--font-hd);
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--cyan);
+  margin-bottom: 8px;
+  line-height: 1;
+}
+
+.stat-card-label {
+  font-family: var(--font-hd);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--txt3);
+}
+
+.profile-charts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.chart-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  padding: 24px;
+}
+
+.chart-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.chart-card-title {
+  font-family: var(--font-hd);
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--txt);
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.chart-period-selector {
+  display: flex;
+  gap: 4px;
+}
+
+.period-btn {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  color: var(--txt2);
+  font-family: var(--font-hd);
+  font-size: 12px;
+  font-weight: 700;
+  padding: 6px 12px;
+  cursor: pointer;
+  transition: all 0.15s;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.period-btn:hover {
+  border-color: var(--orange);
+  color: var(--txt);
+}
+
+.period-btn.active {
+  background: var(--orange);
+  border-color: var(--orange);
+  color: #fff;
+}
+
+.chart-container {
+  height: 300px;
+  position: relative;
+}
+
+.profile-advanced-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.advanced-stat-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  padding: 20px;
+  text-align: center;
+  transition: all 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+
+.advanced-stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--orange);
+  transform: scaleX(0);
+  transition: transform 0.3s;
+}
+
+.advanced-stat-card:hover::before {
+  transform: scaleX(1);
+}
+
+.advanced-stat-card:hover {
+  border-color: var(--border2);
+  transform: translateY(-2px);
+}
+
+.advanced-stat-icon {
+  font-size: 32px;
+  margin-bottom: 12px;
+  line-height: 1;
+}
+
+.advanced-stat-value {
+  font-family: var(--font-hd);
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--cyan);
+  margin-bottom: 8px;
+  line-height: 1;
+}
+
+.advanced-stat-label {
+  font-family: var(--font-hd);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--txt);
+  margin-bottom: 4px;
+}
+
+.advanced-stat-desc {
+  font-size: 12px;
+  color: var(--txt3);
+  font-style: italic;
+}
+
+@media (max-width: 1200px) {
+  .profile-charts {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .profile-header {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .profile-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .profile-advanced-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
 </style>
 </head>
 <body>
@@ -791,12 +1576,408 @@ td.num {
     <a class="nav-link active" id="nav-home"        onclick="showPage('home')">Leaderboard</a>
     <a class="nav-link"       id="nav-matches"      onclick="showPage('matches')">Matches</a>
     <a class="nav-link"       id="nav-weapons"      onclick="showPage('weapons')">Weapons</a>
-  </div>
+      <a class="nav-link" id="nav-faq" onclick="showPage('faq')">FAQ</a>
+</div>
   <div class="nav-status">
     <div class="status-dot" id="statusDot"></div>
     <span id="statusLabel">connecting...</span>
   </div>
 </nav>
+
+
+<!-- ══════════════════════════════════════════════════════════════
+     PAGE: FAQ
+══════════════════════════════════════════════════════════════ -->
+<div class="page" id="page-faq">
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title">🎯 Rating System Explained</div>
+    </div>
+
+    <div class="faq-container">
+      
+      <div class="faq-block">
+        <h2 class="faq-title">Что такое Impact Rating 3.0?</h2>
+        <p class="faq-text">
+          Impact Rating 3.0 — это продвинутая система оценки вклада игрока в победу команды, которая учитывает не просто количество убийств, 
+          а <strong>КОНТЕКСТ</strong> каждого действия. Система анализирует ситуацию на карте, экономику команд, количество живых игроков 
+          и время в раунде, чтобы оценить реальную ценность каждого фрага.
+        </p>
+        <p class="faq-text">
+          В отличие от простого K/D, наш рейтинг понимает разницу между убийством последнего игрока в сейве (низкая ценность) 
+          и entry-фрагом на fullbuy раунде (высокая ценность).
+        </p>
+      </div>
+
+      <div class="faq-block">
+        <h2 class="faq-title">Из чего состоит рейтинг?</h2>
+        <div class="faq-components">
+          
+          <div class="faq-component">
+            <div class="faq-component-header">
+              <span class="faq-component-icon">🎯</span>
+              <span class="faq-component-name">KAST</span>
+              <span class="faq-component-weight">17% веса</span>
+            </div>
+            <p class="faq-component-desc">
+              <strong>Kill, Assist, Survive, Trade</strong> — процент раундов где вы: убили, помогли убить, выжили или были отомщены. 
+              Хороший KAST = 70-80%. Топ игроки >85%.
+            </p>
+            <div class="faq-example">
+              <div class="faq-example-title">Пример:</div>
+              <div class="faq-example-text">
+                22 раунда → 18 раундов с участием = <span class="highlight-green">81.8% KAST</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="faq-component">
+            <div class="faq-component-header">
+              <span class="faq-component-icon">⚡</span>
+              <span class="faq-component-name">SWING</span>
+              <span class="faq-component-weight">55% веса</span>
+            </div>
+            <p class="faq-component-desc">
+              <strong>Win Probability изменение</strong> — насколько ваши действия изменили шансы команды на победу в раунде. 
+              Киллы в критических моментах дают больше SWING.
+            </p>
+            <div class="faq-example">
+              <div class="faq-example-title">Примеры SWING:</div>
+              <div class="faq-example-grid">
+                <div class="swing-example swing-high">
+                  <div class="swing-label">5v5 → 5v4 entry</div>
+                  <div class="swing-value">+12% SWING</div>
+                  <div class="swing-desc">Открытие раунда</div>
+                </div>
+                <div class="swing-example swing-med">
+                  <div class="swing-label">3v3 mid-round</div>
+                  <div class="swing-value">+8% SWING</div>
+                  <div class="swing-desc">Стандартный фраг</div>
+                </div>
+                <div class="swing-example swing-low">
+                  <div class="swing-label">5v1 cleanup</div>
+                  <div class="swing-value">+0.5% SWING</div>
+                  <div class="swing-desc">Почти нет вклада</div>
+                </div>
+                <div class="swing-example swing-clutch">
+                  <div class="swing-label">1v3 clutch kill</div>
+                  <div class="swing-value">+25% SWING</div>
+                  <div class="swing-desc">Огромный вклад!</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="faq-component">
+            <div class="faq-component-header">
+              <span class="faq-component-icon">💥</span>
+              <span class="faq-component-name">Base Impact</span>
+              <span class="faq-component-weight">Основа</span>
+            </div>
+            <p class="faq-component-desc">
+              Официальная формула HLTV: <code>Impact = 2.13 × KPR + 0.42 × APR - 0.41</code><br>
+              где KPR = убийства/раунд, APR = ассисты/раунд
+            </p>
+            <div class="faq-example">
+              <div class="faq-example-title">Пример:</div>
+              <div class="faq-example-text">
+                20K / 22 rounds = 0.91 KPR, 5A / 22 = 0.23 APR<br>
+                Impact = 2.13 × 0.91 + 0.42 × 0.23 - 0.41 = <span class="highlight-cyan">1.63</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="faq-component">
+            <div class="faq-component-header">
+              <span class="faq-component-icon">🚪</span>
+              <span class="faq-component-name">Entry Impact</span>
+              <span class="faq-component-weight">35% веса</span>
+            </div>
+            <p class="faq-component-desc">
+              Первые фраги и смерти в раунде. Entry kill = открываете раунд для команды. Entry death = теряете преимущество.
+              Положительный Entry score = агрессивный и полезный игрок.
+            </p>
+            <div class="faq-example">
+              <div class="faq-example-title">Расчёт:</div>
+              <div class="faq-example-text">
+                6 Entry Kills - 2 Entry Deaths = <span class="highlight-green">+4 Entry Impact</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="faq-component">
+            <div class="faq-component-header">
+              <span class="faq-component-icon">🔥</span>
+              <span class="faq-component-name">Multikill Bonus</span>
+              <span class="faq-component-weight">18% веса</span>
+            </div>
+            <p class="faq-component-desc">
+              Бонус за несколько убийств в одном раунде. 2K = x1.12, 3K = x1.20, 4K = x1.28, ACE = x1.35
+            </p>
+            <div class="faq-example">
+              <div class="faq-example-grid">
+                <div class="multikill-ex">2K: +12%</div>
+                <div class="multikill-ex">3K: +20%</div>
+                <div class="multikill-ex">4K: +28%</div>
+                <div class="multikill-ex">ACE: +35%</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="faq-component">
+            <div class="faq-component-header">
+              <span class="faq-component-icon">💣</span>
+              <span class="faq-component-name">Bomb Impact</span>
+              <span class="faq-component-weight">8% веса</span>
+            </div>
+            <p class="faq-component-desc">
+              Установка/обезвреживание бомбы = изменение шансов на победу. Plant на T = +WinProb, Defuse на CT = +WinProb.
+            </p>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="faq-block">
+        <h2 class="faq-title">Эко vs Fullbuy vs Clutch</h2>
+        <div class="faq-scenarios">
+          
+          <div class="scenario-card">
+            <div class="scenario-header">🔫 Fullbuy vs Fullbuy</div>
+            <div class="scenario-body">
+              <p>Обе команды с полной экипировкой (AK/M4, utility, armor)</p>
+              <p class="scenario-impact">
+                <strong>Вес убийства:</strong> <span class="highlight-green">100%</span>
+              </p>
+              <p class="scenario-desc">Стандартная ситуация. Каждый фраг имеет полную ценность.</p>
+            </div>
+          </div>
+
+          <div class="scenario-card">
+            <div class="scenario-header">💰 Fullbuy vs Eco</div>
+            <div class="scenario-body">
+              <p>Вы fullbuy, противник eco (pistols/no armor)</p>
+              <p class="scenario-impact">
+                <strong>Ваше убийство:</strong> <span class="highlight-yellow">68%</span> (ожидаемо)<br>
+                <strong>Ваша смерть:</strong> <span class="highlight-red">122%</span> (позор!)
+              </p>
+              <p class="scenario-desc">Убить на eco = норма. Умереть на eco = сильно падает рейтинг.</p>
+            </div>
+          </div>
+
+          <div class="scenario-card">
+            <div class="scenario-header">⚔️ Clutch 1vX</div>
+            <div class="scenario-body">
+              <p>Вы один против нескольких</p>
+              <p class="scenario-impact">
+                <strong>1v2 kill:</strong> <span class="highlight-green">+18% Swing</span><br>
+                <strong>1v3 kill:</strong> <span class="highlight-green">+25% Swing</span><br>
+                <strong>1v4 kill:</strong> <span class="highlight-green">+35% Swing</span>
+              </p>
+              <p class="scenario-desc">Каждый фраг в клатче = огромный вклад. 1v5 ace = instant MVP.</p>
+            </div>
+          </div>
+
+          <div class="scenario-card">
+            <div class="scenario-header">🎯 5v1 Cleanup</div>
+            <div class="scenario-body">
+              <p>Вы впятером против одного</p>
+              <p class="scenario-impact">
+                <strong>Ваше убийство:</strong> <span class="highlight-low">~0% Swing</span>
+              </p>
+              <p class="scenario-desc">Раунд уже выигран. Фраг почти не влияет на рейтинг.</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="faq-block">
+        <h2 class="faq-title">Примеры рейтингов</h2>
+        <div class="rating-examples">
+          
+          <div class="rating-ex-card rating-top">
+            <div class="rating-ex-badge">2.10</div>
+            <div class="rating-ex-player">s1mple-level</div>
+            <div class="rating-ex-stats">
+              <div>KAST: 92%</div>
+              <div>SWING: +2.4</div>
+              <div>K/D: 1.85</div>
+              <div>Entry: 80%</div>
+            </div>
+            <div class="rating-ex-desc">Доминирование. Топ-1 world.</div>
+          </div>
+
+          <div class="rating-ex-card rating-good">
+            <div class="rating-ex-badge">1.35</div>
+            <div class="rating-ex-player">Solid player</div>
+            <div class="rating-ex-stats">
+              <div>KAST: 78%</div>
+              <div>SWING: +1.1</div>
+              <div>K/D: 1.25</div>
+              <div>Entry: 55%</div>
+            </div>
+            <div class="rating-ex-desc">Хороший игрок, стабильный вклад.</div>
+          </div>
+
+          <div class="rating-ex-card rating-avg">
+            <div class="rating-ex-badge">1.00</div>
+            <div class="rating-ex-player">Average</div>
+            <div class="rating-ex-stats">
+              <div>KAST: 68%</div>
+              <div>SWING: +0.3</div>
+              <div>K/D: 1.00</div>
+              <div>Entry: 50%</div>
+            </div>
+            <div class="rating-ex-desc">Средний уровень. Норма для большинства.</div>
+          </div>
+
+          <div class="rating-ex-card rating-low">
+            <div class="rating-ex-badge">0.72</div>
+            <div class="rating-ex-player">Struggling</div>
+            <div class="rating-ex-stats">
+              <div>KAST: 52%</div>
+              <div>SWING: -0.4</div>
+              <div>K/D: 0.75</div>
+              <div>Entry: 35%</div>
+            </div>
+            <div class="rating-ex-desc">Тяжёлая игра. Нужно работать над aim/positioning.</div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="faq-block">
+        <h2 class="faq-title">Показательный пример: Почему контекст важнее статистики?</h2>
+        <p class="faq-text">
+          Представьте два матча. <strong>Игрок A</strong> сыграл 20-10 (K/D = 2.0), а <strong>Игрок B</strong> сыграл 15-15 (K/D = 1.0). 
+          На первый взгляд, Игрок A намного лучше, правда? <strong>Но посмотрим на КОНТЕКСТ:</strong>
+        </p>
+        
+        <div class="comparison-players">
+          
+          <div class="player-comparison player-a">
+            <div class="player-comparison-header">
+              <div class="player-comparison-name">Игрок A: 20-10 (K/D 2.0)</div>
+              <div class="player-comparison-rating rating-good">Rating: 1.18</div>
+            </div>
+            <div class="player-comparison-stats">
+              <div class="stat-row">
+                <span class="stat-label">Entry Kills:</span>
+                <span class="stat-value">2 FK / 0 FD</span>
+              </div>
+              <div class="stat-row">
+                <span class="stat-label">Multikills:</span>
+                <span class="stat-value">2×2K, 1×3K</span>
+              </div>
+              <div class="stat-row">
+                <span class="stat-label">Clutches:</span>
+                <span class="stat-value">Проиграл все 1vX</span>
+              </div>
+              <div class="stat-row">
+                <span class="stat-label">KAST:</span>
+                <span class="stat-value">65%</span>
+              </div>
+              <div class="stat-row">
+                <span class="stat-label">SWING:</span>
+                <span class="stat-value highlight-yellow">+4.2%</span>
+              </div>
+            </div>
+            <div class="player-comparison-breakdown">
+              <strong>Разбор:</strong> Много фрагов в 5v1/5v2 cleanup ситуациях. 
+              Не открывает раунды. Не выигрывает клатчи. Хорошая статистика, но низкий impact.
+            </div>
+          </div>
+
+          <div class="player-comparison player-b">
+            <div class="player-comparison-header">
+              <div class="player-comparison-name">Игрок B: 15-15 (K/D 1.0)</div>
+              <div class="player-comparison-rating rating-top">Rating: 1.42</div>
+            </div>
+            <div class="player-comparison-stats">
+              <div class="stat-row">
+                <span class="stat-label">Entry Kills:</span>
+                <span class="stat-value">8 FK / 3 FD</span>
+              </div>
+              <div class="stat-row">
+                <span class="stat-label">Multikills:</span>
+                <span class="stat-value">1×2K, 1×3K</span>
+              </div>
+              <div class="stat-row">
+                <span class="stat-label">Clutches:</span>
+                <span class="stat-value">Выиграл 1v2 + 1v3</span>
+              </div>
+              <div class="stat-row">
+                <span class="stat-label">KAST:</span>
+                <span class="stat-value">88%</span>
+              </div>
+              <div class="stat-row">
+                <span class="stat-label">SWING:</span>
+                <span class="stat-value highlight-green">+12.8%</span>
+              </div>
+            </div>
+            <div class="player-comparison-breakdown">
+              <strong>Разбор:</strong> Открывает раунды (8 entry kills). Выигрывает критические клатчи. 
+              Почти всегда участвует в раунде (88% KAST). Меньше фрагов, но <strong>ОГРОМНЫЙ</strong> impact!
+            </div>
+          </div>
+
+        </div>
+
+        <div class="faq-conclusion">
+          <div class="conclusion-icon">💡</div>
+          <div class="conclusion-text">
+            <strong>Вывод:</strong> Игрок B с K/D 1.0 получает рейтинг <span class="highlight-green">1.42</span>, 
+            а Игрок A с K/D 2.0 получает только <span class="highlight-yellow">1.18</span>. 
+            Почему? <strong>Потому что Impact Rating 3.0 оценивает КОГДА и КАК вы убили, а не просто СКОЛЬКО.</strong>
+          </div>
+        </div>
+
+        <div class="real-world-example">
+          <div class="real-world-header">🌟 Реальный пример из про-сцены:</div>
+          <div class="real-world-text">
+            <strong>donk vs ZywOo</strong> на IEM Katowice 2024:<br><br>
+            <strong>ZywOo:</strong> 28-18 (K/D 1.56), много фрагов, но в cleanup ситуациях → Rating: 1.31<br>
+            <strong>donk:</strong> 22-20 (K/D 1.10), меньше фрагов, но критические entry kills и клатчи → Rating: 1.48<br><br>
+            donk выиграл MVP турнира, потому что его фраги <strong>решали раунды</strong>, а не просто красиво выглядели в статистике.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-block">
+        <h2 class="faq-title">Почему это лучше чем K/D?</h2>
+        <div class="comparison-grid">
+          <div class="comparison-item">
+            <div class="comparison-label">K/D</div>
+            <div class="comparison-con">❌ Не учитывает контекст</div>
+            <div class="comparison-con">❌ 5v1 = 1v5 по ценности</div>
+            <div class="comparison-con">❌ Eco = Fullbuy</div>
+          </div>
+          <div class="comparison-item">
+            <div class="comparison-label">Impact Rating 3.0</div>
+            <div class="comparison-pro">✅ Учитывает WinProb</div>
+            <div class="comparison-pro">✅ Clutch > Cleanup</div>
+            <div class="comparison-pro">✅ Eco penalties</div>
+            <div class="comparison-pro">✅ Entry/Trade/KAST</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-block faq-final">
+        <h2 class="faq-title">🎯 Итог</h2>
+        <p class="faq-text-large">
+          Impact Rating 3.0 оценивает <strong>реальный вклад в победу</strong>, а не просто статистику. 
+          Это самая продвинутая рейтинговая система для CS2, основанная на принципах HLTV 3.0 
+          с улучшениями для учёта клатчей, эко-раундов и критических моментов.
+        </p>
+        <div class="faq-cta">
+          <p>Играйте умно. Не собирайте фраги в сейвах — делайте импакт в fullbuy раундах! 🔥</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
 
 <!-- ══════════════════════════════════════════════════════════════
      PAGE: HOME — Leaderboard
@@ -808,7 +1989,7 @@ td.num {
       <div class="hero-title">
         CS2<br>
         <span class="line2">Analytics</span>
-        <span class="line3">Premier Match Statistics Platform</span>
+        <span class="line3">Bank TOCHKA CS2 Tournament</span>
       </div>
       <div class="hero-meta">
         <div class="hero-stat-item">
@@ -826,22 +2007,6 @@ td.num {
       </div>
     </div>
 
-    <div class="upload-card anim-in anim-in-d1">
-      <div class="upload-card-title">
-        <span>⬆</span> Upload Demo
-      </div>
-      <div class="upload-drop" id="uploadDrop">
-        <input type="file" id="fileInput" accept=".dem">
-        <div class="upload-icon">📁</div>
-        <div class="upload-drop-text">Drop .dem file here</div>
-        <div class="upload-drop-sub">or click to browse</div>
-      </div>
-      <button class="btn-upload" id="uploadBtn" disabled>Analyze Demo</button>
-      <div class="upload-progress" id="uploadProgress">
-        <div class="progress-bar-track"><div class="progress-bar-fill" id="progressFill"></div></div>
-        <div class="progress-label" id="progressLabel">Parsing demo...</div>
-      </div>
-    </div>
   </div>
 
   <div class="section anim-in anim-in-d2">
@@ -874,6 +2039,8 @@ td.num {
           <th>Player</th>
           <th class="num">Rating</th>
           <th class="num">Matches</th>
+          <th class="num">KAST</th>
+          <th class="num">SWING</th>
           <th class="num">K/D</th>
           <th class="num">ADR</th>
           <th class="num">HS%</th>
@@ -960,6 +2127,8 @@ td.num {
           <th class="num">D</th>
           <th class="num">A</th>
           <th class="num">K/D</th>
+          <th class="num">KAST</th>
+          <th class="num">SWING</th>
           <th class="num">HS%</th>
           <th class="num">ADR</th>
           <th class="num">FK</th>
@@ -1006,6 +2175,8 @@ td.num {
           <th class="num">K</th>
           <th class="num">D</th>
           <th class="num">A</th>
+          <th class="num">KAST</th>
+          <th class="num">SWING</th>
           <th class="num">ADR</th>
           <th class="num">HS%</th>
           <th class="num">Rating</th>
@@ -1029,6 +2200,7 @@ td.num {
         <thead><tr>
           <th>#</th>
           <th>Weapon</th>
+          <th>MVP</th>
           <th class="num">Total Kills</th>
           <th class="num">HS%</th>
           <th class="num">Avg DMG/Kill</th>
@@ -1068,6 +2240,145 @@ td.num {
   </div>
 </div>
 
+<!-- ══════════════════════════════════════════════════════════════
+     ENHANCED PLAYER PROFILE PAGE
+══════════════════════════════════════════════════════════════ -->
+<div class="page" id="page-profile">
+  <button class="btn-back" onclick="showPage('home')">← Back to Rankings</button>
+
+  <div class="profile-hero">
+    <div class="profile-header">
+      <div class="profile-avatar" id="profAvatar">BA</div>
+      <div class="profile-info">
+        <h1 class="profile-name" id="profName">Player Name</h1>
+        <div class="profile-steam" id="profSteam">SteamID: ...</div>
+      </div>
+      <div class="profile-rating-badge">
+        <div class="rating-badge-label">Rating</div>
+        <div class="rating-badge-value" id="profRatingBadge">1.00</div>
+      </div>
+    </div>
+
+    <div class="profile-stats-grid">
+      <div class="profile-stat-card">
+        <div class="stat-card-value" id="profKD">1.00</div>
+        <div class="stat-card-label">K/D Ratio</div>
+      </div>
+      <div class="profile-stat-card">
+        <div class="stat-card-value" id="profADR">0</div>
+        <div class="stat-card-label">Avg ADR</div>
+      </div>
+      <div class="profile-stat-card">
+        <div class="stat-card-value" id="profHS">0%</div>
+        <div class="stat-card-label">HS%</div>
+      </div>
+      <div class="profile-stat-card">
+        <div class="stat-card-value" id="profMatches">0</div>
+        <div class="stat-card-label">Matches</div>
+      </div>
+      <div class="profile-stat-card">
+        <div class="stat-card-value" id="profKills">0</div>
+        <div class="stat-card-label">Total Kills</div>
+      </div>
+      <div class="profile-stat-card">
+        <div class="stat-card-value" id="profWinRate">0%</div>
+        <div class="stat-card-label">Win Rate</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="profile-charts">
+    <div class="chart-card">
+      <div class="chart-card-header">
+        <h3 class="chart-card-title">📈 Rating Progression</h3>
+        <div class="chart-period-selector">
+          <button class="period-btn active" onclick="setRatingPeriod('all')">All Time</button>
+          <button class="period-btn" onclick="setRatingPeriod(20)">Last 20</button>
+          <button class="period-btn" onclick="setRatingPeriod(10)">Last 10</button>
+        </div>
+      </div>
+      <div class="chart-container">
+        <canvas id="ratingProgressChart"></canvas>
+      </div>
+    </div>
+
+    <div class="chart-card">
+      <div class="chart-card-header">
+        <h3 class="chart-card-title">🗺️ Map Performance</h3>
+      </div>
+      <div class="chart-container">
+        <canvas id="mapRadarChart"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <div class="profile-advanced-stats">
+    <div class="advanced-stat-card">
+      <div class="advanced-stat-icon">🚪</div>
+      <div class="advanced-stat-value" id="profEntrySuccess">0%</div>
+      <div class="advanced-stat-label">Entry Success</div>
+      <div class="advanced-stat-desc">First kill success rate</div>
+    </div>
+
+    <div class="advanced-stat-card">
+      <div class="advanced-stat-icon">🏆</div>
+      <div class="advanced-stat-value" id="profMVP">0</div>
+      <div class="advanced-stat-label">MVP Count</div>
+      <div class="advanced-stat-desc">Times as match MVP</div>
+    </div>
+
+    <div class="advanced-stat-card">
+      <div class="advanced-stat-icon">🎯</div>
+      <div class="advanced-stat-value" id="profBestMap">—</div>
+      <div class="advanced-stat-label">Best Map</div>
+      <div class="advanced-stat-desc" id="profBestMapRating">Rating: —</div>
+    </div>
+
+    <div class="advanced-stat-card">
+      <div class="advanced-stat-icon">📉</div>
+      <div class="advanced-stat-value" id="profWorstMap">—</div>
+      <div class="advanced-stat-label">Worst Map</div>
+      <div class="advanced-stat-desc" id="profWorstMapRating">Rating: —</div>
+    </div>
+
+    <div class="advanced-stat-card">
+      <div class="advanced-stat-icon">🔫</div>
+      <div class="advanced-stat-value" id="profFavWeapon">—</div>
+      <div class="advanced-stat-label">Favorite Weapon</div>
+      <div class="advanced-stat-desc">Most kills</div>
+    </div>
+
+    <div class="advanced-stat-card">
+      <div class="advanced-stat-icon">⚡</div>
+      <div class="advanced-stat-value" id="profAvgKAST">0%</div>
+      <div class="advanced-stat-label">Avg KAST</div>
+      <div class="advanced-stat-desc">Round participation</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title" style="margin-bottom:16px">Match History</div>
+    <div class="data-table-wrap">
+      <table>
+        <thead><tr>
+          <th>Date</th>
+          <th>Map</th>
+          <th>Side</th>
+          <th class="num">K</th>
+          <th class="num">D</th>
+          <th class="num">A</th>
+          <th class="num">KAST</th>
+          <th class="num">SWING</th>
+          <th class="num">ADR</th>
+          <th class="num">HS%</th>
+          <th class="num">Rating</th>
+        </tr></thead>
+        <tbody id="profMatchHistory"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
 <!-- ── TOAST ── -->
 <div class="toast" id="toast"></div>
 
@@ -1075,7 +2386,7 @@ td.num {
 /* ══════════════════════════════════════════════════════
    CONFIG
 ══════════════════════════════════════════════════════ */
-const API = '';
+const API = 'http://127.0.0.1:8000';
 const KEY = localStorage.getItem('apiKey') || 'changeme-set-in-dotenv';
 
 /* ══════════════════════════════════════════════════════
@@ -1083,7 +2394,18 @@ const KEY = localStorage.getItem('apiKey') || 'changeme-set-in-dotenv';
 ══════════════════════════════════════════════════════ */
 const $ = id => document.getElementById(id);
 
+
+function swingClass(s) {
+  // SWING: >5% = зелёный, <0% = красный, 0-5% = жёлтый
+  s = Number(s);
+  if (s > 5) return 'swing-positive';      // >5% = зелёный
+  if (s < 0) return 'swing-negative';      // <0% = КРАСНЫЙ (любой минус!)
+  return 'swing-neutral';                  // 0-5% = жёлтый
+}
+
 function ratingClass(r) {
+  r = Number(r);
+
   if (r >= 1.20) return 'rating-high';
   if (r >= 0.95) return 'rating-mid';
   return 'rating-low';
@@ -1119,11 +2441,13 @@ const pageMap = {
   'player':       'page-player',
   'weapons':      'page-weapons',
   'weapon-detail': 'page-weapon-detail',
+  'faq':          'page-faq',
 };
 const navMap = {
   'home':    'nav-home',
   'matches': 'nav-matches',
   'weapons': 'nav-weapons',
+  'faq':     'nav-faq',
 };
 
 function showPage(name) {
@@ -1206,13 +2530,30 @@ async function loadLeaderboard() {
 
 function renderLeaderboard(data) {
   const tbody = $('leaderboardBody');
+
   if (!data.length) {
-    tbody.innerHTML = `<tr><td colspan="8"><div class="empty-state"><div class="empty-state-icon">🎯</div><div class="empty-state-title">No data yet</div><div class="empty-state-sub">Upload a demo to get started</div></div></td></tr>`;
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="10">
+          <div class="empty-state">
+            <div class="empty-state-icon">🎯</div>
+            <div class="empty-state-title">No data yet</div>
+            <div class="empty-state-sub">Upload a demo to get started</div>
+          </div>
+        </td>
+      </tr>`;
     return;
   }
+
   tbody.innerHTML = data.map((p,i) => `
     <tr onclick="loadPlayer('${p.steam_id}')" style="animation:fadeSlideIn .25s ${i*.03}s ease both">
-      <td><span class="rank-num ${i===0?'top1':i===1?'top2':i===2?'top3':''}">${p.rank}</span></td>
+
+      <td>
+        <span class="rank-num ${i===0?'top1':i===1?'top2':i===2?'top3':''}">
+          ${p.rank}
+        </span>
+      </td>
+
       <td>
         <div class="player-cell">
           <div class="player-avatar">${initials(p.nickname)}</div>
@@ -1222,12 +2563,37 @@ function renderLeaderboard(data) {
           </div>
         </div>
       </td>
-      <td class="num"><span class="rating-badge ${ratingClass(p.avg_rating)}">${p.avg_rating?.toFixed(2)}</span></td>
+
+      <td class="num">
+        <span class="rating-badge ${ratingClass(p.avg_rating)}">
+          ${p.avg_rating?.toFixed(2)}
+        </span>
+      </td>
+
       <td class="num">${p.matches}</td>
-      <td class="num"><span class="kd-val">${p.kd_ratio?.toFixed(2)}</span></td>
+
+      <td class="num">
+        <span class="pct-val">${p.kast?.toFixed(0)}%</span>
+      </td>
+
+      <td class="num">
+        <span class="swing-val ${swingClass(p.swing||0)}">${p.swing >= 0 ? '+' : ''}${(p.swing||0).toFixed(2)}%</span>
+      </td>
+
+      <td class="num">
+        <span class="kd-val">${p.kd_ratio?.toFixed(2)}</span>
+      </td>
+
       <td class="num">${p.avg_adr?.toFixed(0)}</td>
-      <td class="num"><span class="pct-val">${p.avg_hs?.toFixed(0)}%</span></td>
-      <td class="num"><span class="pct-val">${p.entry_rate?.toFixed(0)}%</span></td>
+
+      <td class="num">
+        <span class="pct-val">${p.avg_hs?.toFixed(0)}%</span>
+      </td>
+
+      <td class="num">
+        <span class="pct-val">${p.entry_rate?.toFixed(0)}%</span>
+      </td>
+
     </tr>
   `).join('');
 }
@@ -1240,52 +2606,80 @@ let matchMapFilter = '';
 
 async function loadMatches() {
   try {
-    allMatches = await apiFetch('/api/matches?limit=100');
+    allMatches = await apiFetch('/api/matches?limit=100&offset=0');
     renderMatches();
-  } catch {
-    $('matchesGrid').innerHTML = '';
-    showToast('Could not load matches', 'error');
+  } catch (e) {
+    console.warn('Could not load matches:', e);
+    const grid = $('matchesGrid');
+    if (grid) {
+      grid.innerHTML = `
+        <div class="empty-state" style="grid-column:1/-1">
+          <div class="empty-state-icon">📂</div>
+          <div class="empty-state-title">Could not load matches</div>
+          <div class="empty-state-sub">Backend responded with an error</div>
+        </div>
+      `;
+    }
   }
 }
 
 function filterMatches(btn, map) {
-  document.querySelectorAll('#page-matches .filter-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
+  document.querySelectorAll('#page-matches .filter-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
   matchMapFilter = map;
   renderMatches();
 }
 
 function renderMatches() {
   const grid = $('matchesGrid');
-  const list = matchMapFilter ? allMatches.filter(m=>m.map===matchMapFilter) : allMatches;
+  if (!grid) return;
+
+  const list = matchMapFilter
+    ? allMatches.filter(m => m.map === matchMapFilter)
+    : allMatches;
+
   if (!list.length) {
-    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><div class="empty-state-icon">📂</div><div class="empty-state-title">No matches found</div><div class="empty-state-sub">Upload a demo to see match history</div></div>`;
+    grid.innerHTML = `
+      <div class="empty-state" style="grid-column:1/-1">
+        <div class="empty-state-icon">📂</div>
+        <div class="empty-state-title">No matches found</div>
+        <div class="empty-state-sub">Upload a demo to see match history</div>
+      </div>
+    `;
     return;
   }
-  const [a,b] = (list[0]?.score||'0-0').split('-').map(Number);
+
   grid.innerHTML = list.map(m => {
-    const [s1,s2] = (m.score||'0-0').split('-').map(Number);
-    const win  = s1 > s2;
+    const scoreRaw = m.score || `${m.team1_score ?? 0}-${m.team2_score ?? 0}`;
+    const [s1, s2] = String(scoreRaw).split('-').map(v => Number(v) || 0);
+    const win = s1 > s2;
     const draw = s1 === s2;
+
     return `
-    <div class="match-card anim-in" onclick="loadMatchDetail(${m.id})">
-      <div class="match-card-header">
-        <div class="match-map">${m.map?.replace('de_','')}</div>
-        <div class="match-date">
-          ${formatDate(m.played_at)}<br>
-          <span style="color:var(--txt3)">${m.map}</span>
+      <div class="match-card anim-in" onclick="loadMatchDetail(${m.id})">
+        <div class="match-card-header">
+          <div class="match-map">${(m.map || 'unknown').replace('de_', '')}</div>
+          <div class="match-date">
+            ${m.played_at ? formatDate(m.played_at) : '—'}<br>
+            <span style="color:var(--txt3)">${m.map || '—'}</span>
+          </div>
+        </div>
+
+        <div class="match-score">
+          <div class="score-num ${win ? 'win' : draw ? '' : 'loss'}" style="${draw ? 'color:var(--txt)' : ''}">
+            ${s1}
+          </div>
+          <div class="score-sep">:</div>
+          <div class="score-num ${!win && !draw ? 'win' : draw ? '' : 'loss'}" style="${draw ? 'color:var(--txt)' : ''}">
+            ${s2}
+          </div>
+        </div>
+
+        <div class="match-card-footer">
+          <div class="match-meta-item">Rounds: <strong>${m.total_rounds ?? 0}</strong></div>
+          <div class="match-meta-item">Kills: <strong>${m.total_kills ?? 0}</strong></div>
         </div>
       </div>
-      <div class="match-score">
-        <div class="score-num ${win?'win':draw?'':''}" style="${win?'':'color:var(--txt)'}">${s1}</div>
-        <div class="score-sep">:</div>
-        <div class="score-num ${!win&&!draw?'loss':''}" style="${!win&&!draw?'':'color:var(--txt)'}">${s2}</div>
-      </div>
-      <div class="match-card-footer">
-        <div class="match-meta-item">Rounds: <strong>${m.total_rounds}</strong></div>
-        <div class="match-meta-item">Kills: <strong>${m.total_kills||0}</strong></div>
-      </div>
-    </div>
     `;
   }).join('');
 }
@@ -1298,224 +2692,101 @@ async function loadMatchDetail(id) {
     const m = await apiFetch(`/api/matches/${id}`);
     renderMatchDetail(m);
     showPage('match-detail');
-  } catch {
+  } catch (e) {
+    console.error(e);
     showToast('Could not load match', 'error');
   }
 }
 
 function renderMatchDetail(m) {
-  $('md-map').textContent  = m.map?.toUpperCase() || '—';
+  $('md-map').textContent = (m.map || '—').toUpperCase();
   $('md-score1').textContent = m.team1_score ?? m.ct_score ?? '—';
-  $('md-score2').textContent = m.team2_score ?? m.t_score  ?? '—';
+  $('md-score2').textContent = m.team2_score ?? m.t_score ?? '—';
 
-  const s1 = m.team1_score ?? m.ct_score ?? 0;
-  const s2 = m.team2_score ?? m.t_score  ?? 0;
-  $('md-score1').style.color = s1>s2 ? 'var(--green)' : s1===s2 ? 'var(--yellow)' : 'var(--red)';
-  $('md-score2').style.color = s2>s1 ? 'var(--green)' : s1===s2 ? 'var(--yellow)' : 'var(--red)';
+  const s1 = Number(m.team1_score ?? m.ct_score ?? 0);
+  const s2 = Number(m.team2_score ?? m.t_score ?? 0);
+
+  $('md-score1').style.color = s1 > s2 ? 'var(--green)' : s1 === s2 ? 'var(--yellow)' : 'var(--red)';
+  $('md-score2').style.color = s2 > s1 ? 'var(--green)' : s1 === s2 ? 'var(--yellow)' : 'var(--red)';
 
   $('md-meta').innerHTML = `
-    ${formatDate(m.played_at)}<br>
-    ${m.total_rounds} rounds &nbsp;·&nbsp; ${m.total_kills||0} kills
+    ${m.played_at ? formatDate(m.played_at) : '—'}<br>
+    ${m.total_rounds ?? 0} rounds &nbsp;·&nbsp; ${m.total_kills ?? 0} kills
   `;
 
-  // Halves
-  const fh = m.first_half  || {};
+  const fh = m.first_half || {};
   const sh = m.second_half || {};
+
   $('md-halves1').innerHTML = `
-    <div class="half-score-pill">1H: ${fh.ct??'?'}</div>
-    <div class="half-score-pill">2H: ${sh.t??'?'}</div>
+    <div class="half-score-pill">1H: ${fh.ct ?? '?'}</div>
+    <div class="half-score-pill">2H: ${sh.t ?? '?'}</div>
   `;
   $('md-halves2').innerHTML = `
-    <div class="half-score-pill">1H: ${fh.t??'?'}</div>
-    <div class="half-score-pill">2H: ${sh.ct??'?'}</div>
+    <div class="half-score-pill">1H: ${fh.t ?? '?'}</div>
+    <div class="half-score-pill">2H: ${sh.ct ?? '?'}</div>
   `;
 
-  // MVP
   const mvp = m.players?.[0];
   if (mvp) {
-    $('mvp-name').textContent = mvp.nickname;
+    $('mvp-name').textContent = mvp.nickname || '—';
     $('mvp-stats').innerHTML = [
-      {v: mvp.rating?.toFixed(2), l:'Rating'},
-      {v: mvp.K, l:'Kills'},
-      {v: (mvp.K/Math.max(mvp.D,1)).toFixed(2), l:'K/D'},
-      {v: mvp.ADR?.toFixed(0), l:'ADR'},
-      {v: mvp.HS?.toFixed(0)+'%', l:'HS%'},
-    ].map(s=>`
+      { v: mvp.rating != null ? Number(mvp.rating).toFixed(2) : '—', l: 'Rating' },
+      { v: mvp.K ?? 0, l: 'Kills' },
+      { v: (Number(mvp.K || 0) / Math.max(Number(mvp.D || 0), 1)).toFixed(2), l: 'K/D' },
+      { v: mvp.ADR != null ? Number(mvp.ADR).toFixed(0) : '—', l: 'ADR' },
+      { v: mvp.HS != null ? `${Number(mvp.HS).toFixed(0)}%` : '—', l: 'HS%' },
+    ].map(s => `
       <div class="mvp-stat">
         <div class="mvp-stat-val">${s.v}</div>
         <div class="mvp-stat-lbl">${s.l}</div>
       </div>
     `).join('');
+  } else {
+    $('mvp-name').textContent = '—';
+    $('mvp-stats').innerHTML = '';
   }
 
-  // Scoreboard
   const tbody = $('matchScoreboard');
+  if (!tbody) return;
+
   if (!m.players?.length) {
-    tbody.innerHTML = `<tr><td colspan="11" style="text-align:center;color:var(--txt3);padding:32px">No player data</td></tr>`;
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="13" style="text-align:center;color:var(--txt3);padding:32px">
+          No player data
+        </td>
+      </tr>
+    `;
     return;
   }
-  tbody.innerHTML = m.players.map((p,i) => `
-    <tr onclick="loadPlayer('${p.steam_id}')" style="animation:fadeSlideIn .2s ${i*.04}s both">
+
+  tbody.innerHTML = m.players.map((p, i) => `
+    <tr onclick="loadPlayer('${p.steam_id}')" style="animation:fadeSlideIn .2s ${i * .04}s both">
       <td>
         <div class="player-cell">
           <div class="player-avatar">${initials(p.nickname)}</div>
           <div>
-            <div class="player-name">${p.nickname}</div>
-            <div class="player-steam">${p.steam_id?.slice(-8)||''}</div>
+            <div class="player-name">${p.nickname || 'Unknown'}</div>
+            <div class="player-steam">${p.steam_id?.slice(-8) || ''}</div>
           </div>
         </div>
       </td>
-      <td><span class="${p.team?.includes('CT')?'tag-ct':'tag-t'}">${p.team?.includes('CT')?'CT':'T'}</span></td>
-      <td class="num">${p.K}</td>
-      <td class="num">${p.D}</td>
-      <td class="num">${p.A}</td>
-      <td class="num"><span class="kd-val">${(p.K/Math.max(p.D,1)).toFixed(2)}</span></td>
-      <td class="num">${p.HS?.toFixed(0)}%</td>
-      <td class="num">${p.ADR?.toFixed(0)}</td>
-      <td class="num">${p.FK}</td>
-      <td class="num">${p.FD}</td>
-      <td class="num"><span class="rating-badge ${ratingClass(p.rating)}">${p.rating?.toFixed(2)}</span></td>
-    </tr>
-  `).join('');
-}
-
-/* ══════════════════════════════════════════════════════
-   PLAYER PROFILE
-══════════════════════════════════════════════════════ */
-async function loadPlayer(steamId) {
-  try {
-    // 1️⃣ Основные данные игрока
-    const p = await apiFetch(`/api/players/${steamId}`);
-
-    // 2️⃣ История матчей игрока
-    const matches = await apiFetch(`/api/players/${steamId}/matches`);
-
-    // 3️⃣ Добавляем матчи в объект игрока
-    p.matches = matches;
-
-    renderPlayer(p);
-    showPage('player');
-
-  } catch (err) {
-    console.error(err);
-    showToast('Could not load player', 'error');
-  }
-}
-
-
-function renderPlayer(p) {
-  const nick = p.nickname || 'Unknown';
-  $('prof-avatar').textContent = initials(nick);
-  $('prof-name').textContent   = nick.toUpperCase();
-  $('prof-steamid').textContent = `SteamID: ${p.steam_id}`;
-
-  const a = p.annual || {};
-
-  // ───── KPIs ─────
-  $('prof-kpis').innerHTML = [
-    {v: a.avg_rating?.toFixed(2)||'—', l:'Avg Rating', c:'var(--orange)'},
-    {v: a.kd_ratio?.toFixed(2)||'—',   l:'K/D Ratio',  c:'var(--cyan)'},
-    {v: a.avg_adr?.toFixed(0)||'—',    l:'Avg ADR',    c:'var(--txt)'},
-    {v: (a.avg_hs_pct?.toFixed(0)||'—')+'%', l:'HS%', c:'var(--txt)'},
-    {v: a.matches||0,                  l:'Matches',    c:'var(--txt)'},
-    {v: a.total_kills||0,              l:'Total Kills', c:'var(--txt)'},
-  ].map(k=>`
-    <div class="kpi-block">
-      <div class="kpi-val" style="color:${k.c}">${k.v}</div>
-      <div class="kpi-lbl">${k.l}</div>
-    </div>
-  `).join('');
-
-  // ───── Stats cards ─────
-  $('profStatsCards').innerHTML = [
-    {v: a.best_rating?.toFixed(2)||'—', l:'Best Rating'},
-    {v: a.worst_rating?.toFixed(2)||'—', l:'Worst Rating'},
-    {v: a.median_rating?.toFixed(2)||'—', l:'Median'},
-    {v: a.std_rating?.toFixed(2)||'—', l:'Consistency (σ)'},
-    {v: a.fk_total||0, l:'Total First Kills'},
-    {v: (a.entry_success_rate?.toFixed(0)||'—')+'%', l:'Entry Success'},
-    {v: a.favorite_map||'—', l:'Fav Map'},
-    {v: a.favorite_weapon||'—', l:'Fav Weapon'},
-  ].map(s=>`
-    <div class="stat-card">
-      <div class="stat-card-val">${s.v}</div>
-      <div class="stat-card-lbl">${s.l}</div>
-    </div>
-  `).join('');
-
-  // ───── Form chart ─────
-  const form = p.monthly_form || [];
-  if (form.length) {
-    const maxR = Math.max(...form.map(f=>f.avg_rating));
-    $('profFormChart').innerHTML = form.map(f => {
-      const h = Math.max(6, (f.avg_rating / maxR) * 100);
-      const col = f.avg_rating >= 1.1 ? 'var(--green)' :
-                  f.avg_rating >= 0.95 ? 'var(--yellow)' :
-                  'var(--red)';
-      return `
-        <div class="form-bar" style="height:${h}%;background:${col};opacity:.85">
-          <div class="form-bar-tooltip">
-            ${f.period}<br>
-            Rating: ${f.avg_rating}<br>
-            Matches: ${f.matches}
-          </div>
-        </div>
-      `;
-    }).join('');
-  } else {
-    $('profFormChart').innerHTML =
-      `<span style="font-family:var(--font-mn);font-size:10px;color:var(--txt3)">
-         No form data
-       </span>`;
-  }
-
-  // ───── Match history ─────
-  const hist = p.matches || [];
-  const tbody = $('profMatchHistory');
-
-  if (!hist.length) {
-    tbody.innerHTML =
-      `<tr>
-         <td colspan="9"
-             style="text-align:center;color:var(--txt3);padding:32px">
-           No match history
-         </td>
-       </tr>`;
-    return;
-  }
-
-  tbody.innerHTML = hist.map((m,i) => `
-    <tr onclick="loadMatchDetail(${m.match_id})"
-        style="animation:fadeSlideIn .2s ${i*.03}s both">
-
-      <td style="font-family:var(--font-mn);
-                 font-size:11px;
-                 color:var(--txt3)">
-        ${formatDate(m.played_at)}
-      </td>
-
-      <td style="font-family:var(--font-hd);
-                 font-weight:700">
-        ${m.map?.replace('de_','').toUpperCase()}
-      </td>
-
       <td>
-        <span class="${m.team?.includes('CT')?'tag-ct':'tag-t'}">
-          ${m.team?.includes('CT')?'CT':'T'}
+        <span class="${p.team?.includes('CT') ? 'tag-ct' : 'tag-t'}">
+          ${p.team?.includes('CT') ? 'CT' : 'T'}
         </span>
       </td>
-
-      <td class="num">${m.K}</td>
-      <td class="num">${m.D}</td>
-      <td class="num">${m.A}</td>
-      <td class="num">${m.ADR?.toFixed(0)}</td>
-      <td class="num">${m.HS?.toFixed(0)}%</td>
-      <td class="num">
-        <span class="rating-badge ${ratingClass(m.rating)}">
-          ${m.rating?.toFixed(2)}
-        </span>
-      </td>
-
+      <td class="num">${p.K ?? 0}</td>
+      <td class="num">${p.D ?? 0}</td>
+      <td class="num">${p.A ?? 0}</td>
+      <td class="num"><span class="kd-val">${(Number(p.K || 0) / Math.max(Number(p.D || 0), 1)).toFixed(2)}</span></td>
+      <td class="num"><span class="pct-val">${Number(p.kast_pct || 0).toFixed(1)}%</span></td>
+      <td class="num"><span class="swing-val ${swingClass(p.swing || 0)}">${Number(p.swing || 0).toFixed(2)}%</span></td>
+      <td class="num">${p.HS != null ? Number(p.HS).toFixed(0) : '0'}%</td>
+      <td class="num">${p.ADR != null ? Number(p.ADR).toFixed(0) : '0'}</td>
+      <td class="num">${p.FK ?? 0}</td>
+      <td class="num">${p.FD ?? 0}</td>
+      <td class="num"><span class="rating-badge ${ratingClass(Number(p.rating || 0))}">${p.rating != null ? Number(p.rating).toFixed(2) : '0.00'}</span></td>
     </tr>
   `).join('');
 }
@@ -1527,132 +2798,63 @@ async function loadWeapons() {
   try {
     const data = await apiFetch('/api/leaderboard/weapons?min_kills=1');
     renderWeapons(data);
-  } catch {
-    $('weaponTableBody').innerHTML = `<tr><td colspan="6" style="text-align:center;padding:40px;color:var(--txt3)">No weapon data yet — upload a demo with weapon tracking</td></tr>`;
+  } catch (e) {
+    console.error(e);
+    const tbody = $('weaponTableBody');
+    if (tbody) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="7" style="text-align:center;padding:40px;color:var(--txt3)">
+            No weapon data yet — upload a demo with weapon tracking
+          </td>
+        </tr>
+      `;
+    }
   }
 }
 
 function renderWeapons(data) {
   const tbody = $('weaponTableBody');
+  if (!tbody) return;
+
   if (!data.length) {
-    tbody.innerHTML = `<tr><td colspan="6"><div class="empty-state"><div class="empty-state-icon">🔫</div><div class="empty-state-title">No weapon data</div><div class="empty-state-sub">Weapon stats will appear after uploading demos</div></div></td></tr>`;
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="7">
+          <div class="empty-state">
+            <div class="empty-state-icon">🔫</div>
+            <div class="empty-state-title">No weapon data</div>
+            <div class="empty-state-sub">Weapon stats will appear after uploading demos</div>
+          </div>
+        </td>
+      </tr>
+    `;
     return;
   }
-  tbody.innerHTML = data.map((w,i) => `
-    <tr style="animation:fadeSlideIn .2s ${i*.03}s both">
-      <td><span class="rank-num ${i===0?'top1':i===1?'top2':i===2?'top3':''}">${i+1}</span></td>
+
+  tbody.innerHTML = data.map((w, i) => `
+    <tr style="animation:fadeSlideIn .2s ${i * .03}s both">
+      <td><span class="rank-num ${i === 0 ? 'top1' : i === 1 ? 'top2' : i === 2 ? 'top3' : ''}">${i + 1}</span></td>
       <td>
-  <span class="weapon-icon"
-        onclick="loadWeaponDetail('${w.weapon}')"
-        style="cursor:pointer">
-    ${w.weapon}
-  </span>
-</td>
-      <td class="num"><span class="big-num">${w.total_kills.toLocaleString()}</span></td>
-      <td class="num"><span class="pct-val">${w.hs_pct?.toFixed(1)}%</span></td>
-      <td class="num">${w.avg_damage_per_kill?.toFixed(0)}</td>
-      <td class="num">${w.usage_count}</td>
+        <span class="weapon-icon" onclick="loadWeaponDetail('${w.weapon}')" style="cursor:pointer">
+          ${w.weapon}
+        </span>
+      </td>
+      <td>
+        <span class="weapon-mvp" onclick="loadPlayer('${w.top_player_steamid || ''}')" style="cursor:pointer;color:var(--cyan);font-size:13px;font-weight:600;">
+          ${w.top_player || '—'}
+        </span>
+      </td>
+      <td class="num"><span class="big-num">${Number(w.total_kills || 0).toLocaleString()}</span></td>
+      <td class="num"><span class="pct-val">${Number(w.hs_pct || 0).toFixed(1)}%</span></td>
+      <td class="num">${w.avg_damage_per_kill != null ? Number(w.avg_damage_per_kill).toFixed(0) : '0'}</td>
+      <td class="num">${w.usage_count ?? 0}</td>
     </tr>
   `).join('');
 }
 
 /* ══════════════════════════════════════════════════════
-   UPLOAD
-══════════════════════════════════════════════════════ */
-const fileInput = $('fileInput');
-const uploadBtn = $('uploadBtn');
-const uploadDrop = $('uploadDrop');
-
-fileInput.addEventListener('change', () => {
-  const f = fileInput.files[0];
-  if (f) {
-    uploadDrop.querySelector('.upload-drop-text').textContent = f.name;
-    uploadDrop.querySelector('.upload-drop-sub').textContent  = (f.size/1024/1024).toFixed(1)+' MB';
-    uploadBtn.disabled = false;
-  }
-});
-
-// Drag and drop
-uploadDrop.addEventListener('dragover', e => { e.preventDefault(); uploadDrop.classList.add('drag'); });
-uploadDrop.addEventListener('dragleave', () => uploadDrop.classList.remove('drag'));
-uploadDrop.addEventListener('drop', e => {
-  e.preventDefault(); uploadDrop.classList.remove('drag');
-  const f = e.dataTransfer.files[0];
-  if (f?.name.endsWith('.dem')) {
-    const dt = new DataTransfer();
-    dt.items.add(f);
-    fileInput.files = dt.files;
-    fileInput.dispatchEvent(new Event('change'));
-  } else {
-    showToast('Only .dem files supported', 'error');
-  }
-});
-
-uploadBtn.addEventListener('click', async () => {
-  const f = fileInput.files[0];
-  if (!f) return;
-
-  uploadBtn.disabled = true;
-  const prog = $('uploadProgress');
-  const fill = $('progressFill');
-  const label = $('progressLabel');
-  prog.style.display = 'block';
-
-  // Animate progress
-  let pct = 0;
-  const tick = setInterval(() => {
-    pct = Math.min(pct + (Math.random() * 8), 88);
-    fill.style.width = pct + '%';
-  }, 200);
-
-  try {
-    label.textContent = 'Uploading demo...';
-    const fd = new FormData();
-    fd.append('demo', f);
-
-    const res = await fetch(`${API}/api/upload`, {
-      method: 'POST',
-      headers: { 'X-API-Key': KEY },
-      body: fd,
-    });
-
-    clearInterval(tick);
-    fill.style.width = '100%';
-
-    if (!res.ok) {
-      const err = await res.json();
-      throw new Error(err.detail || 'Upload failed');
-    }
-
-    const data = await res.json();
-    label.textContent = `✓ Match saved — ${data.map} ${data.score}`;
-    showToast(`✓ Demo parsed: ${data.map} ${data.score} (${data.players} players)`, 'success');
-
-    // Reset
-    setTimeout(() => {
-      prog.style.display = 'none';
-      fill.style.width = '0';
-      uploadBtn.disabled = false;
-      fileInput.value = '';
-      uploadDrop.querySelector('.upload-drop-text').textContent = 'Drop .dem file here';
-      uploadDrop.querySelector('.upload-drop-sub').textContent  = 'or click to browse';
-    }, 2500);
-
-    // Refresh data
-    loadOverview();
-    loadLeaderboard();
-
-  } catch (err) {
-    clearInterval(tick);
-    fill.style.width = '0';
-    prog.style.display = 'none';
-    uploadBtn.disabled = false;
-    showToast(err.message, 'error');
-  }
-});
-
-/* ══════════════════════════════════════════════════════
-   INIT
+   WEAPON DETAIL
 ══════════════════════════════════════════════════════ */
 async function loadWeaponDetail(weaponName) {
   try {
@@ -1660,39 +2862,363 @@ async function loadWeaponDetail(weaponName) {
     renderWeaponDetail(weaponName, data);
     showPage('weapon-detail');
   } catch (e) {
+    console.error(e);
     showToast('Failed to load weapon detail', 'error');
   }
 }
 
 function renderWeaponDetail(weaponName, data) {
-  $('weaponDetailTitle').textContent = `Top Players — ${weaponName.toUpperCase()}`;
+  $('weaponDetailTitle').textContent = `Top Players — ${String(weaponName || '').toUpperCase()}`;
 
   const tbody = $('weaponDetailBody');
+  if (!tbody) return;
 
   if (!data.length) {
-    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:40px;color:var(--txt3)">No data</td></tr>`;
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="6" style="text-align:center;padding:40px;color:var(--txt3)">
+          No data
+        </td>
+      </tr>
+    `;
     return;
   }
 
-  tbody.innerHTML = data.map((p,i) => `
-    <tr onclick="loadPlayer('${p.steam_id}')" style="animation:fadeSlideIn .2s ${i*.03}s both">
-      <td>${i+1}</td>
+  tbody.innerHTML = data.map((p, i) => `
+    <tr onclick="loadPlayer('${p.steam_id}')" style="animation:fadeSlideIn .2s ${i * .03}s both">
+      <td>${i + 1}</td>
       <td>
         <div class="player-cell">
           <div class="player-avatar">${initials(p.nickname)}</div>
           <div>
-            <div class="player-name">${p.nickname}</div>
+            <div class="player-name">${p.nickname || 'Unknown'}</div>
           </div>
         </div>
       </td>
-      <td class="num">${p.kills}</td>
-      <td class="num">${p.hs_percent?.toFixed(1)}%</td>
-      <td class="num">${p.avg_dmg_per_kill?.toFixed(0)}</td>
-      <td class="num">${p.matches_used}</td>
+      <td class="num">${p.kills ?? 0}</td>
+      <td class="num">${p.hs_percent != null ? Number(p.hs_percent).toFixed(1) : '0.0'}%</td>
+      <td class="num">${p.avg_dmg_per_kill != null ? Number(p.avg_dmg_per_kill).toFixed(0) : '0'}</td>
+      <td class="num">${p.matches_used ?? 0}</td>
     </tr>
   `).join('');
 }
+
+/* ══════════════════════════════════════════════════════
+   TOURNAMENT STATS
+══════════════════════════════════════════════════════ */
+async function loadTournamentStats() {
+  try {
+    const data = await apiFetch('/api/stats/tournament');
+    $('stat-total-matches').textContent = data.total_matches || '0';
+    $('stat-total-players').textContent = data.total_players || '0';
+    $('stat-total-kills').textContent = data.total_kills || '0';
+  } catch (error) {
+    console.error('Failed to load tournament stats:', error);
+    $('stat-total-matches').textContent = '—';
+    $('stat-total-players').textContent = '—';
+    $('stat-total-kills').textContent = '—';
+  }
+}
+
+/* ══════════════════════════════════════════════════════
+   ENHANCED PLAYER PROFILE
+══════════════════════════════════════════════════════ */
+let currentPlayerData = null;
+let currentRatingPeriod = 'all';
+let ratingChart = null;
+let mapChart = null;
+
+function profile$(id) {
+  return document.querySelector(`#page-profile #${id}`) || document.getElementById(id);
+}
+
+function openProfilePage() {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  const page = document.getElementById('page-profile');
+  if (page) page.classList.add('active');
+
+  document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+  if ($('nav-home')) $('nav-home').classList.add('active');
+
+  currentPage = 'profile';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function profileRatingClass(r) {
+  r = Number(r || 0);
+  if (r >= 1.5) return 'rating-god';
+  if (r >= 1.2) return 'rating-pro';
+  if (r >= 1.0) return 'rating-good';
+  if (r >= 0.8) return 'rating-avg';
+  return 'rating-low';
+}
+
+async function loadPlayer(steamId) {
+  try {
+    const data = await apiFetch(`/api/players/${steamId}`);
+    currentPlayerData = data;
+
+    renderEnhancedProfile(data);
+
+    const hist = await apiFetch(`/api/players/${steamId}/matches?limit=50`);
+    renderProfileMatchHistory(hist);
+
+    openProfilePage();
+  } catch (e) {
+    console.error(e);
+    showToast('Failed to load player profile', 'error');
+  }
+}
+
+function renderEnhancedProfile(data) {
+  profile$('profName').textContent = data.nickname || 'Unknown';
+  profile$('profSteam').textContent = `SteamID: ${data.steam_id || '—'}`;
+  profile$('profAvatar').textContent = initials(data.nickname || 'Unknown');
+
+  const overview = data.overview || {};
+
+  const ratingBadge = profile$('profRatingBadge');
+  ratingBadge.textContent = Number(overview.avg_rating || 0).toFixed(2);
+  ratingBadge.className = `rating-badge-value ${profileRatingClass(overview.avg_rating)}`;
+
+  profile$('profKD').textContent = Number(overview.kd_ratio || 0).toFixed(2);
+  profile$('profADR').textContent = Math.round(Number(overview.avg_adr || 0));
+  profile$('profHS').textContent = `${Math.round(Number(overview.avg_hs || 0))}%`;
+  profile$('profMatches').textContent = overview.total_matches || 0;
+  profile$('profKills').textContent = overview.total_kills || 0;
+  profile$('profWinRate').textContent = `${Math.round(Number(overview.win_rate || 0))}%`;
+
+  profile$('profEntrySuccess').textContent = `${Math.round(Number(overview.entry_success || 0))}%`;
+  profile$('profMVP').textContent = data.mvp_count || 0;
+  profile$('profAvgKAST').textContent = `${Math.round(Number(overview.avg_kast || 0))}%`;
+  profile$('profFavWeapon').textContent = String(data.favorite_weapon || 'ak47').toUpperCase();
+
+  if (data.best_map) {
+    profile$('profBestMap').textContent = data.best_map.name || '—';
+    profile$('profBestMapRating').textContent = `Rating: ${Number(data.best_map.rating || 0).toFixed(2)}`;
+  } else {
+    profile$('profBestMap').textContent = '—';
+    profile$('profBestMapRating').textContent = 'Rating: —';
+  }
+
+  if (data.worst_map) {
+    profile$('profWorstMap').textContent = data.worst_map.name || '—';
+    profile$('profWorstMapRating').textContent = `Rating: ${Number(data.worst_map.rating || 0).toFixed(2)}`;
+  } else {
+    profile$('profWorstMap').textContent = '—';
+    profile$('profWorstMapRating').textContent = 'Rating: —';
+  }
+
+  renderRatingProgressChart(data.rating_progression || []);
+  renderMapRadarChart(data.map_performance || []);
+}
+
+function renderRatingProgressChart(progression) {
+  const canvas = profile$('ratingProgressChart');
+  if (!canvas || typeof Chart === 'undefined') return;
+
+  const ctx = canvas.getContext('2d');
+  let filteredData = progression;
+
+  if (currentRatingPeriod !== 'all') {
+    filteredData = progression.slice(-Number(currentRatingPeriod));
+  }
+
+  if (ratingChart) {
+    ratingChart.destroy();
+  }
+
+  if (!filteredData.length) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = '#7a8fa6';
+    ctx.font = '14px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText('No rating progression yet', canvas.width / 2, canvas.height / 2);
+    return;
+  }
+
+  const labels = filteredData.map(d => {
+    if (!d.date) return '—';
+    const date = new Date(d.date);
+    return `${date.getMonth() + 1}/${date.getDate()}`;
+  });
+
+  const ratings = filteredData.map(d => Number(d.rating || 0));
+  const colors = filteredData.map(d => d.result === 'W' ? '#00e676' : '#ff3d3d');
+
+  ratingChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [{
+        label: 'Rating',
+        data: ratings,
+        borderColor: '#00d4ff',
+        backgroundColor: 'rgba(0, 212, 255, 0.1)',
+        borderWidth: 2,
+        pointBackgroundColor: colors,
+        pointBorderColor: colors,
+        pointRadius: 4,
+        tension: 0.3,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            title: (items) => {
+              const idx = items[0].dataIndex;
+              return filteredData[idx]?.map || '—';
+            },
+            label: (item) => {
+              const idx = item.dataIndex;
+              const result = filteredData[idx]?.result || '-';
+              return `Rating: ${item.parsed.y} (${result})`;
+            }
+          }
+        }
+      },
+      scales: {
+        y: {
+          beginAtZero: false,
+          grid: { color: '#1e2d40' },
+          ticks: { color: '#7a8fa6' }
+        },
+        x: {
+          grid: { color: '#1e2d40' },
+          ticks: { color: '#7a8fa6', maxRotation: 0 }
+        }
+      }
+    }
+  });
+}
+
+function renderMapRadarChart(mapPerf) {
+  const canvas = profile$('mapRadarChart');
+  if (!canvas || typeof Chart === 'undefined') return;
+
+  const ctx = canvas.getContext('2d');
+
+  if (mapChart) {
+    mapChart.destroy();
+  }
+
+  if (!mapPerf || !mapPerf.length) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = '#7a8fa6';
+    ctx.font = '14px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText('No map data yet', canvas.width / 2, canvas.height / 2);
+    return;
+  }
+
+  const labels = mapPerf.map(m => m.map || 'Unknown');
+  const ratings = mapPerf.map(m => Number(m.avg_rating || 0));
+
+  mapChart = new Chart(ctx, {
+    type: 'radar',
+    data: {
+      labels,
+      datasets: [{
+        label: 'Rating',
+        data: ratings,
+        backgroundColor: 'rgba(255, 106, 0, 0.2)',
+        borderColor: '#ff6a00',
+        borderWidth: 2,
+        pointBackgroundColor: '#ff6a00',
+        pointBorderColor: '#fff',
+        pointHoverBackgroundColor: '#fff',
+        pointHoverBorderColor: '#ff6a00',
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false }
+      },
+      scales: {
+        r: {
+          beginAtZero: true,
+          grid: { color: '#1e2d40' },
+          angleLines: { color: '#1e2d40' },
+          pointLabels: { color: '#c8d6e5', font: { size: 12 } },
+          ticks: { color: '#7a8fa6', backdropColor: 'transparent' }
+        }
+      }
+    }
+  });
+}
+
+function setRatingPeriod(period) {
+  currentRatingPeriod = period;
+
+  const buttons = document.querySelectorAll('#page-profile .period-btn');
+  buttons.forEach(btn => btn.classList.remove('active'));
+
+  if (buttons.length >= 3) {
+    if (period === 'all') buttons[0].classList.add('active');
+    if (period === 20) buttons[1].classList.add('active');
+    if (period === 10) buttons[2].classList.add('active');
+  }
+
+  if (currentPlayerData && currentPlayerData.rating_progression) {
+    renderRatingProgressChart(currentPlayerData.rating_progression);
+  }
+}
+
+function renderProfileMatchHistory(hist) {
+  const tbody = document.querySelector('#page-profile #profMatchHistory') || document.getElementById('profMatchHistory');
+  if (!tbody) return;
+
+  if (!hist || !hist.length) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="11" style="text-align:center;padding:40px;color:var(--txt3)">
+          No match history
+        </td>
+      </tr>
+    `;
+    return;
+  }
+
+  tbody.innerHTML = hist.map((m, i) => `
+    <tr onclick="loadMatchDetail(${m.match_id})" style="animation:fadeSlideIn .2s ${i * .03}s both">
+      <td style="font-family:var(--font-mn);font-size:11px;color:var(--txt3)">
+        ${m.played_at ? formatDate(m.played_at) : '—'}
+      </td>
+      <td style="font-family:var(--font-hd);font-weight:700">
+        ${(m.map || 'unknown').replace('de_','').toUpperCase()}
+      </td>
+      <td>
+        <span class="${m.team?.includes('CT') ? 'tag-ct' : 'tag-t'}">
+          ${m.team?.includes('CT') ? 'CT' : 'T'}
+        </span>
+      </td>
+      <td class="num">${m.K ?? 0}</td>
+      <td class="num">${m.D ?? 0}</td>
+      <td class="num">${m.A ?? 0}</td>
+      <td class="num">${Number(m.kast_pct || 0).toFixed(1)}%</td>
+      <td class="num"><span class="swing-val ${swingClass(m.swing || 0)}">${Number(m.swing || 0).toFixed(2)}%</span></td>
+      <td class="num">${m.ADR != null ? Number(m.ADR).toFixed(0) : '0'}</td>
+      <td class="num">${m.HS != null ? Number(m.HS).toFixed(0) : '0'}%</td>
+      <td class="num">
+        <span class="rating-badge ${ratingClass(Number(m.rating || 0))}">
+          ${m.rating != null ? Number(m.rating).toFixed(2) : '0.00'}
+        </span>
+      </td>
+    </tr>
+  `).join('');
+}
+
+/* ══════════════════════════════════════════════════════
+   INIT
+══════════════════════════════════════════════════════ */
 checkBackend();
+loadTournamentStats();
 </script>
 </body>
 </html>

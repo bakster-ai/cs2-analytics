@@ -3,19 +3,21 @@ from typing import Optional, Dict
 from sqlalchemy.orm import Session
 from models.models import Match, Player, MatchPlayer, WeaponStat
 from models.round_event import RoundEvent
-from services.impact_rating_v3 import compute_impact_rating
+from services.impact_rating_v3 import (
+    compute_impact_rating_v3 as compute_impact_rating,
+    compute_impact_breakdown_v3,  # ← НОВОЕ: для KAST и SWING
+)
 import re
 
 
+# ============================================================
+# Helpers
+# ============================================================
+
 def _parse_date_from_filename(filename: str) -> datetime:
-    """
-    Пытается извлечь дату из имени демо-файла.
-    Формат Valve: 21712473_20312634_2602070523-de_dust2.dem
-    Последняя группа цифр: YYMMDDHHMM → 2602070523 = 2026-02-07 05:23
-    """
     match = re.search(r"(\d{10})-", filename)
     if match:
-        s = match.group(1)  # "2602070523"
+        s = match.group(1)
         try:
             return datetime.strptime(s, "%y%m%d%H%M")
         except ValueError:
@@ -24,37 +26,30 @@ def _parse_date_from_filename(filename: str) -> datetime:
 
 
 def upsert_player(db: Session, steam_id: str, nickname: str) -> Player:
-    """Создаёт или обновляет игрока по steam_id."""
     player = db.query(Player).filter(Player.steam_id == steam_id).first()
     if player is None:
         player = Player(steam_id=steam_id, nickname=nickname)
         db.add(player)
         db.flush()
     else:
-        # Обновляем никнейм (игрок мог сменить)
         player.nickname = nickname
     return player
 
+
+# ============================================================
+# MAIN SAVE FUNCTION
+# ============================================================
 
 def save_match(
     db: Session,
     raw: dict,
     demo_filename: Optional[str] = None,
 ) -> Match:
-    """
-    Принимает dict от CS2DemoAnalyzer.parse() и сохраняет в БД.
 
-    raw expected keys:
-        map, total_rounds, ct_score, t_score,
-        team1_score, team2_score,
-        players: [{nickname, steamid, team, K, D, A, ADR, HS,
-                   FK, FD, rating, weapon_kills (optional)}]
-        round_events: [{...}]  <-- новый блок событий по раундам
-    """
     played_at = _parse_date_from_filename(demo_filename or "")
 
-    # --- Создаём матч ---
     total_kills = sum(p.get("K", 0) for p in raw.get("players", []))
+
     match = Match(
         demo_filename=demo_filename,
         played_at=played_at,
@@ -66,14 +61,19 @@ def save_match(
         team2_score=raw.get("team2_score", raw.get("t_score", 0)),
         total_kills=total_kills,
     )
-    db.add(match)
-    db.flush()  # получаем match.id
 
-    # --- Игроки ---
+    db.add(match)
+    db.flush()
+
     steam_to_player: Dict[str, Player] = {}
     steam_to_mp: Dict[str, MatchPlayer] = {}
 
+    # ============================================================
+    # Players + MatchPlayer + WeaponStats
+    # ============================================================
+
     for p_data in raw.get("players", []):
+
         steam_id = p_data.get("steamid", "")
         nickname = p_data.get("nickname", "unknown")
 
@@ -85,10 +85,12 @@ def save_match(
 
         kills = int(p_data.get("K", 0) or 0)
         deaths = int(p_data.get("D", 0) or 0)
+
         hs_pct = float(p_data.get("HS", 0.0) or 0.0)
         headshots = round(kills * hs_pct / 100) if kills else 0
 
         rounds = int(raw.get("total_rounds", 1) or 1)
+
         adr = float(p_data.get("ADR", 0.0) or 0.0)
         damage = round(adr * rounds)
 
@@ -99,37 +101,41 @@ def save_match(
             kills=kills,
             deaths=deaths,
             assists=int(p_data.get("A", 0) or 0),
-            headshots=int(headshots),
-            damage=int(damage),
+            headshots=headshots,
+            damage=damage,
             adr=adr,
             hs_pct=hs_pct,
             fk=int(p_data.get("FK", 0) or 0),
             fd=int(p_data.get("FD", 0) or 0),
             rating=float(p_data.get("rating", 0.0) or 0.0),
-            impact_rating=1.0,  # 🔥 HLTV 3.0 rating (обновим ниже)
+            rounds_played=rounds,  # ← НОВОЕ
         )
+
         db.add(mp)
         steam_to_mp[steam_id] = mp
 
-        # --- Weapon stats (если парсер вернул) ---
-        for w_data in p_data.get("weapon_kills", []):
+        # Weapon stats
+        for w in p_data.get("weapon_kills", []):
             ws = WeaponStat(
                 match_id=match.id,
                 player_id=player.id,
-                weapon=w_data.get("weapon", "unknown"),
-                kills=int(w_data.get("kills", 0) or 0),
-                headshots=int(w_data.get("headshots", 0) or 0),
-                damage=int(w_data.get("damage", 0) or 0),
+                weapon=w.get("weapon", "unknown"),
+                kills=int(w.get("kills", 0) or 0),
+                headshots=int(w.get("headshots", 0) or 0),
+                damage=int(w.get("damage", 0) or 0),
             )
             db.add(ws)
 
-    db.flush()  # чтобы mp.id/player.id гарантированно были
+    db.flush()
 
     # ============================================================
-    # 🔥 Round Events: сохраняем события раундов (для impact рейтинга)
+    # ROUND EVENTS
     # ============================================================
+
     bulk_events = []
-    for e in (raw.get("round_events") or []):
+
+    for e in raw.get("round_events", []):
+
         attacker_steam = e.get("attacker_id")
         victim_steam = e.get("victim_id")
 
@@ -141,7 +147,7 @@ def save_match(
                 match_id=match.id,
                 map_name=str(raw.get("map", "unknown") or "unknown"),
                 round_number=int(e.get("round_number") or 0),
-                tick=int(e.get("tick") or 0) if e.get("tick") is not None else None,
+                tick=int(e.get("tick")) if e.get("tick") is not None else None,
                 event_type=str(e.get("event_type") or ""),
                 attacker_id=attacker.id if attacker else None,
                 victim_id=victim.id if victim else None,
@@ -154,6 +160,10 @@ def save_match(
                 eco_ct=bool(e.get("eco_ct") or False),
                 score_t=int(e.get("score_t") or 0),
                 score_ct=int(e.get("score_ct") or 0),
+
+                attacker_side=e.get("attacker_side"),
+                victim_side=e.get("victim_side"),
+                time_in_round=e.get("time_in_round"),
             )
         )
 
@@ -162,22 +172,36 @@ def save_match(
         db.flush()
 
     # ============================================================
-    # 🔥 HLTV 3.0 Impact Rating: считаем и пишем в MatchPlayer
+    # IMPACT RATING + KAST + SWING (✅ ИСПРАВЛЕНО!)
     # ============================================================
-    if bulk_events:
-        player_id_to_steamid = {pl.id: sid for sid, pl in steam_to_player.items()}
 
-        ratings = compute_impact_rating(
-            db_events=bulk_events,            # можно считать по объектам, которые только что сохранили
+    if bulk_events:
+
+        player_id_to_steamid = {
+            pl.id: sid for sid, pl in steam_to_player.items()
+        }
+
+        # ✅ FIX: Используем breakdown вместо просто рейтинга
+        breakdown = compute_impact_breakdown_v3(
+            db_events=bulk_events,
             total_rounds=match.total_rounds,
             player_id_to_steamid=player_id_to_steamid,
         )
 
-        for steam_id, r in ratings.items():
+        for player_id, stats in breakdown.items():
+
+            steam_id = player_id_to_steamid.get(player_id)
+            if not steam_id:
+                continue
+
             mp = steam_to_mp.get(str(steam_id))
             if mp:
-                mp.impact_rating = float(r)
+                # ✅ НОВОЕ: Сохраняем все HLTV 3.0 метрики
+                mp.impact_rating = float(stats.get("rating", 1.0))
+                mp.kast_pct      = float(stats.get("kast_pct", 0.0))
+                mp.swing         = float(stats.get("swing_per_round", 0.0))
 
     db.commit()
     db.refresh(match)
+
     return match

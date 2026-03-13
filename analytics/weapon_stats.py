@@ -24,8 +24,30 @@ def get_weapon_leaderboard(
         .all()
     )
 
-    return [
-        {
+    result = []
+
+    for r in rows:
+        # ✅ НОВОЕ: Находим лучшего игрока для каждого оружия
+        top_player_query = (
+            db.query(
+                Player.nickname,
+                Player.steam_id,
+                func.sum(WeaponStat.kills).label("player_kills")
+            )
+            .join(Player, Player.id == WeaponStat.player_id)
+            .filter(WeaponStat.weapon == r.weapon)
+            .group_by(Player.id)
+            .order_by(func.sum(WeaponStat.kills).desc())
+            .first()
+        )
+
+        top_player = None
+        top_player_steamid = None
+        if top_player_query:
+            top_player = top_player_query.nickname
+            top_player_steamid = top_player_query.steam_id
+
+        result.append({
             "weapon":      r.weapon,
             "total_kills": r.total_kills,
             "hs_pct":      round(
@@ -35,9 +57,13 @@ def get_weapon_leaderboard(
                 float(r.total_damage or 0) / max(float(r.total_kills or 1), 1), 1
             ),
             "usage_count": r.usage_count,
-        }
-        for r in rows
-    ]
+            
+            # ✅ НОВОЕ: MVP колонка
+            "top_player": top_player,
+            "top_player_steamid": top_player_steamid,
+        })
+
+    return result
 
 
 def get_player_weapon_stats(
