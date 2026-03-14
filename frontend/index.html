@@ -1565,6 +1565,40 @@ td .swing-negative {
   }
 }
 
+/* ══════════════════════════════════════════════════════════════
+   STEAM AVATARS
+══════════════════════════════════════════════════════════════ */
+.player-avatar {
+  position: relative;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: linear-gradient(135deg, var(--orange), var(--orange2));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.player-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.avatar-fallback,
+.avatar-initials {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-hd);
+  font-weight: 900;
+  color: #fff;
+  text-transform: uppercase;
+}
+
 </style>
 </head>
 <body>
@@ -2557,7 +2591,7 @@ function renderLeaderboard(data) {
 
       <td>
         <div class="player-cell">
-          <div class="player-avatar">${initials(p.nickname)}</div>
+          ${renderAvatar(p, 40)}
           <div>
             <div class="player-name">${p.nickname}</div>
             <div class="player-steam">${p.steam_id?.slice(-8)||''}</div>
@@ -2962,7 +2996,10 @@ async function loadPlayer(steamId) {
 function renderEnhancedProfile(data) {
   profile$('profName').textContent = data.nickname || 'Unknown';
   profile$('profSteam').textContent = `SteamID: ${data.steam_id || '—'}`;
-  profile$('profAvatar').textContent = initials(data.nickname || 'Unknown');
+  
+  // Render avatar
+  const avatarEl = profile$('profAvatar');
+  avatarEl.innerHTML = renderAvatar(data, 80).replace('player-avatar', 'player-avatar profile-avatar-img');
 
   const overview = data.overview || {};
 
@@ -3201,6 +3238,46 @@ function renderProfileMatchHistory(hist) {
       </td>
     </tr>
   `).join('');
+}
+
+/* ══════════════════════════════════════════════════════
+   STEAM AVATARS
+══════════════════════════════════════════════════════ */
+function getInitials(nickname) {
+  if (!nickname) return 'NA';
+  const words = nickname.trim().split(/\s+/);
+  if (words.length >= 2) {
+    return (words[0][0] + words[1][0]).toUpperCase();
+  } else {
+    return nickname.substring(0, 2).toUpperCase();
+  }
+}
+
+function renderAvatar(player, size = 40) {
+  const avatar = player.avatar_url;
+  const initials = getInitials(player.nickname || 'NA');
+  const fontSize = Math.round(size * 0.4);
+  
+  if (avatar) {
+    return `
+      <div class="player-avatar" style="width:${size}px;height:${size}px;font-size:${fontSize}px">
+        <img src="${avatar}" 
+             alt="${player.nickname}" 
+             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="avatar-fallback" style="display:none">
+          ${initials}
+        </div>
+      </div>
+    `;
+  } else {
+    return `
+      <div class="player-avatar" style="width:${size}px;height:${size}px">
+        <div class="avatar-initials" style="font-size:${fontSize}px">
+          ${initials}
+        </div>
+      </div>
+    `;
+  }
 }
 
 /* ══════════════════════════════════════════════════════
