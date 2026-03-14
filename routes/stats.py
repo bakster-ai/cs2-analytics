@@ -17,8 +17,13 @@ def get_tournament_stats(db: Session = Depends(get_db)):
     # Количество матчей
     total_matches = db.query(func.count(Match.id)).scalar() or 0
     
-    # Количество уникальных игроков
-    total_players = db.query(func.count(func.distinct(Player.id))).scalar() or 0
+    # Количество уникальных игроков из СУЩЕСТВУЮЩИХ матчей
+    # (не считаем игроков из удалённых матчей)
+    total_players = db.query(
+        func.count(func.distinct(MatchPlayer.player_id))
+    ).join(
+        Match, Match.id == MatchPlayer.match_id
+    ).scalar() or 0
     
     # Общее количество убийств
     total_kills = db.query(func.sum(MatchPlayer.kills)).scalar() or 0
