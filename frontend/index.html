@@ -2439,6 +2439,7 @@ const pageMap = {
   'matches':      'page-matches',
   'match-detail': 'page-match-detail',
   'player':       'page-player',
+  'profile':      'page-profile',
   'weapons':      'page-weapons',
   'weapon-detail': 'page-weapon-detail',
   'faq':          'page-faq',
@@ -2932,18 +2933,6 @@ function profile$(id) {
   return document.querySelector(`#page-profile #${id}`) || document.getElementById(id);
 }
 
-function openProfilePage() {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  const page = document.getElementById('page-profile');
-  if (page) page.classList.add('active');
-
-  document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-  if ($('nav-home')) $('nav-home').classList.add('active');
-
-  currentPage = 'profile';
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
 function profileRatingClass(r) {
   r = Number(r || 0);
   if (r >= 1.5) return 'rating-god';
@@ -2963,7 +2952,7 @@ async function loadPlayer(steamId) {
     const hist = await apiFetch(`/api/players/${steamId}/matches?limit=50`);
     renderProfileMatchHistory(hist);
 
-    openProfilePage();
+    showPage('profile');
   } catch (e) {
     console.error(e);
     showToast('Failed to load player profile', 'error');
