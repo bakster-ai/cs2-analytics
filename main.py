@@ -8,11 +8,12 @@ from routes.players import router as players_router
 from routes.weapons import router as weapons_router
 from routes.admin import router as admin_router
 from routes.stats import router as stats_router
+from routes.avatars import router as avatars_router  # ← ДОБАВЛЕНО
 
 app = FastAPI(
     title="CS2 Analytics API",
     version="3.0.0",
-    description="Impact Rating v3 + KAST + SWING"
+    description="Impact Rating v3 + KAST + SWING + Steam Avatars"
 )
 
 # CORS
@@ -32,6 +33,7 @@ app.include_router(players_router)
 app.include_router(weapons_router)
 app.include_router(admin_router)
 app.include_router(stats_router)
+app.include_router(avatars_router)  # ← ДОБАВЛЕНО
 
 
 # ✅ Health check endpoint (доступен по /api/health)

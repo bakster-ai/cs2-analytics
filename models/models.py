@@ -12,6 +12,7 @@ class Player(Base, TimestampMixin):
     id       = Column(Integer, primary_key=True)
     steam_id = Column(String(32), unique=True, nullable=False, index=True)
     nickname = Column(String(64), nullable=False)
+    avatar_url = Column(String(255), nullable=True)  # ← ДОБАВЛЕНО ДЛЯ АВАТАРОК
 
     match_players = relationship("MatchPlayer", back_populates="player", cascade="all, delete-orphan")
     weapon_stats  = relationship("WeaponStat",  back_populates="player", cascade="all, delete-orphan")

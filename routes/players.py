@@ -46,6 +46,7 @@ def list_players(
             "id": p.id,
             "steam_id": p.steam_id,
             "nickname": p.nickname,
+            "avatar_url": p.avatar_url,  # ← ДОБАВЛЕНО
             "matches": int(matches) if matches else 0,
             "rating": round(float(rating), 2) if rating else None,
             "kast": round(float(kast), 1) if kast else None,
@@ -85,6 +86,7 @@ def get_player(player_key: str, db: Session = Depends(get_db)):
         "id": player.id,
         "steam_id": player.steam_id,
         "nickname": player.nickname,
+        "avatar_url": player.avatar_url,  # ← ДОБАВЛЕНО
 
         "overview": overview,
         "rating_progression": rating_progress,
