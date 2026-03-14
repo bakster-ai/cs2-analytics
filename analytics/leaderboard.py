@@ -27,6 +27,7 @@ def get_leaderboard(
             Player.id,
             Player.steam_id,
             Player.nickname,
+            Player.avatar_url,
 
             func.count(MatchPlayer.id).label("matches"),
 
@@ -81,6 +82,7 @@ def get_leaderboard(
             "player_id": r.id,
             "steam_id": r.steam_id,
             "nickname": r.nickname,
+            "avatar_url": r.avatar_url,
 
             "matches": r.matches,
 
