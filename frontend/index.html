@@ -821,10 +821,28 @@ td.num {
 .weapon-top-player-row:hover { opacity: .8; }
 .weapon-top-player-rank-sm {
   font-family: var(--font-hd);
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 800;
   color: var(--txt3);
-  width: 16px;
+  width: 20px;
+  flex-shrink: 0;
+}
+.weapon-top-player-rank-sm.p1 { color: var(--yellow); }
+.weapon-top-player-rank-sm.p2 { color: var(--txt2); }
+.weapon-top-player-rank-sm.p3 { color: #cd7f32; }
+.weapon-top-player-name-sm {
+  font-family: var(--font-hd);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--cyan);
+  flex: 1;
+}
+.weapon-top-player-kills-sm {
+  font-family: var(--font-hd);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--txt2);
+}px;
   flex-shrink: 0;
 }
 .weapon-top-player-rank-sm.p1 { color: var(--yellow); }
@@ -3063,26 +3081,34 @@ function renderMatchDetail(m) {
 /* ══════════════════════════════════════════════════════
    WEAPONS
 ══════════════════════════════════════════════════════ */
+const WEAPON_IMG_BASE = 'https://raw.githubusercontent.com/SteamDatabase/GameTracking-CS2/master/game/csgo/pak01_dir/panorama/images/icons/equipment/';
 const WEAPON_IMAGES = {
-  'ak47':          'https://cdn.cs2info.net/images/weapons/weapon_ak47.png',
-  'awp':           'https://cdn.cs2info.net/images/weapons/weapon_awp.png',
-  'm4a1':          'https://cdn.cs2info.net/images/weapons/weapon_m4a1_silencer.png',
-  'm4a1_silencer': 'https://cdn.cs2info.net/images/weapons/weapon_m4a1_silencer.png',
-  'usp_silencer':  'https://cdn.cs2info.net/images/weapons/weapon_usp_silencer.png',
-  'glock':         'https://cdn.cs2info.net/images/weapons/weapon_glock.png',
-  'deagle':        'https://cdn.cs2info.net/images/weapons/weapon_deagle.png',
-  'mp9':           'https://cdn.cs2info.net/images/weapons/weapon_mp9.png',
-  'mac10':         'https://cdn.cs2info.net/images/weapons/weapon_mac10.png',
-  'mp7':           'https://cdn.cs2info.net/images/weapons/weapon_mp7.png',
-  'fiveseven':     'https://cdn.cs2info.net/images/weapons/weapon_fiveseven.png',
-  'tec9':          'https://cdn.cs2info.net/images/weapons/weapon_tec9.png',
-  'galilar':       'https://cdn.cs2info.net/images/weapons/weapon_galilar.png',
-  'famas':         'https://cdn.cs2info.net/images/weapons/weapon_famas.png',
-  'sg556':         'https://cdn.cs2info.net/images/weapons/weapon_sg556.png',
-  'aug':           'https://cdn.cs2info.net/images/weapons/weapon_aug.png',
-  'hegrenade':     'https://cdn.cs2info.net/images/weapons/weapon_hegrenade.png',
-  'p250':          'https://cdn.cs2info.net/images/weapons/weapon_p250.png',
-  'cz75a':         'https://cdn.cs2info.net/images/weapons/weapon_cz75a.png',
+  'ak47':          WEAPON_IMG_BASE + 'ak47.svg',
+  'awp':           WEAPON_IMG_BASE + 'awp.svg',
+  'm4a1':          WEAPON_IMG_BASE + 'm4a1.svg',
+  'm4a1_silencer': WEAPON_IMG_BASE + 'm4a1_silencer.svg',
+  'usp_silencer':  WEAPON_IMG_BASE + 'usp_silencer.svg',
+  'glock':         WEAPON_IMG_BASE + 'glock.svg',
+  'deagle':        WEAPON_IMG_BASE + 'deagle.svg',
+  'mp9':           WEAPON_IMG_BASE + 'mp9.svg',
+  'mac10':         WEAPON_IMG_BASE + 'mac10.svg',
+  'mp7':           WEAPON_IMG_BASE + 'mp7.svg',
+  'fiveseven':     WEAPON_IMG_BASE + 'fiveseven.svg',
+  'tec9':          WEAPON_IMG_BASE + 'tec9.svg',
+  'galilar':       WEAPON_IMG_BASE + 'galilar.svg',
+  'famas':         WEAPON_IMG_BASE + 'famas.svg',
+  'sg556':         WEAPON_IMG_BASE + 'sg556.svg',
+  'aug':           WEAPON_IMG_BASE + 'aug.svg',
+  'hegrenade':     WEAPON_IMG_BASE + 'hegrenade.svg',
+  'p250':          WEAPON_IMG_BASE + 'p250.svg',
+  'cz75a':         WEAPON_IMG_BASE + 'cz75a.svg',
+  'mp5sd':         WEAPON_IMG_BASE + 'mp5sd.svg',
+  'bizon':         WEAPON_IMG_BASE + 'bizon.svg',
+  'mag7':          WEAPON_IMG_BASE + 'mag7.svg',
+  'nova':          WEAPON_IMG_BASE + 'nova.svg',
+  'xm1014':        WEAPON_IMG_BASE + 'xm1014.svg',
+  'negev':         WEAPON_IMG_BASE + 'negev.svg',
+  'm249':          WEAPON_IMG_BASE + 'm249.svg',
 };
 
 function getWeaponImage(weapon) {
@@ -3148,7 +3174,7 @@ function renderWeapons(data) {
         <div class="weapon-top-player-row" onclick="event.stopPropagation();loadPlayer('${p.steam_id||p.top_player_steamid||''}')">
           <span class="weapon-top-player-rank-sm ${rankColors[pi]}">#${pi+1}</span>
           <span class="weapon-top-player-name-sm">${p.nickname || p.top_player || '—'}</span>
-          ${p.kills ? `<span class="weapon-top-player-kills-sm">${p.kills}k</span>` : ''}
+          ${p.kills ? `<span class="weapon-top-player-kills-sm">${p.kills} kills</span>` : ''}
         </div>
       `).join('');
 
@@ -3176,7 +3202,7 @@ function renderWeapons(data) {
           </div>
           <div class="weapon-top-players">
             <div class="weapon-mvp-label">🏆 Top Players</div>
-            ${playersHtml || `<div class="weapon-top-player-row"><span class="weapon-top-player-name-sm" onclick="event.stopPropagation();loadPlayer('${w.top_player_steamid||''}')">${w.top_player || '—'}</span></div>`}
+        ${playersHtml || `<div class="weapon-top-player-row"><span class="weapon-top-player-name-sm" onclick="event.stopPropagation();loadPlayer('${w.top_player_steamid||''}')">${w.top_player || '—'}</span></div>`}
           </div>
         </div>
       `;
