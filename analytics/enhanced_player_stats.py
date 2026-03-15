@@ -44,6 +44,7 @@ def get_player_overview(db: Session, player_id: int) -> dict:
     ).filter(
         MatchPlayer.player_id == player_id,
         ((MatchPlayer.team == "CT") & (Match.team1_score > Match.team2_score)) |
+        ((MatchPlayer.team == "TERRORIST") & (Match.team2_score > Match.team1_score)) |
         ((MatchPlayer.team == "T") & (Match.team2_score > Match.team1_score))
     ).scalar() or 0
     
