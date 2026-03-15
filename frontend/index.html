@@ -2462,7 +2462,7 @@ td .swing-negative {
           <th>MVP Player</th>
           <th class="num">Total Kills</th>
           <th class="num">HS%</th>
-          <th class="num">Avg DMG/Kill</th>
+          <th class="num">Kills/Usage</th>
           <th class="num">Usage</th>
         </tr></thead>
         <tbody id="weaponTableBody"></tbody>
@@ -2499,7 +2499,6 @@ td .swing-negative {
             <th>Player</th>
             <th class="num">Kills</th>
             <th class="num">HS%</th>
-            <th class="num">Avg DMG/Kill</th>
             <th class="num">Matches Used</th>
           </tr>
         </thead>
@@ -3065,23 +3064,25 @@ function renderMatchDetail(m) {
    WEAPONS
 ══════════════════════════════════════════════════════ */
 const WEAPON_IMAGES = {
-  'ak47':         'https://wiki.teamfortress.com/w/images/thumb/0/0f/Backpack_AK-47.png/120px-Backpack_AK-47.png',
-  'awp':          'https://static.wikia.nocookie.net/cswikia/images/9/9c/Csgo-awp-ingame.png',
-  'm4a1':         'https://static.wikia.nocookie.net/cswikia/images/b/b3/Csgo-m4a1-s-ingame.png',
-  'm4a1_silencer':'https://static.wikia.nocookie.net/cswikia/images/b/b3/Csgo-m4a1-s-ingame.png',
-  'usp_silencer': 'https://static.wikia.nocookie.net/cswikia/images/e/e3/Csgo-usp-s-ingame.png',
-  'glock':        'https://static.wikia.nocookie.net/cswikia/images/7/7d/Csgo-glock-18-ingame.png',
-  'deagle':       'https://static.wikia.nocookie.net/cswikia/images/5/5e/Csgo-desert-eagle-ingame.png',
-  'mp9':          'https://static.wikia.nocookie.net/cswikia/images/9/96/Csgo-mp9-ingame.png',
-  'mac10':        'https://static.wikia.nocookie.net/cswikia/images/3/30/Csgo-mac-10-ingame.png',
-  'mp7':          'https://static.wikia.nocookie.net/cswikia/images/c/c5/Csgo-mp7-ingame.png',
-  'fiveseven':    'https://static.wikia.nocookie.net/cswikia/images/0/08/Csgo-five-seven-ingame.png',
-  'tec9':         'https://static.wikia.nocookie.net/cswikia/images/f/f8/Csgo-tec-9-ingame.png',
-  'galilar':      'https://static.wikia.nocookie.net/cswikia/images/4/47/Csgo-galil-ar-ingame.png',
-  'famas':        'https://static.wikia.nocookie.net/cswikia/images/9/99/Csgo-famas-ingame.png',
-  'sg556':        'https://static.wikia.nocookie.net/cswikia/images/6/6d/Csgo-sg-553-ingame.png',
-  'aug':          'https://static.wikia.nocookie.net/cswikia/images/c/c4/Csgo-aug-ingame.png',
-  'hegrenade':    'https://static.wikia.nocookie.net/cswikia/images/3/39/Csgo-he-grenade-ingame.png',
+  'ak47':          'https://cdn.cs2info.net/images/weapons/weapon_ak47.png',
+  'awp':           'https://cdn.cs2info.net/images/weapons/weapon_awp.png',
+  'm4a1':          'https://cdn.cs2info.net/images/weapons/weapon_m4a1_silencer.png',
+  'm4a1_silencer': 'https://cdn.cs2info.net/images/weapons/weapon_m4a1_silencer.png',
+  'usp_silencer':  'https://cdn.cs2info.net/images/weapons/weapon_usp_silencer.png',
+  'glock':         'https://cdn.cs2info.net/images/weapons/weapon_glock.png',
+  'deagle':        'https://cdn.cs2info.net/images/weapons/weapon_deagle.png',
+  'mp9':           'https://cdn.cs2info.net/images/weapons/weapon_mp9.png',
+  'mac10':         'https://cdn.cs2info.net/images/weapons/weapon_mac10.png',
+  'mp7':           'https://cdn.cs2info.net/images/weapons/weapon_mp7.png',
+  'fiveseven':     'https://cdn.cs2info.net/images/weapons/weapon_fiveseven.png',
+  'tec9':          'https://cdn.cs2info.net/images/weapons/weapon_tec9.png',
+  'galilar':       'https://cdn.cs2info.net/images/weapons/weapon_galilar.png',
+  'famas':         'https://cdn.cs2info.net/images/weapons/weapon_famas.png',
+  'sg556':         'https://cdn.cs2info.net/images/weapons/weapon_sg556.png',
+  'aug':           'https://cdn.cs2info.net/images/weapons/weapon_aug.png',
+  'hegrenade':     'https://cdn.cs2info.net/images/weapons/weapon_hegrenade.png',
+  'p250':          'https://cdn.cs2info.net/images/weapons/weapon_p250.png',
+  'cz75a':         'https://cdn.cs2info.net/images/weapons/weapon_cz75a.png',
 };
 
 function getWeaponImage(weapon) {
@@ -3211,7 +3212,7 @@ function renderWeapons(data) {
         </div>
       </td>
       <td class="num"><span class="pct-val" style="color:${Number(w.hs_pct||0)>50?'var(--green)':Number(w.hs_pct||0)>30?'var(--yellow)':'var(--txt2)'}">${Number(w.hs_pct || 0).toFixed(1)}%</span></td>
-      <td class="num">${w.avg_damage_per_kill != null ? Number(w.avg_damage_per_kill).toFixed(0) : '0'}</td>
+      <td class="num"><span style="color:var(--cyan);font-family:var(--font-hd);font-size:17px;font-weight:700">${Number(w.kills_per_usage || 0).toFixed(1)}</span></td>
       <td class="num">${w.usage_count ?? 0}</td>
     </tr>
   `).join('');
@@ -3255,10 +3256,12 @@ function renderWeaponDetail(weaponName, data) {
 
   const wdStats = $('wdStats');
   if (wdStats) {
+    const usageCount = data.length;
+    const killsPerUsage = usageCount > 0 ? (totalKills / data.reduce((s,p) => s + (p.matches_used||0), 0)).toFixed(1) : '0';
     wdStats.innerHTML = [
       { v: totalKills.toLocaleString(), l: 'Total Kills' },
       { v: avgHS.toFixed(1) + '%', l: 'Avg HS%' },
-      { v: avgDmg.toFixed(0), l: 'Avg DMG/Kill' },
+      { v: killsPerUsage, l: 'Kills/Usage' },
       { v: data.length, l: 'Players Used' },
     ].map(s => `
       <div>
@@ -3300,7 +3303,6 @@ function renderWeaponDetail(weaponName, data) {
         </div>
       </td>
       <td class="num"><span class="pct-val" style="color:${Number(p.hs_percent||0)>50?'var(--green)':Number(p.hs_percent||0)>30?'var(--yellow)':'var(--txt2)'}">${p.hs_percent != null ? Number(p.hs_percent).toFixed(1) : '0.0'}%</span></td>
-      <td class="num">${p.avg_dmg_per_kill != null ? Number(p.avg_dmg_per_kill).toFixed(0) : '0'}</td>
       <td class="num">${p.matches_used ?? 0}</td>
     </tr>
   `).join('');

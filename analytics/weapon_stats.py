@@ -27,8 +27,8 @@ def get_weapon_leaderboard(
     result = []
 
     for r in rows:
-        # ✅ НОВОЕ: Находим лучшего игрока для каждого оружия
-        top_player_query = (
+        # Топ-3 игроков для этого оружия
+        top_players_query = (
             db.query(
                 Player.nickname,
                 Player.steam_id,
@@ -38,14 +38,20 @@ def get_weapon_leaderboard(
             .filter(WeaponStat.weapon == r.weapon)
             .group_by(Player.id)
             .order_by(func.sum(WeaponStat.kills).desc())
-            .first()
+            .limit(3)
+            .all()
         )
 
         top_player = None
         top_player_steamid = None
-        if top_player_query:
-            top_player = top_player_query.nickname
-            top_player_steamid = top_player_query.steam_id
+        top_players_list = []
+        if top_players_query:
+            top_player = top_players_query[0].nickname
+            top_player_steamid = top_players_query[0].steam_id
+            top_players_list = [
+                {"nickname": p.nickname, "steam_id": p.steam_id, "kills": int(p.player_kills or 0)}
+                for p in top_players_query
+            ]
 
         result.append({
             "weapon":      r.weapon,
@@ -53,14 +59,13 @@ def get_weapon_leaderboard(
             "hs_pct":      round(
                 float(r.total_hs or 0) / max(float(r.total_kills or 1), 1) * 100, 1
             ),
-            "avg_damage_per_kill": round(
-                float(r.total_damage or 0) / max(float(r.total_kills or 1), 1), 1
+            "kills_per_usage": round(
+                float(r.total_kills or 0) / max(float(r.usage_count or 1), 1), 2
             ),
             "usage_count": r.usage_count,
-            
-            # ✅ НОВОЕ: MVP колонка
             "top_player": top_player,
             "top_player_steamid": top_player_steamid,
+            "top_players": top_players_list,
         })
 
     return result
