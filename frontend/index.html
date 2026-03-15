@@ -1108,628 +1108,559 @@ td.num {
 }
 
 /* ═══════════════════════════════════════════════════════
-   FAQ PAGE STYLES — REDESIGNED
+   FAQ PAGE STYLES — DASHBOARD
 ═══════════════════════════════════════════════════════ */
 .faq-container {
-  max-width: 1040px;
+  max-width: 1200px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 2px;
 }
 
-/* Section blocks */
-.faq-block {
+/* ── Top hero bar ── */
+.faq-hero {
   background: var(--bg2);
   border: 1px solid var(--border);
-  margin-bottom: 20px;
-  overflow: hidden;
-  clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 0 100%);
-}
-
-.faq-block-header {
-  padding: 20px 28px;
-  border-bottom: 1px solid var(--border);
-  display: flex;
+  padding: 28px 32px;
+  display: grid;
+  grid-template-columns: 1fr auto;
   align-items: center;
-  gap: 14px;
-  background: var(--bg3);
+  gap: 32px;
+  clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 0 100%);
 }
-
-.faq-block-num {
-  font-family: var(--font-mn);
-  font-size: 11px;
-  color: var(--orange);
-  background: rgba(255,106,0,0.12);
-  border: 1px solid rgba(255,106,0,0.3);
-  padding: 3px 8px;
-  letter-spacing: 0.1em;
-  flex-shrink: 0;
-}
-
-.faq-title {
+.faq-hero-title {
   font-family: var(--font-hd);
-  font-size: 22px;
-  font-weight: 800;
-  color: var(--txt);
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-}
-
-.faq-block-body {
-  padding: 24px 28px;
-}
-
-.faq-text {
-  font-family: var(--font-hd);
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 1.9;
-  color: var(--txt2);
-  margin-bottom: 16px;
-}
-
-.faq-text strong, .faq-text b {
-  color: var(--orange);
+  font-size: 13px;
   font-weight: 700;
+  color: var(--txt3);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.faq-hero-desc {
+  font-family: var(--font-hd);
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--txt);
+  line-height: 1.6;
+  max-width: 680px;
+}
+.faq-hero-desc strong { color: var(--orange); font-weight: 800; }
+.faq-hero-badge {
+  font-family: var(--font-hd);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--cyan);
+  border: 1px solid rgba(0,212,255,0.3);
+  background: rgba(0,212,255,0.06);
+  padding: 8px 16px;
+  white-space: nowrap;
 }
 
-/* Components grid */
-.faq-components {
-  display: flex;
-  flex-direction: column;
+/* ── Two-col layout ── */
+.faq-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+}
+.faq-grid-3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
   gap: 2px;
 }
 
-.faq-component {
+/* ── Panel base ── */
+.faq-panel {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+.faq-panel-full {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+.faq-panel-hd {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
   background: var(--bg3);
-  border-left: 3px solid var(--border2);
-  transition: border-color .2s;
+  border-bottom: 1px solid var(--border);
 }
-
-.faq-component:hover { border-left-color: var(--orange); }
-
-.faq-component-header {
-  display: flex;
-  align-items: center;
-  gap: 0;
-  cursor: default;
-  padding: 0;
-}
-
-.faq-component-icon {
-  width: 48px;
-  height: 48px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 20px;
-  background: var(--bg1);
-  flex-shrink: 0;
-  border-right: 1px solid var(--border);
-}
-
-.faq-component-name {
-  font-family: var(--font-hd);
-  font-size: 17px;
-  font-weight: 800;
-  color: var(--cyan);
-  flex: 1;
-  padding: 0 16px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-
-.faq-component-weight {
-  font-family: var(--font-mn);
-  font-size: 11px;
-  color: var(--orange);
-  background: rgba(255,106,0,0.1);
-  border-left: 1px solid var(--border);
-  padding: 0 16px;
-  height: 48px;
-  display: flex;
-  align-items: center;
-  letter-spacing: 0.05em;
-  flex-shrink: 0;
-}
-
-.faq-component-body {
-  padding: 16px 16px 16px 64px;
-  border-top: 1px solid var(--border);
-}
-
-.faq-component-desc {
-  font-family: var(--font-hd);
-  font-size: 15px;
-  font-weight: 400;
-  line-height: 1.8;
-  color: var(--txt2);
-  margin-bottom: 12px;
-}
-
-.faq-component-desc code {
-  background: var(--bg);
-  padding: 2px 8px;
-  font-family: var(--font-mn);
-  font-size: 12px;
-  color: var(--orange2);
-  border: 1px solid var(--border);
-}
-
-.faq-example {
-  background: var(--bg);
-  padding: 12px 16px;
-  border: 1px solid var(--border);
-  margin-top: 8px;
-}
-
-.faq-example-title {
+.faq-panel-hd-label {
   font-family: var(--font-mn);
   font-size: 10px;
-  color: var(--txt3);
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  letter-spacing: 0.12em;
-  margin-bottom: 8px;
-}
-
-.faq-example-text {
-  font-family: var(--font-mn);
-  font-size: 13px;
-  line-height: 1.8;
-  color: var(--txt);
-}
-
-.faq-example-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 8px;
-}
-
-/* Swing examples */
-.swing-example {
-  background: var(--bg1);
-  padding: 12px;
-  border: 1px solid var(--border);
-  text-align: center;
-  position: relative;
-  overflow: hidden;
-}
-
-.swing-example::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 2px;
-}
-
-.swing-high::before { background: var(--green); }
-.swing-med::before  { background: var(--cyan); }
-.swing-low::before  { background: var(--txt3); }
-.swing-clutch::before { background: var(--yellow); }
-
-.swing-label {
-  font-family: var(--font-mn);
-  font-size: 11px;
   color: var(--txt3);
-  margin-bottom: 8px;
-  letter-spacing: 0.04em;
+  flex: 1;
 }
-
-.swing-value {
-  font-family: var(--font-hd);
-  font-size: 22px;
-  font-weight: 900;
-  margin-bottom: 4px;
-  letter-spacing: 0.02em;
-}
-
-.swing-high .swing-value  { color: var(--green); }
-.swing-med .swing-value   { color: var(--cyan); }
-.swing-low .swing-value   { color: var(--txt3); }
-.swing-clutch .swing-value{ color: var(--yellow); }
-
-.swing-desc {
-  font-family: var(--font-hd);
-  font-size: 12px;
-  color: var(--txt3);
-  font-weight: 400;
-}
-
-/* Multikill pills */
-.multikill-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 8px;
-}
-
-.multikill-ex {
-  background: var(--bg1);
-  padding: 10px 8px;
-  text-align: center;
-  font-family: var(--font-hd);
-  font-size: 16px;
-  font-weight: 800;
-  color: var(--orange2);
-  border-top: 2px solid var(--orange);
-}
-
-/* Highlights */
-.highlight-green { color: var(--green);  font-weight: 700; font-family: var(--font-hd); }
-.highlight-cyan  { color: var(--cyan);   font-weight: 700; font-family: var(--font-hd); }
-.highlight-yellow{ color: var(--yellow); font-weight: 700; font-family: var(--font-hd); }
-.highlight-red   { color: var(--red);    font-weight: 700; font-family: var(--font-hd); }
-.highlight-low   { color: var(--txt3);   font-weight: 700; font-family: var(--font-hd); }
-
-/* Scenarios */
-.faq-scenarios {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 2px;
-  background: var(--border);
-}
-
-.scenario-card {
-  background: var(--bg3);
-  overflow: hidden;
-}
-
-.scenario-header {
-  background: var(--bg1);
-  padding: 11px 16px;
-  font-family: var(--font-hd);
-  font-size: 15px;
-  font-weight: 800;
+.faq-panel-hd-tag {
+  font-family: var(--font-mn);
+  font-size: 10px;
+  letter-spacing: 0.08em;
   color: var(--orange);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  border-bottom: 2px solid var(--border2);
+  background: rgba(255,106,0,0.1);
+  border: 1px solid rgba(255,106,0,0.25);
+  padding: 2px 8px;
 }
-
-.scenario-body {
+.faq-panel-body {
   padding: 16px;
 }
 
-.scenario-body p {
-  font-family: var(--font-hd);
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 1.8;
-  color: var(--txt2);
-  margin-bottom: 12px;
-}
-
-.scenario-impact {
-  background: var(--bg);
-  padding: 12px 14px;
-  margin: 12px 0;
-  border-left: 2px solid var(--cyan);
+/* ── Formula panel ── */
+.faq-formula {
   font-family: var(--font-mn);
   font-size: 13px;
-  line-height: 2.0;
-  color: var(--txt);
+  color: var(--orange2);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  padding: 12px 16px;
+  margin-bottom: 12px;
+  letter-spacing: 0.04em;
 }
 
-.scenario-desc {
+/* ── Weight bars (components) ── */
+.faq-weight-row {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  border-bottom: 1px solid var(--border);
+  height: 44px;
+  cursor: default;
+  transition: background .15s;
+}
+.faq-weight-row:last-child { border-bottom: none; }
+.faq-weight-row:hover { background: rgba(255,255,255,0.02); }
+
+.faq-wr-icon {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  background: var(--bg3);
+  border-right: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.faq-wr-name {
   font-family: var(--font-hd);
-  font-size: 13px;
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--txt);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  width: 140px;
+  padding: 0 14px;
+  flex-shrink: 0;
+}
+.faq-wr-bar-wrap {
+  flex: 1;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  padding: 0 14px;
+  position: relative;
+  border-left: 1px solid var(--border);
+}
+.faq-wr-bar-bg {
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  opacity: 0.08;
+}
+.faq-wr-bar-fill {
+  height: 4px;
+  border-radius: 0;
+  position: relative;
+  z-index: 1;
+}
+.faq-wr-pct {
+  font-family: var(--font-hd);
+  font-size: 20px;
+  font-weight: 900;
+  position: relative;
+  z-index: 1;
+  margin-left: 12px;
+  flex-shrink: 0;
+  min-width: 52px;
+}
+.faq-wr-desc {
+  font-family: var(--font-hd);
+  font-size: 12px;
   font-weight: 400;
   color: var(--txt3);
-  border-top: 1px solid var(--border);
-  padding-top: 10px;
-  margin-top: 4px;
+  position: relative;
+  z-index: 1;
+  margin-left: 10px;
+  flex: 1;
 }
 
-/* Rating examples */
-.rating-examples {
+/* bar colors */
+.faq-wr-bar-fill.c-orange { background: var(--orange); }
+.faq-wr-bar-fill.c-cyan   { background: var(--cyan); }
+.faq-wr-bar-fill.c-green  { background: var(--green); }
+.faq-wr-bar-fill.c-yellow { background: var(--yellow); }
+.faq-wr-bar-fill.c-red    { background: var(--red); }
+.faq-wr-bar-bg.c-orange   { background: var(--orange); width: 100%; }
+.faq-wr-bar-bg.c-cyan     { background: var(--cyan); width: 100%; }
+.faq-wr-bar-bg.c-green    { background: var(--green); width: 100%; }
+.faq-wr-bar-bg.c-yellow   { background: var(--yellow); width: 100%; }
+.faq-wr-pct.c-orange { color: var(--orange); }
+.faq-wr-pct.c-cyan   { color: var(--cyan); }
+.faq-wr-pct.c-green  { color: var(--green); }
+.faq-wr-pct.c-yellow { color: var(--yellow); }
+.faq-wr-pct.c-red    { color: var(--red); }
+
+/* ── SWING visual grid ── */
+.faq-swing-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 2px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
   background: var(--border);
 }
-
-.rating-ex-card {
+.faq-swing-cell {
   background: var(--bg3);
-  padding: 20px;
+  padding: 16px 12px;
   text-align: center;
   position: relative;
   overflow: hidden;
 }
-
-.rating-ex-card::after {
+.faq-swing-cell::after {
   content: '';
   position: absolute;
   bottom: 0; left: 0; right: 0;
   height: 3px;
 }
+.faq-swing-cell.s-green::after  { background: var(--green); }
+.faq-swing-cell.s-cyan::after   { background: var(--cyan); }
+.faq-swing-cell.s-grey::after   { background: var(--txt3); }
+.faq-swing-cell.s-yellow::after { background: var(--yellow); }
 
-.rating-top::after  { background: var(--green); }
-.rating-good::after { background: var(--cyan); }
-.rating-avg::after  { background: var(--yellow); }
-.rating-low::after  { background: var(--red); }
-
-.rating-ex-badge {
-  font-family: var(--font-hd);
-  font-size: 52px;
-  font-weight: 900;
-  line-height: 1;
-  margin-bottom: 4px;
-  letter-spacing: -0.01em;
-}
-
-.rating-top  .rating-ex-badge { color: var(--green); }
-.rating-good .rating-ex-badge { color: var(--cyan); }
-.rating-avg  .rating-ex-badge { color: var(--yellow); }
-.rating-low  .rating-ex-badge { color: var(--red); }
-
-.rating-ex-player {
+.faq-swing-situation {
   font-family: var(--font-mn);
-  font-size: 11px;
+  font-size: 10px;
+  letter-spacing: 0.08em;
   color: var(--txt3);
-  margin-bottom: 14px;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  margin-bottom: 10px;
 }
-
-.rating-ex-stats {
-  background: var(--bg);
-  padding: 12px;
-  margin-bottom: 12px;
-  font-family: var(--font-mn);
-  font-size: 12px;
-  line-height: 2.0;
-  color: var(--txt2);
-  text-align: left;
-}
-
-.rating-ex-desc {
+.faq-swing-val {
   font-family: var(--font-hd);
-  font-size: 13px;
+  font-size: 28px;
+  font-weight: 900;
+  margin-bottom: 4px;
+  line-height: 1;
+}
+.faq-swing-val.s-green  { color: var(--green); }
+.faq-swing-val.s-cyan   { color: var(--cyan); }
+.faq-swing-val.s-grey   { color: var(--txt3); }
+.faq-swing-val.s-yellow { color: var(--yellow); }
+.faq-swing-label {
+  font-family: var(--font-hd);
+  font-size: 12px;
   font-weight: 400;
   color: var(--txt3);
 }
 
-/* Comparison grid K/D vs Rating */
-.comparison-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 2px;
-  background: var(--border);
+/* ── Scenario table ── */
+.faq-scenario-table {
+  width: 100%;
+  border-collapse: collapse;
 }
-
-.comparison-item {
-  background: var(--bg3);
-  padding: 24px;
-}
-
-.comparison-label {
-  font-family: var(--font-hd);
-  font-size: 20px;
-  font-weight: 900;
-  color: var(--txt);
-  margin-bottom: 16px;
+.faq-scenario-table th {
+  font-family: var(--font-mn);
+  font-size: 10px;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  padding-bottom: 12px;
-  border-bottom: 2px solid var(--border2);
+  color: var(--txt3);
+  padding: 8px 12px;
+  background: var(--bg3);
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+  font-weight: 400;
 }
-
-.comparison-pro, .comparison-con {
-  padding: 9px 12px;
-  margin-bottom: 6px;
+.faq-scenario-table th:not(:first-child) { text-align: right; }
+.faq-scenario-table td {
+  padding: 0 12px;
+  border-bottom: 1px solid var(--border);
+  height: 42px;
+  vertical-align: middle;
+}
+.faq-scenario-table tr:last-child td { border-bottom: none; }
+.faq-scenario-table tr:hover td { background: rgba(255,255,255,0.015); }
+.faq-st-name {
   font-family: var(--font-hd);
   font-size: 14px;
-  font-weight: 500;
-  line-height: 1.5;
-}
-
-.comparison-pro {
-  background: rgba(0,230,118,0.07);
-  border-left: 2px solid var(--green);
+  font-weight: 700;
   color: var(--txt);
-}
-
-.comparison-con {
-  background: rgba(255,61,61,0.07);
-  border-left: 2px solid var(--red);
-  color: var(--txt2);
-}
-
-/* Final block */
-.faq-final {
-  border: 1px solid var(--orange) !important;
-  background: linear-gradient(135deg, rgba(255,106,0,0.04) 0%, var(--bg2) 60%) !important;
-}
-
-.faq-text-large {
-  font-family: var(--font-hd);
-  font-size: 17px;
-  font-weight: 400;
-  line-height: 1.9;
-  color: var(--txt2);
-  margin-bottom: 20px;
-}
-
-.faq-cta {
-  background: rgba(255,106,0,0.06);
-  padding: 20px 24px;
-  text-align: center;
-  border: 1px solid rgba(255,106,0,0.3);
-  margin-top: 20px;
-  clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 0 100%);
-}
-
-.faq-cta p {
-  font-family: var(--font-hd);
-  font-size: 20px;
-  font-weight: 800;
-  color: var(--orange);
-  margin: 0;
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
-
-/* Player comparison */
-.comparison-players {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2px;
-  background: var(--border);
-  margin: 20px 0;
+.faq-st-sub {
+  font-family: var(--font-mn);
+  font-size: 10px;
+  color: var(--txt3);
+  display: block;
+  margin-top: 1px;
+  letter-spacing: 0.05em;
 }
-
-.player-comparison {
-  background: var(--bg3);
-  padding: 20px;
-}
-
-.player-comparison-header {
-  margin-bottom: 16px;
-  padding-bottom: 14px;
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-.player-comparison-name {
+.faq-st-val {
   font-family: var(--font-hd);
   font-size: 16px;
   font-weight: 800;
-  color: var(--txt);
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
+  text-align: right;
 }
-
-.player-comparison-rating {
-  font-family: var(--font-hd);
-  font-size: 15px;
-  font-weight: 800;
-  padding: 6px 14px;
-  flex-shrink: 0;
-}
-
-.player-comparison-rating.rating-top {
-  background: rgba(0,230,118,0.1);
-  color: var(--green);
-  border: 1px solid rgba(0,230,118,0.3);
-}
-
-.player-comparison-rating.rating-good {
-  background: rgba(0,212,255,0.1);
-  color: var(--cyan);
-  border: 1px solid rgba(0,212,255,0.3);
-}
-
-.player-comparison-stats {
-  margin-bottom: 16px;
-}
-
-.stat-row {
-  display: flex;
-  justify-content: space-between;
-  padding: 7px 0;
-  border-bottom: 1px solid var(--border);
-}
-
-.stat-label {
+.faq-st-note {
   font-family: var(--font-mn);
   font-size: 11px;
   color: var(--txt3);
+  text-align: right;
+}
+
+/* ── Rating scale ── */
+.faq-rating-scale {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+.faq-rs-row {
+  display: grid;
+  grid-template-columns: 72px 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: var(--bg3);
+  border-left: 3px solid transparent;
+  transition: background .15s;
+}
+.faq-rs-row:hover { background: rgba(255,255,255,0.025); }
+.faq-rs-row.tier-top    { border-left-color: var(--green); }
+.faq-rs-row.tier-good   { border-left-color: var(--cyan); }
+.faq-rs-row.tier-avg    { border-left-color: var(--yellow); }
+.faq-rs-row.tier-low    { border-left-color: var(--red); }
+.faq-rs-num {
+  font-family: var(--font-hd);
+  font-size: 32px;
+  font-weight: 900;
+  line-height: 1;
+}
+.tier-top  .faq-rs-num { color: var(--green); }
+.tier-good .faq-rs-num { color: var(--cyan); }
+.tier-avg  .faq-rs-num { color: var(--yellow); }
+.tier-low  .faq-rs-num { color: var(--red); }
+.faq-rs-info {}
+.faq-rs-title {
+  font-family: var(--font-hd);
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--txt);
   text-transform: uppercase;
   letter-spacing: 0.05em;
+  margin-bottom: 4px;
 }
-
-.stat-value {
-  font-family: var(--font-hd);
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--txt);
+.faq-rs-stats {
+  font-family: var(--font-mn);
+  font-size: 11px;
+  color: var(--txt3);
+  letter-spacing: 0.05em;
 }
-
-.player-comparison-breakdown {
-  background: var(--bg);
-  padding: 14px;
-  border-left: 2px solid var(--orange);
-  font-family: var(--font-hd);
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 1.7;
-  color: var(--txt2);
+.faq-rs-bar-wrap {
+  width: 120px;
 }
-
-.player-comparison-breakdown strong {
+.faq-rs-bar-bg {
+  height: 4px;
+  background: var(--bg1);
+  border-radius: 0;
+  overflow: hidden;
+}
+.faq-rs-bar-fill {
+  height: 100%;
+  transition: width .6s;
+}
+.tier-top  .faq-rs-bar-fill { background: var(--green); width: 95%; }
+.tier-good .faq-rs-bar-fill { background: var(--cyan);  width: 65%; }
+.tier-avg  .faq-rs-bar-fill { background: var(--yellow);width: 48%; }
+.tier-low  .faq-rs-bar-fill { background: var(--red);   width: 34%; }
+.faq-rs-pct {
   font-family: var(--font-mn);
   font-size: 10px;
-  color: var(--orange);
-  display: block;
-  margin-bottom: 6px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+  color: var(--txt3);
+  margin-top: 4px;
+  letter-spacing: 0.06em;
 }
 
-/* Conclusion */
-.faq-conclusion {
-  background: rgba(0,212,255,0.04);
-  border: 1px solid rgba(0,212,255,0.25);
-  padding: 20px 24px;
-  margin: 20px 0;
-  display: flex;
-  gap: 16px;
-  align-items: flex-start;
+/* ── Player vs player ── */
+.faq-vs-grid {
+  display: grid;
+  grid-template-columns: 1fr 48px 1fr;
+  align-items: stretch;
 }
-
-.conclusion-icon {
-  font-size: 28px;
-  flex-shrink: 0;
-  margin-top: 2px;
+.faq-vs-col {
+  padding: 20px;
 }
-
-.conclusion-text {
-  font-family: var(--font-hd);
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 1.8;
-  color: var(--txt);
+.faq-vs-hd {
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
 }
-
-.conclusion-text strong {
-  color: var(--cyan);
-  font-weight: 800;
-}
-
-/* Real world example */
-.real-world-example {
-  background: var(--bg);
-  border: 1px solid var(--border2);
-  padding: 20px 24px;
-  margin-top: 16px;
-  border-top: 2px solid var(--yellow);
-}
-
-.real-world-header {
-  font-family: var(--font-hd);
-  font-size: 13px;
-  font-weight: 800;
-  color: var(--yellow);
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  margin-bottom: 14px;
-}
-
-.real-world-text {
+.faq-vs-name {
   font-family: var(--font-hd);
   font-size: 15px;
-  font-weight: 400;
-  line-height: 1.9;
-  color: var(--txt2);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--txt);
+  margin-bottom: 6px;
+}
+.faq-vs-rating {
+  font-family: var(--font-hd);
+  font-size: 32px;
+  font-weight: 900;
+  line-height: 1;
+}
+.faq-vs-rating.lose { color: var(--cyan); }
+.faq-vs-rating.win  { color: var(--green); }
+.faq-vs-label {
+  font-family: var(--font-mn);
+  font-size: 10px;
+  color: var(--txt3);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+.faq-vs-sep {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg3);
+  border-left: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  font-family: var(--font-hd);
+  font-size: 14px;
+  font-weight: 900;
+  color: var(--txt3);
+  letter-spacing: 0.05em;
+}
+.faq-vs-row {
+  display: grid;
+  grid-template-columns: 1fr 80px 1fr;
+  align-items: center;
+  border-bottom: 1px solid var(--border);
+  min-height: 36px;
+  gap: 8px;
+}
+.faq-vs-row:last-child { border-bottom: none; }
+.faq-vs-stat {
+  font-family: var(--font-hd);
+  font-size: 17px;
+  font-weight: 800;
+  text-align: right;
+  padding: 0 8px;
+}
+.faq-vs-stat.left { text-align: left; }
+.faq-vs-stat-key {
+  font-family: var(--font-mn);
+  font-size: 10px;
+  color: var(--txt3);
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.faq-vs-winner { color: var(--green); }
+.faq-vs-loser  { color: var(--txt2); }
+
+/* ── Comparison K/D vs Impact ── */
+.faq-compare-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: var(--border);
+}
+.faq-compare-col {
+  background: var(--bg2);
+  padding: 20px;
+}
+.faq-compare-title {
+  font-family: var(--font-hd);
+  font-size: 18px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--border2);
+}
+.faq-compare-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--border);
+  font-family: var(--font-hd);
+  font-size: 14px;
+  font-weight: 500;
+}
+.faq-compare-row:last-child { border-bottom: none; }
+.faq-compare-row.pro { color: var(--txt); }
+.faq-compare-row.pro::before {
+  content: '✓';
+  color: var(--green);
+  font-weight: 900;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+.faq-compare-row.con { color: var(--txt3); }
+.faq-compare-row.con::before {
+  content: '✗';
+  color: var(--red);
+  font-weight: 900;
+  font-size: 14px;
+  flex-shrink: 0;
 }
 
-.real-world-text strong {
-  color: var(--txt);
-  font-weight: 700;
+/* ── Final CTA ── */
+.faq-final-panel {
+  background: var(--bg2);
+  border: 1px solid var(--orange);
+  padding: 28px 32px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 32px;
 }
+.faq-final-text {
+  font-family: var(--font-hd);
+  font-size: 17px;
+  font-weight: 500;
+  color: var(--txt2);
+  line-height: 1.7;
+}
+.faq-final-text strong { color: var(--txt); font-weight: 800; }
+.faq-final-cta {
+  font-family: var(--font-hd);
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--orange);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+  border: 1px solid rgba(255,106,0,0.4);
+  padding: 14px 24px;
+  background: rgba(255,106,0,0.06);
+  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%);
+}
+
+/* highlights used in tables */
+.highlight-green { color: var(--green);  font-weight: 800; font-family: var(--font-hd); }
+.highlight-cyan  { color: var(--cyan);   font-weight: 800; font-family: var(--font-hd); }
+.highlight-yellow{ color: var(--yellow); font-weight: 800; font-family: var(--font-hd); }
+.highlight-red   { color: var(--red);    font-weight: 800; font-family: var(--font-hd); }
+.highlight-low   { color: var(--txt3);   font-weight: 800; font-family: var(--font-hd); }
 
 .swing-val {
   font-family: var(--font-hd);
@@ -2232,371 +2163,374 @@ td .swing-negative {
 
     <div class="faq-container">
 
-      <!-- BLOCK 1: What is Impact Rating -->
-      <div class="faq-block">
-        <div class="faq-block-header">
-          <span class="faq-block-num">01</span>
-          <h2 class="faq-title">Что такое Impact Rating 3.0?</h2>
+      <!-- HERO -->
+      <div class="faq-hero">
+        <div>
+          <div class="faq-hero-title">// IMPACT RATING 3.0 — DOCUMENTATION</div>
+          <div class="faq-hero-desc">
+            Система оценки вклада игрока, учитывающая <strong>КОНТЕКСТ</strong> каждого действия.
+            Не просто K/D — а когда, как и в каком состоянии игры был сделан фраг.
+          </div>
         </div>
-        <div class="faq-block-body">
-          <p class="faq-text">
-            Impact Rating 3.0 — продвинутая система оценки вклада игрока в победу команды.
-            Учитывает не просто количество убийств, а <strong>КОНТЕКСТ</strong> каждого действия:
-            ситуацию на карте, экономику команд, количество живых игроков и время в раунде.
-          </p>
-          <p class="faq-text">
-            В отличие от простого K/D, рейтинг понимает разницу между убийством последнего игрока
-            в сейве (низкая ценность) и entry-фрагом на fullbuy раунде (высокая ценность).
-          </p>
+        <div class="faq-hero-badge">~70% HLTV 3.0 accuracy</div>
+      </div>
+
+      <!-- ROW 1: components + swing -->
+      <div class="faq-grid-2">
+
+        <!-- Weight panel -->
+        <div class="faq-panel">
+          <div class="faq-panel-hd">
+            <div class="faq-panel-hd-label">Rating components</div>
+            <div class="faq-panel-hd-tag">weight distribution</div>
+          </div>
+          <div class="faq-wr-row">
+            <div class="faq-wr-icon">⚡</div>
+            <div class="faq-wr-name">SWING</div>
+            <div class="faq-wr-bar-wrap">
+              <div class="faq-wr-bar-bg c-orange"></div>
+              <div class="faq-wr-bar-fill c-orange" style="width:55%"></div>
+              <div class="faq-wr-pct c-orange">55%</div>
+              <div class="faq-wr-desc">Win probability delta per round</div>
+            </div>
+          </div>
+          <div class="faq-wr-row">
+            <div class="faq-wr-icon">🚪</div>
+            <div class="faq-wr-name">ENTRY</div>
+            <div class="faq-wr-bar-wrap">
+              <div class="faq-wr-bar-bg c-cyan"></div>
+              <div class="faq-wr-bar-fill c-cyan" style="width:35%"></div>
+              <div class="faq-wr-pct c-cyan">35%</div>
+              <div class="faq-wr-desc">First kill / first death impact</div>
+            </div>
+          </div>
+          <div class="faq-wr-row">
+            <div class="faq-wr-icon">🔥</div>
+            <div class="faq-wr-name">MULTI</div>
+            <div class="faq-wr-bar-wrap">
+              <div class="faq-wr-bar-bg c-yellow"></div>
+              <div class="faq-wr-bar-fill c-yellow" style="width:18%"></div>
+              <div class="faq-wr-pct c-yellow">18%</div>
+              <div class="faq-wr-desc">2K/3K/4K/ACE multipliers</div>
+            </div>
+          </div>
+          <div class="faq-wr-row">
+            <div class="faq-wr-icon">🎯</div>
+            <div class="faq-wr-name">KAST</div>
+            <div class="faq-wr-bar-wrap">
+              <div class="faq-wr-bar-bg c-green"></div>
+              <div class="faq-wr-bar-fill c-green" style="width:17%"></div>
+              <div class="faq-wr-pct c-green">17%</div>
+              <div class="faq-wr-desc">Kill / Assist / Survive / Trade %</div>
+            </div>
+          </div>
+          <div class="faq-wr-row">
+            <div class="faq-wr-icon">💣</div>
+            <div class="faq-wr-name">BOMB</div>
+            <div class="faq-wr-bar-wrap">
+              <div class="faq-wr-bar-bg c-red"></div>
+              <div class="faq-wr-bar-fill c-red" style="width:8%"></div>
+              <div class="faq-wr-pct c-red">8%</div>
+              <div class="faq-wr-desc">Plant / defuse win probability</div>
+            </div>
+          </div>
+          <div style="padding:12px 16px;background:var(--bg3);border-top:1px solid var(--border)">
+            <div class="faq-formula">Impact = 2.13 × KPR + 0.42 × APR − 0.41</div>
+            <div style="font-family:var(--font-mn);font-size:11px;color:var(--txt3);letter-spacing:0.06em">BASE HLTV FORMULA — KPR = kills/round, APR = assists/round</div>
+          </div>
+        </div>
+
+        <!-- SWING values panel -->
+        <div class="faq-panel" style="display:flex;flex-direction:column;">
+          <div class="faq-panel-hd">
+            <div class="faq-panel-hd-label">SWING — situational values</div>
+            <div class="faq-panel-hd-tag">win probability delta</div>
+          </div>
+          <div class="faq-swing-grid" style="flex:1">
+            <div class="faq-swing-cell s-green">
+              <div class="faq-swing-situation">5v5 → 5v4</div>
+              <div class="faq-swing-val s-green">+12%</div>
+              <div class="faq-swing-label">Entry frag</div>
+            </div>
+            <div class="faq-swing-cell s-cyan">
+              <div class="faq-swing-situation">3v3 mid-round</div>
+              <div class="faq-swing-val s-cyan">+8%</div>
+              <div class="faq-swing-label">Standard kill</div>
+            </div>
+            <div class="faq-swing-cell s-grey">
+              <div class="faq-swing-situation">5v1 cleanup</div>
+              <div class="faq-swing-val s-grey">+0.5%</div>
+              <div class="faq-swing-label">Near zero</div>
+            </div>
+            <div class="faq-swing-cell s-yellow">
+              <div class="faq-swing-situation">1v3 clutch</div>
+              <div class="faq-swing-val s-yellow">+25%</div>
+              <div class="faq-swing-label">Clutch kill</div>
+            </div>
+          </div>
+          <!-- Multikill bonuses -->
+          <div class="faq-panel-hd" style="border-top:1px solid var(--border);border-bottom:none;margin-top:auto">
+            <div class="faq-panel-hd-label">Multikill multipliers</div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border)">
+            <div style="background:var(--bg3);padding:14px;text-align:center">
+              <div style="font-family:var(--font-hd);font-size:22px;font-weight:900;color:var(--txt)">×1.12</div>
+              <div style="font-family:var(--font-mn);font-size:10px;color:var(--txt3);letter-spacing:.08em;margin-top:4px">2K</div>
+            </div>
+            <div style="background:var(--bg3);padding:14px;text-align:center">
+              <div style="font-family:var(--font-hd);font-size:22px;font-weight:900;color:var(--cyan)">×1.20</div>
+              <div style="font-family:var(--font-mn);font-size:10px;color:var(--txt3);letter-spacing:.08em;margin-top:4px">3K</div>
+            </div>
+            <div style="background:var(--bg3);padding:14px;text-align:center">
+              <div style="font-family:var(--font-hd);font-size:22px;font-weight:900;color:var(--orange)">×1.28</div>
+              <div style="font-family:var(--font-mn);font-size:10px;color:var(--txt3);letter-spacing:.08em;margin-top:4px">4K</div>
+            </div>
+            <div style="background:var(--bg3);padding:14px;text-align:center">
+              <div style="font-family:var(--font-hd);font-size:22px;font-weight:900;color:var(--yellow)">×1.35</div>
+              <div style="font-family:var(--font-mn);font-size:10px;color:var(--txt3);letter-spacing:.08em;margin-top:4px">ACE</div>
+            </div>
+          </div>
         </div>
       </div>
 
-      <!-- BLOCK 2: Components -->
-      <div class="faq-block">
-        <div class="faq-block-header">
-          <span class="faq-block-num">02</span>
-          <h2 class="faq-title">Из чего состоит рейтинг?</h2>
-        </div>
-        <div class="faq-block-body">
-          <div class="faq-components">
+      <!-- ROW 2: Scenario table + Rating scale -->
+      <div class="faq-grid-2">
 
-            <div class="faq-component">
-              <div class="faq-component-header">
-                <span class="faq-component-icon">🎯</span>
-                <span class="faq-component-name">KAST</span>
-                <span class="faq-component-weight">17% веса</span>
+        <!-- Scenario table -->
+        <div class="faq-panel">
+          <div class="faq-panel-hd">
+            <div class="faq-panel-hd-label">Eco / Fullbuy / Clutch — kill weight</div>
+            <div class="faq-panel-hd-tag">context multipliers</div>
+          </div>
+          <div class="faq-panel-body" style="padding:0">
+            <table class="faq-scenario-table">
+              <thead>
+                <tr>
+                  <th>Ситуация</th>
+                  <th>Ваш килл</th>
+                  <th>Ваша смерть</th>
+                  <th>SWING</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><span class="faq-st-name">Fullbuy vs Fullbuy</span><span class="faq-st-sub">AK/M4 · full utility</span></td>
+                  <td><span class="faq-st-val highlight-green">100%</span></td>
+                  <td><span class="faq-st-val highlight-green">100%</span></td>
+                  <td><span class="faq-st-note">стандарт</span></td>
+                </tr>
+                <tr>
+                  <td><span class="faq-st-name">Fullbuy vs Eco</span><span class="faq-st-sub">pistols / no armor</span></td>
+                  <td><span class="faq-st-val highlight-yellow">68%</span></td>
+                  <td><span class="faq-st-val highlight-red">122%</span></td>
+                  <td><span class="faq-st-note">eco penalty</span></td>
+                </tr>
+                <tr>
+                  <td><span class="faq-st-name">Clutch 1v2</span><span class="faq-st-sub">1 vs 2 alive</span></td>
+                  <td><span class="faq-st-val highlight-green">+18%</span></td>
+                  <td><span class="faq-st-val">—</span></td>
+                  <td><span class="faq-st-note c-green">swing boost</span></td>
+                </tr>
+                <tr>
+                  <td><span class="faq-st-name">Clutch 1v3</span><span class="faq-st-sub">1 vs 3 alive</span></td>
+                  <td><span class="faq-st-val highlight-green">+25%</span></td>
+                  <td><span class="faq-st-val">—</span></td>
+                  <td><span class="faq-st-note c-green">swing boost</span></td>
+                </tr>
+                <tr>
+                  <td><span class="faq-st-name">Clutch 1v4</span><span class="faq-st-sub">1 vs 4 alive</span></td>
+                  <td><span class="faq-st-val highlight-yellow">+35%</span></td>
+                  <td><span class="faq-st-val">—</span></td>
+                  <td><span class="faq-st-note c-yellow">huge swing</span></td>
+                </tr>
+                <tr>
+                  <td><span class="faq-st-name">5v1 Cleanup</span><span class="faq-st-sub">5 vs 1 alive</span></td>
+                  <td><span class="faq-st-val highlight-low">~0%</span></td>
+                  <td><span class="faq-st-val highlight-red">high</span></td>
+                  <td><span class="faq-st-note">no value</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Rating scale -->
+        <div class="faq-panel">
+          <div class="faq-panel-hd">
+            <div class="faq-panel-hd-label">Rating tiers</div>
+            <div class="faq-panel-hd-tag">performance scale</div>
+          </div>
+          <div class="faq-panel-body" style="padding:0">
+            <div class="faq-rating-scale">
+              <div class="faq-rs-row tier-top">
+                <div class="faq-rs-num">2.10</div>
+                <div class="faq-rs-info">
+                  <div class="faq-rs-title">s1mple-level</div>
+                  <div class="faq-rs-stats">KAST 92% · SWING +2.4 · K/D 1.85</div>
+                </div>
+                <div class="faq-rs-bar-wrap">
+                  <div class="faq-rs-bar-bg"><div class="faq-rs-bar-fill"></div></div>
+                  <div class="faq-rs-pct">WORLD CLASS</div>
+                </div>
               </div>
-              <div class="faq-component-body">
-                <p class="faq-component-desc">
-                  <strong>Kill / Assist / Survive / Trade</strong> — процент раундов где вы убили, помогли убить, выжили или были отомщены. Хороший KAST = 70–80%. Топ-игроки &gt;85%.
-                </p>
-                <div class="faq-example">
-                  <div class="faq-example-title">Пример</div>
-                  <div class="faq-example-text">22 раунда → 18 раундов с участием = <span class="highlight-green">81.8% KAST</span></div>
+              <div class="faq-rs-row tier-good">
+                <div class="faq-rs-num">1.35</div>
+                <div class="faq-rs-info">
+                  <div class="faq-rs-title">Solid player</div>
+                  <div class="faq-rs-stats">KAST 78% · SWING +1.1 · K/D 1.25</div>
+                </div>
+                <div class="faq-rs-bar-wrap">
+                  <div class="faq-rs-bar-bg"><div class="faq-rs-bar-fill"></div></div>
+                  <div class="faq-rs-pct">ABOVE AVG</div>
+                </div>
+              </div>
+              <div class="faq-rs-row tier-avg">
+                <div class="faq-rs-num">1.00</div>
+                <div class="faq-rs-info">
+                  <div class="faq-rs-title">Average</div>
+                  <div class="faq-rs-stats">KAST 68% · SWING +0.3 · K/D 1.00</div>
+                </div>
+                <div class="faq-rs-bar-wrap">
+                  <div class="faq-rs-bar-bg"><div class="faq-rs-bar-fill"></div></div>
+                  <div class="faq-rs-pct">BASELINE</div>
+                </div>
+              </div>
+              <div class="faq-rs-row tier-low">
+                <div class="faq-rs-num">0.72</div>
+                <div class="faq-rs-info">
+                  <div class="faq-rs-title">Struggling</div>
+                  <div class="faq-rs-stats">KAST 52% · SWING −0.4 · K/D 0.75</div>
+                </div>
+                <div class="faq-rs-bar-wrap">
+                  <div class="faq-rs-bar-bg"><div class="faq-rs-bar-fill"></div></div>
+                  <div class="faq-rs-pct">BELOW AVG</div>
                 </div>
               </div>
             </div>
-
-            <div class="faq-component">
-              <div class="faq-component-header">
-                <span class="faq-component-icon">⚡</span>
-                <span class="faq-component-name">SWING</span>
-                <span class="faq-component-weight">55% веса</span>
-              </div>
-              <div class="faq-component-body">
-                <p class="faq-component-desc">
-                  <strong>Win Probability изменение</strong> — насколько ваши действия изменили шансы команды на победу в раунде. Киллы в критических моментах дают больше SWING.
-                </p>
-                <div class="faq-example">
-                  <div class="faq-example-title">Примеры SWING</div>
-                  <div class="faq-example-grid">
-                    <div class="swing-example swing-high">
-                      <div class="swing-label">5v5 → 5v4 entry</div>
-                      <div class="swing-value">+12%</div>
-                      <div class="swing-desc">Открытие раунда</div>
-                    </div>
-                    <div class="swing-example swing-med">
-                      <div class="swing-label">3v3 mid-round</div>
-                      <div class="swing-value">+8%</div>
-                      <div class="swing-desc">Стандартный фраг</div>
-                    </div>
-                    <div class="swing-example swing-low">
-                      <div class="swing-label">5v1 cleanup</div>
-                      <div class="swing-value">+0.5%</div>
-                      <div class="swing-desc">Почти нет вклада</div>
-                    </div>
-                    <div class="swing-example swing-clutch">
-                      <div class="swing-label">1v3 clutch kill</div>
-                      <div class="swing-value">+25%</div>
-                      <div class="swing-desc">Огромный вклад</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="faq-component">
-              <div class="faq-component-header">
-                <span class="faq-component-icon">💥</span>
-                <span class="faq-component-name">Base Impact</span>
-                <span class="faq-component-weight">Основа</span>
-              </div>
-              <div class="faq-component-body">
-                <p class="faq-component-desc">
-                  Официальная формула HLTV: <code>Impact = 2.13 × KPR + 0.42 × APR - 0.41</code><br>
-                  где KPR = убийства/раунд, APR = ассисты/раунд
-                </p>
-                <div class="faq-example">
-                  <div class="faq-example-title">Пример</div>
-                  <div class="faq-example-text">
-                    20K / 22 rounds = 0.91 KPR, 5A / 22 = 0.23 APR<br>
-                    Impact = 2.13 × 0.91 + 0.42 × 0.23 − 0.41 = <span class="highlight-cyan">1.63</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="faq-component">
-              <div class="faq-component-header">
-                <span class="faq-component-icon">🚪</span>
-                <span class="faq-component-name">Entry Impact</span>
-                <span class="faq-component-weight">35% веса</span>
-              </div>
-              <div class="faq-component-body">
-                <p class="faq-component-desc">
-                  Первые фраги и смерти в раунде. Entry kill = открываете раунд для команды. Entry death = теряете преимущество. Положительный Entry score = агрессивный и полезный игрок.
-                </p>
-                <div class="faq-example">
-                  <div class="faq-example-title">Расчёт</div>
-                  <div class="faq-example-text">6 Entry Kills − 2 Entry Deaths = <span class="highlight-green">+4 Entry Impact</span></div>
-                </div>
-              </div>
-            </div>
-
-            <div class="faq-component">
-              <div class="faq-component-header">
-                <span class="faq-component-icon">🔥</span>
-                <span class="faq-component-name">Multikill Bonus</span>
-                <span class="faq-component-weight">18% веса</span>
-              </div>
-              <div class="faq-component-body">
-                <p class="faq-component-desc">Бонус за несколько убийств в одном раунде.</p>
-                <div class="faq-example">
-                  <div class="multikill-grid">
-                    <div class="multikill-ex">2K +12%</div>
-                    <div class="multikill-ex">3K +20%</div>
-                    <div class="multikill-ex">4K +28%</div>
-                    <div class="multikill-ex">ACE +35%</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="faq-component">
-              <div class="faq-component-header">
-                <span class="faq-component-icon">💣</span>
-                <span class="faq-component-name">Bomb Impact</span>
-                <span class="faq-component-weight">8% веса</span>
-              </div>
-              <div class="faq-component-body">
-                <p class="faq-component-desc">
-                  Установка/обезвреживание бомбы изменяет шансы на победу. Plant на T = +WinProb, Defuse на CT = +WinProb.
-                </p>
-              </div>
-            </div>
-
           </div>
         </div>
       </div>
 
-      <!-- BLOCK 3: Scenarios -->
-      <div class="faq-block">
-        <div class="faq-block-header">
-          <span class="faq-block-num">03</span>
-          <h2 class="faq-title">Эко vs Fullbuy vs Clutch</h2>
+      <!-- ROW 3: Player A vs B comparison -->
+      <div class="faq-panel-full">
+        <div class="faq-panel-hd">
+          <div class="faq-panel-hd-label">Context matters — K/D 2.0 vs K/D 1.0</div>
+          <div class="faq-panel-hd-tag">why context beats raw stats</div>
         </div>
-        <div class="faq-block-body" style="padding: 0;">
-          <div class="faq-scenarios">
-            <div class="scenario-card">
-              <div class="scenario-header">🔫 Fullbuy vs Fullbuy</div>
-              <div class="scenario-body">
-                <p>Обе команды с полной экипировкой (AK/M4, utility, armor)</p>
-                <p class="scenario-impact"><strong>Вес убийства:</strong> <span class="highlight-green">100%</span></p>
-                <p class="scenario-desc">Стандартная ситуация. Каждый фраг имеет полную ценность.</p>
-              </div>
+        <div class="faq-vs-grid">
+          <div class="faq-vs-col" style="background:rgba(0,212,255,0.02)">
+            <div class="faq-vs-hd">
+              <div class="faq-vs-name">Игрок A — 20–10</div>
+              <div class="faq-vs-rating lose">1.18</div>
+              <div class="faq-vs-label">IMPACT RATING</div>
             </div>
-            <div class="scenario-card">
-              <div class="scenario-header">💰 Fullbuy vs Eco</div>
-              <div class="scenario-body">
-                <p>Вы fullbuy, противник eco (pistols/no armor)</p>
-                <p class="scenario-impact">
-                  <strong>Ваше убийство:</strong> <span class="highlight-yellow">68%</span> (ожидаемо)<br>
-                  <strong>Ваша смерть:</strong> <span class="highlight-red">122%</span> (позор!)
-                </p>
-                <p class="scenario-desc">Убить на eco = норма. Умереть на eco = сильно падает рейтинг.</p>
-              </div>
+            <div class="faq-vs-row">
+              <div class="faq-vs-stat left faq-vs-loser">2 FK / 0 FD</div>
+              <div class="faq-vs-stat-key">ENTRY</div>
+              <div></div>
             </div>
-            <div class="scenario-card">
-              <div class="scenario-header">⚔️ Clutch 1vX</div>
-              <div class="scenario-body">
-                <p>Вы один против нескольких</p>
-                <p class="scenario-impact">
-                  <strong>1v2 kill:</strong> <span class="highlight-green">+18% Swing</span><br>
-                  <strong>1v3 kill:</strong> <span class="highlight-green">+25% Swing</span><br>
-                  <strong>1v4 kill:</strong> <span class="highlight-green">+35% Swing</span>
-                </p>
-                <p class="scenario-desc">Каждый фраг в клатче = огромный вклад. 1v5 ace = instant MVP.</p>
-              </div>
+            <div class="faq-vs-row">
+              <div class="faq-vs-stat left faq-vs-loser">2×2K, 1×3K</div>
+              <div class="faq-vs-stat-key">MULTI</div>
+              <div></div>
             </div>
-            <div class="scenario-card">
-              <div class="scenario-header">🎯 5v1 Cleanup</div>
-              <div class="scenario-body">
-                <p>Вы впятером против одного</p>
-                <p class="scenario-impact"><strong>Ваше убийство:</strong> <span class="highlight-low">~0% Swing</span></p>
-                <p class="scenario-desc">Раунд уже выигран. Фраг почти не влияет на рейтинг.</p>
-              </div>
+            <div class="faq-vs-row">
+              <div class="faq-vs-stat left faq-vs-loser">Проиграл все</div>
+              <div class="faq-vs-stat-key">CLUTCH</div>
+              <div></div>
             </div>
+            <div class="faq-vs-row">
+              <div class="faq-vs-stat left faq-vs-loser">65%</div>
+              <div class="faq-vs-stat-key">KAST</div>
+              <div></div>
+            </div>
+            <div class="faq-vs-row">
+              <div class="faq-vs-stat left highlight-yellow">+4.2%</div>
+              <div class="faq-vs-stat-key">SWING</div>
+              <div></div>
+            </div>
+            <div style="margin-top:16px;padding:12px;background:var(--bg);border-left:2px solid var(--txt3);font-family:var(--font-hd);font-size:13px;color:var(--txt3);line-height:1.6">
+              Фраги в 5v1/5v2 cleanup. Не открывает раунды, не выигрывает клатчи.
+            </div>
+          </div>
+          <div class="faq-vs-sep">VS</div>
+          <div class="faq-vs-col" style="background:rgba(0,230,118,0.02)">
+            <div class="faq-vs-hd">
+              <div class="faq-vs-name">Игрок B — 15–15</div>
+              <div class="faq-vs-rating win">1.42</div>
+              <div class="faq-vs-label">IMPACT RATING</div>
+            </div>
+            <div class="faq-vs-row">
+              <div></div>
+              <div class="faq-vs-stat-key">ENTRY</div>
+              <div class="faq-vs-stat faq-vs-winner">8 FK / 3 FD</div>
+            </div>
+            <div class="faq-vs-row">
+              <div></div>
+              <div class="faq-vs-stat-key">MULTI</div>
+              <div class="faq-vs-stat faq-vs-loser">1×2K, 1×3K</div>
+            </div>
+            <div class="faq-vs-row">
+              <div></div>
+              <div class="faq-vs-stat-key">CLUTCH</div>
+              <div class="faq-vs-stat faq-vs-winner">1v2 + 1v3 ✓</div>
+            </div>
+            <div class="faq-vs-row">
+              <div></div>
+              <div class="faq-vs-stat-key">KAST</div>
+              <div class="faq-vs-stat faq-vs-winner">88%</div>
+            </div>
+            <div class="faq-vs-row">
+              <div></div>
+              <div class="faq-vs-stat-key">SWING</div>
+              <div class="faq-vs-stat highlight-green">+12.8%</div>
+            </div>
+            <div style="margin-top:16px;padding:12px;background:var(--bg);border-left:2px solid var(--green);font-family:var(--font-hd);font-size:13px;color:var(--txt2);line-height:1.6">
+              Entry kills, clutch wins, 88% KAST. Меньше фрагов — огромный impact.
+            </div>
+          </div>
+        </div>
+        <!-- donk vs ZywOo -->
+        <div style="padding:14px 20px;background:var(--bg3);border-top:1px solid var(--border);display:flex;align-items:center;gap:16px">
+          <div style="font-family:var(--font-mn);font-size:10px;color:var(--yellow);letter-spacing:.12em;text-transform:uppercase;flex-shrink:0">🌟 Pro example · IEM Katowice 2024</div>
+          <div style="font-family:var(--font-hd);font-size:13px;color:var(--txt2)">
+            <strong style="color:var(--txt)">ZywOo</strong> 28–18 (K/D 1.56) cleanup frags → Rating 1.31 &nbsp;·&nbsp;
+            <strong style="color:var(--green)">donk</strong> 22–20 (K/D 1.10) entry + clutches → Rating 1.48 · <strong style="color:var(--green)">MVP</strong>
           </div>
         </div>
       </div>
 
-      <!-- BLOCK 4: Rating examples -->
-      <div class="faq-block">
-        <div class="faq-block-header">
-          <span class="faq-block-num">04</span>
-          <h2 class="faq-title">Примеры рейтингов</h2>
+      <!-- ROW 4: K/D vs Impact Rating -->
+      <div class="faq-panel-full">
+        <div class="faq-panel-hd">
+          <div class="faq-panel-hd-label">K/D vs Impact Rating 3.0</div>
+          <div class="faq-panel-hd-tag">why we don't use K/D</div>
         </div>
-        <div class="faq-block-body" style="padding: 0;">
-          <div class="rating-examples">
-            <div class="rating-ex-card rating-top">
-              <div class="rating-ex-badge">2.10</div>
-              <div class="rating-ex-player">s1mple-level</div>
-              <div class="rating-ex-stats">
-                <div>KAST: 92%</div><div>SWING: +2.4</div>
-                <div>K/D: 1.85</div><div>Entry: 80%</div>
-              </div>
-              <div class="rating-ex-desc">Доминирование. Топ-1 world.</div>
-            </div>
-            <div class="rating-ex-card rating-good">
-              <div class="rating-ex-badge">1.35</div>
-              <div class="rating-ex-player">Solid player</div>
-              <div class="rating-ex-stats">
-                <div>KAST: 78%</div><div>SWING: +1.1</div>
-                <div>K/D: 1.25</div><div>Entry: 55%</div>
-              </div>
-              <div class="rating-ex-desc">Хороший игрок, стабильный вклад.</div>
-            </div>
-            <div class="rating-ex-card rating-avg">
-              <div class="rating-ex-badge">1.00</div>
-              <div class="rating-ex-player">Average</div>
-              <div class="rating-ex-stats">
-                <div>KAST: 68%</div><div>SWING: +0.3</div>
-                <div>K/D: 1.00</div><div>Entry: 50%</div>
-              </div>
-              <div class="rating-ex-desc">Средний уровень. Норма для большинства.</div>
-            </div>
-            <div class="rating-ex-card rating-low">
-              <div class="rating-ex-badge">0.72</div>
-              <div class="rating-ex-player">Struggling</div>
-              <div class="rating-ex-stats">
-                <div>KAST: 52%</div><div>SWING: −0.4</div>
-                <div>K/D: 0.75</div><div>Entry: 35%</div>
-              </div>
-              <div class="rating-ex-desc">Тяжёлая игра. Работать над aim/positioning.</div>
-            </div>
+        <div class="faq-compare-grid">
+          <div class="faq-compare-col">
+            <div class="faq-compare-title" style="color:var(--txt3)">K / D ratio</div>
+            <div class="faq-compare-row con">Не учитывает контекст убийства</div>
+            <div class="faq-compare-row con">5v1 = 1v5 по ценности</div>
+            <div class="faq-compare-row con">Eco = Fullbuy по весу</div>
+            <div class="faq-compare-row con">Cleanup = Entry по значимости</div>
+          </div>
+          <div class="faq-compare-col">
+            <div class="faq-compare-title" style="color:var(--orange)">Impact Rating 3.0</div>
+            <div class="faq-compare-row pro">Win probability delta (SWING)</div>
+            <div class="faq-compare-row pro">Clutch &gt; Cleanup — всегда</div>
+            <div class="faq-compare-row pro">Eco penalties / fullbuy bonuses</div>
+            <div class="faq-compare-row pro">Entry + Trade + KAST учтены</div>
           </div>
         </div>
       </div>
 
-      <!-- BLOCK 5: Context example -->
-      <div class="faq-block">
-        <div class="faq-block-header">
-          <span class="faq-block-num">05</span>
-          <h2 class="faq-title">Почему контекст важнее статистики?</h2>
+      <!-- FINAL -->
+      <div class="faq-final-panel">
+        <div class="faq-final-text">
+          Impact Rating 3.0 оценивает <strong>реальный вклад в победу</strong>, а не просто статистику.
+          Основан на принципах HLTV 3.0 с улучшениями для клатчей, эко-раундов и критических ситуаций.
         </div>
-        <div class="faq-block-body">
-          <p class="faq-text">
-            Игрок A сыграл 20–10 (K/D 2.0), Игрок B сыграл 15–15 (K/D 1.0).
-            На первый взгляд A намного лучше. <strong>Но посмотрим на контекст:</strong>
-          </p>
-          <div class="comparison-players">
-            <div class="player-comparison player-a">
-              <div class="player-comparison-header">
-                <div class="player-comparison-name">Игрок A — 20-10 / K/D 2.0</div>
-                <div class="player-comparison-rating rating-good">Rating 1.18</div>
-              </div>
-              <div class="player-comparison-stats">
-                <div class="stat-row"><span class="stat-label">Entry Kills</span><span class="stat-value">2 FK / 0 FD</span></div>
-                <div class="stat-row"><span class="stat-label">Multikills</span><span class="stat-value">2×2K, 1×3K</span></div>
-                <div class="stat-row"><span class="stat-label">Clutches</span><span class="stat-value">Проиграл все 1vX</span></div>
-                <div class="stat-row"><span class="stat-label">KAST</span><span class="stat-value">65%</span></div>
-                <div class="stat-row"><span class="stat-label">SWING</span><span class="stat-value highlight-yellow">+4.2%</span></div>
-              </div>
-              <div class="player-comparison-breakdown">
-                <strong>Разбор</strong>
-                Много фрагов в 5v1/5v2 cleanup ситуациях. Не открывает раунды, не выигрывает клатчи. Хорошая статистика — низкий impact.
-              </div>
-            </div>
-            <div class="player-comparison player-b">
-              <div class="player-comparison-header">
-                <div class="player-comparison-name">Игрок B — 15-15 / K/D 1.0</div>
-                <div class="player-comparison-rating rating-top">Rating 1.42</div>
-              </div>
-              <div class="player-comparison-stats">
-                <div class="stat-row"><span class="stat-label">Entry Kills</span><span class="stat-value">8 FK / 3 FD</span></div>
-                <div class="stat-row"><span class="stat-label">Multikills</span><span class="stat-value">1×2K, 1×3K</span></div>
-                <div class="stat-row"><span class="stat-label">Clutches</span><span class="stat-value">Выиграл 1v2 + 1v3</span></div>
-                <div class="stat-row"><span class="stat-label">KAST</span><span class="stat-value">88%</span></div>
-                <div class="stat-row"><span class="stat-label">SWING</span><span class="stat-value highlight-green">+12.8%</span></div>
-              </div>
-              <div class="player-comparison-breakdown">
-                <strong>Разбор</strong>
-                Открывает раунды (8 entry kills), выигрывает критические клатчи, участвует почти в каждом раунде. Меньше фрагов — огромный impact.
-              </div>
-            </div>
-          </div>
-
-          <div class="faq-conclusion">
-            <div class="conclusion-icon">💡</div>
-            <div class="conclusion-text">
-              <strong>Вывод:</strong> Игрок B с K/D 1.0 получает рейтинг <span class="highlight-green">1.42</span>,
-              а Игрок A с K/D 2.0 — только <span class="highlight-yellow">1.18</span>.
-              <strong>Impact Rating 3.0 оценивает КОГДА и КАК вы убили, а не просто СКОЛЬКО.</strong>
-            </div>
-          </div>
-
-          <div class="real-world-example">
-            <div class="real-world-header">🌟 Реальный пример из про-сцены</div>
-            <div class="real-world-text">
-              <strong>donk vs ZywOo</strong> — IEM Katowice 2024<br><br>
-              <strong>ZywOo:</strong> 28–18 (K/D 1.56), много фрагов в cleanup → Rating: 1.31<br>
-              <strong>donk:</strong> 22–20 (K/D 1.10), критические entry kills и клатчи → Rating: 1.48<br><br>
-              donk выиграл MVP турнира, потому что его фраги <strong>решали раунды</strong>, а не просто красиво выглядели в статистике.
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- BLOCK 6: K/D vs Rating -->
-      <div class="faq-block">
-        <div class="faq-block-header">
-          <span class="faq-block-num">06</span>
-          <h2 class="faq-title">Почему это лучше чем K/D?</h2>
-        </div>
-        <div class="faq-block-body" style="padding: 0;">
-          <div class="comparison-grid">
-            <div class="comparison-item">
-              <div class="comparison-label">K/D</div>
-              <div class="comparison-con">❌ Не учитывает контекст</div>
-              <div class="comparison-con">❌ 5v1 = 1v5 по ценности</div>
-              <div class="comparison-con">❌ Eco = Fullbuy</div>
-            </div>
-            <div class="comparison-item">
-              <div class="comparison-label">Impact Rating 3.0</div>
-              <div class="comparison-pro">✅ Учитывает WinProb</div>
-              <div class="comparison-pro">✅ Clutch &gt; Cleanup</div>
-              <div class="comparison-pro">✅ Eco penalties</div>
-              <div class="comparison-pro">✅ Entry / Trade / KAST</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- BLOCK 7: Final -->
-      <div class="faq-block faq-final">
-        <div class="faq-block-header">
-          <span class="faq-block-num">07</span>
-          <h2 class="faq-title">Итог</h2>
-        </div>
-        <div class="faq-block-body">
-          <p class="faq-text-large">
-            Impact Rating 3.0 оценивает <strong>реальный вклад в победу</strong>, а не просто статистику.
-            Система основана на принципах HLTV 3.0 с улучшениями для учёта клатчей, эко-раундов и критических моментов.
-          </p>
-          <div class="faq-cta">
-            <p>Играйте умно — делайте импакт в нужный момент, а не собирайте фраги в сейвах 🔥</p>
-          </div>
-        </div>
+        <div class="faq-final-cta">Играй умно.<br>Делай импакт 🔥</div>
       </div>
 
     </div>
