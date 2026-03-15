@@ -2497,7 +2497,6 @@ td .swing-negative {
   <div class="weapon-detail-hero">
     <div class="weapon-detail-hero-inner">
       <div style="display:flex;flex-direction:column;align-items:center;gap:8px">
-        <div id="wdWeaponSvg" style="color:var(--orange);opacity:0.7;height:50px;width:150px"></div>
         <div class="weapon-detail-icon-big" id="wdWeaponName">AK47</div>
       </div>
       <div class="weapon-detail-stats" id="wdStats"></div>
@@ -3347,9 +3346,7 @@ function renderWeaponDetail(weaponName, data) {
   const avgHS = data.length ? data.reduce((s, p) => s + (p.hs_percent || 0), 0) / data.length : 0;
   const avgDmg = data.length ? data.reduce((s, p) => s + (p.avg_dmg_per_kill || 0), 0) / data.length : 0;
 
-  // SVG иконка оружия
-  const wdSvg = $('wdWeaponSvg');
-  if (wdSvg) wdSvg.innerHTML = getWeaponSvg(weaponName);
+  // SVG убран
 
   const wdStats = $('wdStats');
   if (wdStats) {
