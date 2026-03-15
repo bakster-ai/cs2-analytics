@@ -44,7 +44,6 @@ def get_player_overview(db: Session, player_id: int) -> dict:
     ).filter(
         MatchPlayer.player_id == player_id,
         ((MatchPlayer.team == "CT") & (Match.team1_score > Match.team2_score)) |
-        ((MatchPlayer.team == "TERRORIST") & (Match.team2_score > Match.team1_score)) |
         ((MatchPlayer.team == "T") & (Match.team2_score > Match.team1_score))
     ).scalar() or 0
     
@@ -95,7 +94,7 @@ def get_rating_progression(db: Session, player_id: int, limit: int = 50) -> list
     for m in reversed(matches):
         won = (
             (m.team == "CT" and m.team1_score > m.team2_score) or
-            (m.team in ("T", "TERRORIST") and m.team2_score > m.team1_score)
+            (m.team == "T" and m.team2_score > m.team1_score)
         )
         
         progression.append({
@@ -142,7 +141,7 @@ def get_map_performance(db: Session, player_id: int) -> list[dict]:
     return sorted(map_stats, key=lambda x: x["avg_rating"], reverse=True)
 
 
-def get_best_and_worst_maps(db: Session, player_id: int, min_matches: int = 2) -> dict:
+def get_best_and_worst_maps(db: Session, player_id: int, min_matches: int = 1) -> dict:
     
     map_stats = get_map_performance(db, player_id)
     
