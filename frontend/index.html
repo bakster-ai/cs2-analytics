@@ -578,7 +578,7 @@ td.num {
   line-height:.9; letter-spacing:-.01em; text-transform:uppercase;
 }
 .profile-steamid {
-  font-family:var(--font-mn); font-size:11px; color:var(--txt3); margin-top:6px;
+  font-family:var(--font-mn); font-size:11px; color:var(--txt2); margin-top:6px;
 }
 .profile-kpis {
   display:flex; gap:32px; margin-top:20px;
@@ -1539,8 +1539,9 @@ td .swing-negative {
 }
 
 .advanced-stat-desc {
-  font-size: 12px;
-  color: var(--txt3);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--txt2);
   font-style: italic;
 }
 
@@ -3213,7 +3214,7 @@ function renderProfileMatchHistory(hist) {
 
   tbody.innerHTML = hist.map((m, i) => `
     <tr onclick="loadMatchDetail(${m.match_id})" style="animation:fadeSlideIn .2s ${i * .03}s both">
-      <td style="font-family:var(--font-mn);font-size:11px;color:var(--txt3)">
+      <td style="font-family:var(--font-mn);font-size:12px;color:var(--txt2)">
         ${m.played_at ? formatDate(m.played_at) : '—'}
       </td>
       <td style="font-family:var(--font-hd);font-weight:700">
