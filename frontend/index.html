@@ -725,26 +725,22 @@ td.num {
   letter-spacing: .06em;
   padding: 2px 8px; border-radius: 2px; white-space: nowrap;
 }
-.impact-badge.fire      { background:rgba(255,106,0,.2);  color:var(--orange); border:1px solid rgba(255,106,0,.3); }
-.impact-badge.clutch    { background:rgba(0,212,255,.15); color:var(--cyan);   border:1px solid rgba(0,212,255,.25); }
-.impact-badge.entry     { background:rgba(0,230,118,.15); color:var(--green);  border:1px solid rgba(0,230,118,.25); }
-.impact-badge.survivor  { background:rgba(100,180,255,.15); color:#64b4ff;     border:1px solid rgba(100,180,255,.25); }
-.impact-badge.assist    { background:rgba(255,214,0,.15); color:var(--yellow); border:1px solid rgba(255,214,0,.25); }
-.impact-badge.headhunter{ background:rgba(255,61,61,.15);  color:var(--red);   border:1px solid rgba(255,61,61,.25); }
-.impact-badge.ghost     { background:rgba(180,100,255,.15);color:#b464ff;      border:1px solid rgba(180,100,255,.25); }
+.impact-badge.fire   { background:rgba(255,106,0,.2);  color:var(--orange); border:1px solid rgba(255,106,0,.3); }
+.impact-badge.clutch { background:rgba(0,212,255,.15); color:var(--cyan);   border:1px solid rgba(0,212,255,.25); }
+.impact-badge.entry  { background:rgba(0,230,118,.15); color:var(--green);  border:1px solid rgba(0,230,118,.25); }
 .mvp-badges { display:flex; gap:8px; margin-top:6px; flex-wrap:wrap; }
-.round-timeline { display:flex; flex-wrap:wrap; gap:5px; margin:16px 0; }
+.round-timeline { display:flex; flex-wrap:wrap; gap:3px; margin:12px 0; }
 .round-pip-new {
-  width:38px; height:38px;
+  width:24px; height:24px;
   display:flex; align-items:center; justify-content:center;
-  font-family:var(--font-hd); font-size:13px; font-weight:800;
-  border-radius:3px; cursor:default; position:relative;
+  font-family:var(--font-mn); font-size:8px; font-weight:700;
+  border-radius:2px; cursor:default; position:relative;
   transition:transform .1s;
 }
-.round-pip-new:hover { transform:scale(1.2); z-index:2; }
-.round-pip-new.ct-win { background:rgba(0,212,255,.25);  border:2px solid rgba(0,212,255,.6);  color:var(--cyan); }
-.round-pip-new.t-win  { background:rgba(255,106,0,.2); border:2px solid rgba(255,106,0,.5); color:var(--orange); }
-.round-pip-new.halftime { width:6px; height:38px; background:var(--border2); border-radius:3px; margin:0 4px; }
+.round-pip-new:hover { transform:scale(1.3); z-index:2; }
+.round-pip-new.ct-win { background:rgba(0,212,255,.2);  border:1px solid rgba(0,212,255,.4);  color:var(--cyan); }
+.round-pip-new.t-win  { background:rgba(255,106,0,.15); border:1px solid rgba(255,106,0,.35); color:var(--orange); }
+.round-pip-new.halftime { width:4px; background:var(--border2); border-radius:2px; }
 
 /* ═══════════════════════════════════════════════════════
    FILTER BAR
@@ -2848,6 +2844,8 @@ const navMap = {
   'faq':     'nav-faq',
 };
 
+let initialLoadDone = false;
+
 function showPage(name) {
   Object.values(pageMap).forEach(id => {
     const el = $(id);
@@ -2863,8 +2861,8 @@ function showPage(name) {
 
   window.scrollTo({top:0, behavior:'smooth'});
 
-  // Lazy load data
-  if (name === 'home')    loadLeaderboard();
+  // Lazy load data — пропускаем первый вызов home, его сделает checkBackend
+  if (name === 'home' && initialLoadDone) loadLeaderboard();
   if (name === 'matches') loadMatches();
   if (name === 'weapons') loadWeapons();
 }
@@ -2890,6 +2888,7 @@ async function checkBackend() {
     $('statusLabel').textContent = 'API online';
     loadOverview();
     loadLeaderboard();
+    initialLoadDone = true;
   } catch {
     $('statusDot').style.background = 'var(--red)';
     $('statusDot').style.boxShadow   = '0 0 8px var(--red)';
@@ -3107,52 +3106,16 @@ async function loadMatchDetail(id) {
   }
 }
 
-function getImpactBadge(p, allPlayers) {
+function getImpactBadge(p) {
   const badges = [];
-  const kills = Number(p.K || 0);
-  const deaths = Number(p.D || 0);
-  const assists = Number(p.A || 0);
-  const hs = Number(p.HS || 0);
-  const kast = Number(p.kast_pct || 0);
-  const swing = Number(p.swing || 0);
-  const rating = Number(p.rating || 0);
-  const fk = Number(p.FK || 0);
-  const fd = Number(p.FD || 0);
-  const entry = (fk + fd) > 0 ? fk / (fk + fd) * 100 : 0;
-
-  // Топ фрагер в матче
-  const maxKills = allPlayers ? Math.max(...allPlayers.map(x => Number(x.K || 0))) : 0;
-  if (kills === maxKills && kills >= 10)
-    badges.push(`<span class="impact-badge fire">🔥 Fragger</span>`);
-
-  // Entry specialist
-  if (entry >= 60 && fk >= 2)
-    badges.push(`<span class="impact-badge entry">🎯 Entry</span>`);
-
-  // Clutch — высокий swing означает переломные фраги
-  if (swing >= 18)
-    badges.push(`<span class="impact-badge clutch">⚡ Clutch</span>`);
-
-  // Survivor — мало смертей
-  if (deaths <= 8 && kills >= 8)
-    badges.push(`<span class="impact-badge survivor">🛡️ Survivor</span>`);
-
-  // Assist King
-  if (assists >= 6)
-    badges.push(`<span class="impact-badge assist">🤝 Assist King</span>`);
-
-  // Headhunter
-  if (hs >= 60 && kills >= 8)
-    badges.push(`<span class="impact-badge headhunter">💥 Headhunter</span>`);
-
-  // Ghost — участвовал почти в каждом раунде
-  if (kast >= 85)
-    badges.push(`<span class="impact-badge ghost">👻 Ghost</span>`);
-
+  if (p.rating >= 1.5) badges.push(`<span class="impact-badge fire">🔥 High Impact</span>`);
+  const entry = (p.FK || 0) + (p.FD || 0) > 0 ? (p.FK || 0) / ((p.FK || 0) + (p.FD || 0)) * 100 : 0;
+  if (entry >= 60 && (p.FK || 0) >= 2) badges.push(`<span class="impact-badge entry">🎯 Entry</span>`);
+  if (p.swing >= 15) badges.push(`<span class="impact-badge clutch">⚡ Clutch</span>`);
   return badges.join('');
 }
 
-function renderPlayerRow(p, i, allPlayers) {
+function renderPlayerRow(p, i) {
   const entry = (p.FK || 0) + (p.FD || 0) > 0
     ? Math.round((p.FK || 0) / ((p.FK || 0) + (p.FD || 0)) * 100)
     : 0;
@@ -3164,7 +3127,7 @@ function renderPlayerRow(p, i, allPlayers) {
           ${renderAvatar(p, 36)}
           <div>
             <div class="player-name">${p.nickname || 'Unknown'}${isMvp ? ' 👑' : ''}</div>
-            <div style="display:flex;gap:4px;margin-top:3px;flex-wrap:wrap">${getImpactBadge(p, allPlayers)}</div>
+            <div style="display:flex;gap:4px;margin-top:3px">${getImpactBadge(p)}</div>
           </div>
         </div>
       </td>
@@ -3220,15 +3183,18 @@ function renderMatchDetail(m) {
   if (winners.length && roundHist && pipsEl) {
     roundHist.style.display = 'block';
     const halfAt = 12;
-    const otAt = 24; // OT separator after round 24
     let html = `<div class="round-timeline">`;
     winners.forEach((w, i) => {
       if (i === halfAt) html += `<div class="round-pip-new halftime" title="Halftime"></div>`;
-      if (i === otAt && winners.length > 24) html += `<div class="round-pip-new halftime" title="Overtime"></div>`;
       const cls = w === 'CT' ? 'ct-win' : 't-win';
       html += `<div class="round-pip-new ${cls}" title="Round ${i+1}: ${w} wins">${i+1}</div>`;
     });
     html += `</div>`;
+    // Legend
+    html += `<div style="display:flex;gap:16px;margin-top:4px">
+      <span style="font-family:var(--font-mn);font-size:10px;color:var(--cyan)">■ CT wins</span>
+      <span style="font-family:var(--font-mn);font-size:10px;color:var(--orange)">■ T wins</span>
+    </div>`;
     pipsEl.innerHTML = html;
   }
 
@@ -3267,8 +3233,8 @@ function renderMatchDetail(m) {
   const ctBody = $('matchScoreboardCT');
   const tBody  = $('matchScoreboardT');
 
-  if (ctBody) ctBody.innerHTML = ctPlayers.map((p, i) => renderPlayerRow(p, i, m.players)).join('');
-  if (tBody)  tBody.innerHTML  = tPlayers.map((p, i)  => renderPlayerRow(p, i, m.players)).join('');
+  if (ctBody) ctBody.innerHTML = ctPlayers.map((p, i) => renderPlayerRow(p, i)).join('');
+  if (tBody)  tBody.innerHTML  = tPlayers.map((p, i)  => renderPlayerRow(p, i)).join('');
 }
 
 /* ══════════════════════════════════════════════════════
