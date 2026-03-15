@@ -3220,18 +3220,15 @@ function renderMatchDetail(m) {
   if (winners.length && roundHist && pipsEl) {
     roundHist.style.display = 'block';
     const halfAt = 12;
+    const otAt = 24; // OT separator after round 24
     let html = `<div class="round-timeline">`;
     winners.forEach((w, i) => {
       if (i === halfAt) html += `<div class="round-pip-new halftime" title="Halftime"></div>`;
+      if (i === otAt && winners.length > 24) html += `<div class="round-pip-new halftime" title="Overtime"></div>`;
       const cls = w === 'CT' ? 'ct-win' : 't-win';
       html += `<div class="round-pip-new ${cls}" title="Round ${i+1}: ${w} wins">${i+1}</div>`;
     });
     html += `</div>`;
-    // Legend
-    html += `<div style="display:flex;gap:16px;margin-top:4px">
-      <span style="font-family:var(--font-mn);font-size:10px;color:var(--cyan)">■ CT wins</span>
-      <span style="font-family:var(--font-mn);font-size:10px;color:var(--orange)">■ T wins</span>
-    </div>`;
     pipsEl.innerHTML = html;
   }
 
