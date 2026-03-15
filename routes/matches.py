@@ -53,6 +53,7 @@ def get_match(match_id: int, db: Session = Depends(get_db)):
         {
             "steam_id": p.steam_id,
             "nickname": p.nickname,
+            "avatar_url": p.avatar_url,
             "team":     mp.team,
             "K":        mp.kills,
             "D":        mp.deaths,

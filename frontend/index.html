@@ -323,25 +323,6 @@ td.num {
   color: var(--orange);
   flex-shrink:0;
   clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 0 100%);
-  overflow: hidden;
-  position: relative;
-}
-.player-avatar img {
-  width: 100%; height: 100%;
-  object-fit: cover;
-  display: block;
-}
-.avatar-fallback {
-  width: 100%; height: 100%;
-  display: flex; align-items: center; justify-content: center;
-  font-family: var(--font-hd); font-size:14px; font-weight:800;
-  color: var(--orange);
-}
-.avatar-initials {
-  width: 100%; height: 100%;
-  display: flex; align-items: center; justify-content: center;
-  font-family: var(--font-hd); font-size:14px; font-weight:800;
-  color: var(--orange);
 }
 .player-name {
   font-family: var(--font-hd); font-size:16px; font-weight:700;
@@ -2584,10 +2565,6 @@ async function loadLeaderboard() {
 
 function renderLeaderboard(data) {
   const tbody = $('leaderboardBody');
-  // DEBUG: проверяем avatar_url
-  if (data.length > 0) {
-    console.log('[Leaderboard] avatar_url первого игрока:', data[0].nickname, data[0].avatar_url);
-  }
 
   if (!data.length) {
     tbody.innerHTML = `
@@ -2822,7 +2799,7 @@ function renderMatchDetail(m) {
     <tr onclick="loadPlayer('${p.steam_id}')" style="animation:fadeSlideIn .2s ${i * .04}s both">
       <td>
         <div class="player-cell">
-          <div class="player-avatar">${initials(p.nickname)}</div>
+          ${renderAvatar(p, 40)}
           <div>
             <div class="player-name">${p.nickname || 'Unknown'}</div>
             <div class="player-steam">${p.steam_id?.slice(-8) || ''}</div>
@@ -2947,7 +2924,7 @@ function renderWeaponDetail(weaponName, data) {
       <td>${i + 1}</td>
       <td>
         <div class="player-cell">
-          <div class="player-avatar">${initials(p.nickname)}</div>
+          ${renderAvatar(p, 40)}
           <div>
             <div class="player-name">${p.nickname || 'Unknown'}</div>
           </div>
