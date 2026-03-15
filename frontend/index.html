@@ -2845,6 +2845,7 @@ const navMap = {
 };
 
 let initialLoadDone = false;
+const pageLoaded = {}; // cache: tracks which pages have been loaded
 
 function showPage(name) {
   Object.values(pageMap).forEach(id => {
@@ -2861,10 +2862,10 @@ function showPage(name) {
 
   window.scrollTo({top:0, behavior:'smooth'});
 
-  // Lazy load data — пропускаем первый вызов home, его сделает checkBackend
-  if (name === 'home' && initialLoadDone) loadLeaderboard();
-  if (name === 'matches') loadMatches();
-  if (name === 'weapons') loadWeapons();
+  // Load data only if not already loaded (no flicker on back navigation)
+  if (name === 'home' && initialLoadDone && !pageLoaded.home) { loadLeaderboard(); pageLoaded.home = true; }
+  if (name === 'matches' && !pageLoaded.matches) { loadMatches(); pageLoaded.matches = true; }
+  if (name === 'weapons' && !pageLoaded.weapons) { loadWeapons(); pageLoaded.weapons = true; }
 }
 
 /* ══════════════════════════════════════════════════════
@@ -3182,19 +3183,41 @@ function renderMatchDetail(m) {
   const winners = m.round_winners || [];
   if (winners.length && roundHist && pipsEl) {
     roundHist.style.display = 'block';
+
+    // Determine which side Team 1 started on (CT or T) from players data
+    const team1Players = m.players ? m.players.filter(p => p.team === 'CT' || p.team?.includes('CT')) : [];
+    // ctPlayers are Team 1 if scoreboard CT side = Team 1 (left side)
+    // We use first_half scores to verify: fh.ct = CT rounds won in 1st half
+    // Team1 starts CT if ctPlayers exist and team1_score aligns
+    // Simplest: check if any Team 1 player is CT side
+    const team1StartsCT = team1Players.length > 0;
+
     const halfAt = 12;
+    const otAt = 24;
     let html = `<div class="round-timeline">`;
     winners.forEach((w, i) => {
       if (i === halfAt) html += `<div class="round-pip-new halftime" title="Halftime"></div>`;
-      const cls = w === 'CT' ? 'ct-win' : 't-win';
-      html += `<div class="round-pip-new ${cls}" title="Round ${i+1}: ${w} wins">${i+1}</div>`;
+      if (i === otAt && winners.length > 24) html += `<div class="round-pip-new halftime" title="Overtime"></div>`;
+
+      // In 1st half (i < 12): sides as-is. In 2nd half (12-23): sides swap. OT (24+): alternates every 3
+      let team1Won;
+      if (i < 12) {
+        team1Won = team1StartsCT ? w === 'CT' : w === 'T';
+      } else if (i < 24) {
+        // sides swapped in 2nd half
+        team1Won = team1StartsCT ? w === 'T' : w === 'CT';
+      } else {
+        // OT: sides alternate every 3 rounds
+        const otRound = i - 24;
+        const otHalf = Math.floor(otRound / 3);
+        const team1IsCtInOt = (otHalf % 2 === 0) ? team1StartsCT : !team1StartsCT;
+        team1Won = team1IsCtInOt ? w === 'CT' : w === 'T';
+      }
+
+      const cls = team1Won ? 'ct-win' : 't-win';
+      html += `<div class="round-pip-new ${cls}" title="Round ${i+1}: ${team1Won ? 'Team 1' : 'Team 2'} wins">${i+1}</div>`;
     });
     html += `</div>`;
-    // Legend
-    html += `<div style="display:flex;gap:16px;margin-top:4px">
-      <span style="font-family:var(--font-mn);font-size:10px;color:var(--cyan)">■ CT wins</span>
-      <span style="font-family:var(--font-mn);font-size:10px;color:var(--orange)">■ T wins</span>
-    </div>`;
     pipsEl.innerHTML = html;
   }
 
