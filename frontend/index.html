@@ -2897,8 +2897,8 @@ async function checkBackend() {
 /* ── Overview stats ── */
 async function loadOverview() {
   try {
-    const matches = await apiFetch('/api/matches?limit=1000');
-    const players = await apiFetch('/api/players?limit=1000');
+    const matches = await apiFetch('/api/matches?limit=100');
+    const players = await apiFetch('/api/players?limit=100');
     const totalKills = matches.reduce((s,m) => s + (m.total_kills||0), 0);
     $('stat-total-matches').textContent = matches.length;
     $('stat-total-players').textContent = players.length;
@@ -3092,6 +3092,18 @@ function renderMatches() {
    MATCH DETAIL
 ══════════════════════════════════════════════════════ */
 async function loadMatchDetail(id) {
+  if (!id || id === 'undefined') { console.warn('loadMatchDetail: invalid id', id); return; }
+  try {
+    const m = await apiFetch(`/api/matches/${id}`);
+    renderMatchDetail(m);
+    showPage('match-detail');
+  } catch (e) {
+    console.error(e);
+    showToast('Could not load match', 'error');
+  }
+}
+
+function getImpactBadge(p) {
   const badges = [];
   if (p.rating >= 1.5) badges.push(`<span class="impact-badge fire">🔥 High Impact</span>`);
   const entry = (p.FK || 0) + (p.FD || 0) > 0 ? (p.FK || 0) / ((p.FK || 0) + (p.FD || 0)) * 100 : 0;
