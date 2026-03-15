@@ -832,32 +832,14 @@ td.num {
 .weapon-top-player-rank-sm.p3 { color: #cd7f32; }
 .weapon-top-player-name-sm {
   font-family: var(--font-hd);
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 700;
   color: var(--cyan);
   flex: 1;
 }
 .weapon-top-player-kills-sm {
   font-family: var(--font-hd);
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--txt2);
-}px;
-  flex-shrink: 0;
-}
-.weapon-top-player-rank-sm.p1 { color: var(--yellow); }
-.weapon-top-player-rank-sm.p2 { color: var(--txt2); }
-.weapon-top-player-rank-sm.p3 { color: #cd7f32; }
-.weapon-top-player-name-sm {
-  font-family: var(--font-hd);
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--cyan);
-  flex: 1;
-}
-.weapon-top-player-kills-sm {
-  font-family: var(--font-hd);
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 700;
   color: var(--txt2);
 }
@@ -3353,12 +3335,9 @@ function renderWeaponDetail(weaponName, data) {
 
   const wdStats = $('wdStats');
   if (wdStats) {
-    const usageCount = data.length;
-    const killsPerUsage = usageCount > 0 ? (totalKills / data.reduce((s,p) => s + (p.matches_used||0), 0)).toFixed(1) : '0';
     wdStats.innerHTML = [
       { v: totalKills.toLocaleString(), l: 'Total Kills' },
       { v: avgHS.toFixed(1) + '%', l: 'Avg HS%' },
-      { v: killsPerUsage, l: 'Kills/Usage' },
       { v: data.length, l: 'Players Used' },
     ].map(s => `
       <div>
