@@ -876,22 +876,32 @@ class CS2DemoAnalyzer:
         )
         second_half_t = regulation_end - halftime_round - second_half_ct if regulation_end > halftime_round else 0
 
-        # OT раунды (24+): каждые 6 раундов — новый OT, смена сторон каждые 3
+        # OT раунды (24+):
+        # CT-стартовая команда в OT:
+        #   раунды 24-26 (первые 3 OT) → играет за T
+        #   раунды 27-29 (вторые 3 OT) → играет за CT
+        #   и так далее каждые 6 раундов
         ot_ct_extra = 0
         ot_t_extra = 0
         if len(self.round_winners) > 24:
             for i in range(24, len(self.round_winners)):
                 ot_round = i - 24  # 0-based внутри OT
-                ot_half = (ot_round % 6) < 3  # первые 3 раунда OT = первая половина OT
+                # CT-стартовая команда: первые 3 раунда каждого OT играет за T, вторые 3 за CT
+                ct_team_plays_ct = (ot_round % 6) >= 3
                 winner = self.round_winners[i]
-                if winner == "CT":
-                    ot_ct_extra += 1
+                if ct_team_plays_ct:
+                    # CT-стартовая за CT
+                    if winner == "CT":
+                        ot_ct_extra += 1
+                    else:
+                        ot_t_extra += 1
                 else:
-                    ot_t_extra += 1
+                    # CT-стартовая за T
+                    if winner == "T":
+                        ot_ct_extra += 1
+                    else:
+                        ot_t_extra += 1
 
-        # team1 = команда начавшая за CT
-        # В обычном матче: team1_score = first_half_ct + second_half_t
-        # В OT: CT и T меняются, поэтому просто суммируем все победы CT-стартовой команды
         team_started_ct_score = first_half_ct + second_half_t + ot_ct_extra
         team_started_t_score = first_half_t + second_half_ct + ot_t_extra
 
