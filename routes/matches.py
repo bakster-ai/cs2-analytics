@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from typing import Optional
 from core.database import get_db
 from models.models import Match, MatchPlayer, Player
+from models.round_event import RoundEvent
 from analytics.leaderboard import get_leaderboard
 from analytics.weapon_stats import get_weapon_leaderboard
 
@@ -77,6 +78,28 @@ def get_match(match_id: int, db: Session = Depends(get_db)):
         for mp, p in rows
     ]
 
+    # Round winners для timeline
+    round_events = (
+        db.query(RoundEvent)
+        .filter(
+            RoundEvent.match_id == match_id,
+            RoundEvent.event_type == 'round_result'
+        )
+        .order_by(RoundEvent.round_number)
+        .all()
+    )
+    round_winners = [e.winner_side for e in round_events if e.winner_side]
+
+    # Счёт по половинам
+    halftime = 12
+    first_half = round_winners[:halftime]
+    second_half = round_winners[halftime:24]
+
+    first_half_ct = sum(1 for r in first_half if r == 'CT')
+    first_half_t = len(first_half) - first_half_ct
+    second_half_ct = sum(1 for r in second_half if r == 'CT')
+    second_half_t = len(second_half) - second_half_ct
+
     return {
         "id":           match.id,
         "played_at":    match.played_at.isoformat(),
@@ -86,6 +109,9 @@ def get_match(match_id: int, db: Session = Depends(get_db)):
         "total_rounds": match.total_rounds,
         "total_kills":  match.total_kills,
         "players":      players,
+        "round_winners": round_winners,
+        "first_half":  {"ct": first_half_ct, "t": first_half_t},
+        "second_half": {"ct": second_half_ct, "t": second_half_t},
     }
 
 
