@@ -494,6 +494,19 @@ td.num {
   background: var(--bg1);
   border-bottom: 1px solid var(--border);
   padding: 40px 32px 32px;
+  position: relative;
+  overflow: hidden;
+}
+.match-detail-hero-bg {
+  position: absolute; inset: 0;
+  background-size: cover;
+  background-position: center;
+  opacity: 0.18;
+  transition: opacity .3s;
+}
+.match-detail-hero:hover .match-detail-hero-bg { opacity: 0.25; }
+.match-detail-hero-content {
+  position: relative; z-index: 1;
 }
 
 .mdhero-inner {
@@ -2380,6 +2393,8 @@ td .swing-negative {
   <button class="btn-back" onclick="showPage('matches')">← Back to Matches</button>
 
   <div class="match-detail-hero">
+    <div class="match-detail-hero-bg" id="mdHeroBg"></div>
+    <div class="match-detail-hero-content">
     <div class="mdhero-inner">
       <div class="team-block">
         <div class="team-side-tag" style="color:var(--cyan)">TEAM 1</div>
@@ -2396,6 +2411,7 @@ td .swing-negative {
         <div class="team-final-score" id="md-score2" style="color:var(--red)">—</div>
         <div class="half-scores right" id="md-halves2"></div>
       </div>
+    </div>
     </div>
   </div>
 
@@ -2983,9 +2999,8 @@ function renderMatches() {
         <div class="match-card-content">
           <div class="match-card-header">
             <div class="match-map">${(m.map || 'unknown').replace('de_', '')}</div>
-            <div class="match-date">
-              ${m.played_at ? formatDate(m.played_at) : '—'}<br>
-              <span style="color:var(--txt3)">${m.map || '—'}</span>
+            <div style="font-family:var(--font-hd);font-size:14px;font-weight:700;color:var(--txt);text-align:right">
+              ${m.played_at ? formatDate(m.played_at) : '—'}
             </div>
           </div>
 
@@ -2997,11 +3012,6 @@ function renderMatches() {
             <div class="score-num ${!win && !draw ? 'win' : draw ? '' : 'loss'}" style="${draw ? 'color:var(--txt)' : ''}">
               ${s2}
             </div>
-          </div>
-
-          <div class="match-card-footer">
-            <div class="match-meta-item">Rounds: <strong>${m.total_rounds ?? 0}</strong></div>
-            <div class="match-meta-item">Kills: <strong>${m.total_kills ?? 0}</strong></div>
           </div>
         </div>
       </div>
@@ -3028,16 +3038,20 @@ function renderMatchDetail(m) {
   $('md-score1').textContent = m.team1_score ?? m.ct_score ?? '—';
   $('md-score2').textContent = m.team2_score ?? m.t_score ?? '—';
 
+  // Фон карты в шапке матча
+  const mdBg = $('mdHeroBg');
+  if (mdBg) {
+    const mapImg = MAP_IMAGES[m.map] || '';
+    mdBg.style.backgroundImage = mapImg ? `url('${mapImg}')` : '';
+  }
+
   const s1 = Number(m.team1_score ?? m.ct_score ?? 0);
   const s2 = Number(m.team2_score ?? m.t_score ?? 0);
 
   $('md-score1').style.color = s1 > s2 ? 'var(--green)' : s1 === s2 ? 'var(--yellow)' : 'var(--red)';
   $('md-score2').style.color = s2 > s1 ? 'var(--green)' : s1 === s2 ? 'var(--yellow)' : 'var(--red)';
 
-  $('md-meta').innerHTML = `
-    ${m.played_at ? formatDate(m.played_at) : '—'}<br>
-    ${m.total_rounds ?? 0} rounds &nbsp;·&nbsp; ${m.total_kills ?? 0} kills
-  `;
+  $('md-meta').innerHTML = `${m.played_at ? formatDate(m.played_at) : '—'}`;
 
   const fh = m.first_half || {};
   const sh = m.second_half || {};
