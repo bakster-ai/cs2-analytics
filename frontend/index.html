@@ -3092,69 +3092,6 @@ function renderMatches() {
    MATCH DETAIL
 ══════════════════════════════════════════════════════ */
 async function loadMatchDetail(id) {
-  try {
-    const m = await apiFetch(`/api/matches/${id}`);
-    renderMatchDetail(m);
-    showPage('match-detail');
-  } catch (e) {
-    console.error(e);
-    showToast('Could not load match', 'error');
-  }
-}
-
-function renderMatchDetail(m) {
-  $('md-map').textContent = (m.map || '—').toUpperCase();
-  $('md-score1').textContent = m.team1_score ?? m.ct_score ?? '—';
-  $('md-score2').textContent = m.team2_score ?? m.t_score ?? '—';
-
-  // Фон карты в шапке матча
-  const mdBg = $('mdHeroBg');
-  if (mdBg) {
-    const mapImg = MAP_IMAGES[m.map] || '';
-    mdBg.style.backgroundImage = mapImg ? `url('${mapImg}')` : '';
-  }
-
-  const s1 = Number(m.team1_score ?? m.ct_score ?? 0);
-  const s2 = Number(m.team2_score ?? m.t_score ?? 0);
-
-  $('md-score1').style.color = s1 > s2 ? 'var(--green)' : s1 === s2 ? 'var(--yellow)' : 'var(--red)';
-  $('md-score2').style.color = s2 > s1 ? 'var(--green)' : s1 === s2 ? 'var(--yellow)' : 'var(--red)';
-
-  $('md-meta').innerHTML = `${m.played_at ? formatDate(m.played_at) : '—'}`;
-
-  const fh = m.first_half || {};
-  const sh = m.second_half || {};
-
-  $('md-halves1').innerHTML = `
-    <div class="half-score-pill">1H: ${fh.ct ?? '?'}</div>
-    <div class="half-score-pill">2H: ${sh.t ?? '?'}</div>
-  `;
-  $('md-halves2').innerHTML = `
-    <div class="half-score-pill">1H: ${fh.t ?? '?'}</div>
-    <div class="half-score-pill">2H: ${sh.ct ?? '?'}</div>
-  `;
-
-  const mvp = m.players?.[0];
-  if (mvp) {
-    $('mvp-name').textContent = mvp.nickname || '—';
-    $('mvp-stats').innerHTML = [
-      { v: mvp.rating != null ? Number(mvp.rating).toFixed(2) : '—', l: 'Rating' },
-      { v: mvp.K ?? 0, l: 'Kills' },
-      { v: (Number(mvp.K || 0) / Math.max(Number(mvp.D || 0), 1)).toFixed(2), l: 'K/D' },
-      { v: mvp.ADR != null ? Number(mvp.ADR).toFixed(0) : '—', l: 'ADR' },
-      { v: mvp.HS != null ? `${Number(mvp.HS).toFixed(0)}%` : '—', l: 'HS%' },
-    ].map(s => `
-      <div class="mvp-stat">
-        <div class="mvp-stat-val">${s.v}</div>
-        <div class="mvp-stat-lbl">${s.l}</div>
-      </div>
-    `).join('');
-  } else {
-    $('mvp-name').textContent = '—';
-    $('mvp-stats').innerHTML = '';
-  }
-
-function getImpactBadge(p) {
   const badges = [];
   if (p.rating >= 1.5) badges.push(`<span class="impact-badge fire">🔥 High Impact</span>`);
   const entry = (p.FK || 0) + (p.FD || 0) > 0 ? (p.FK || 0) / ((p.FK || 0) + (p.FD || 0)) * 100 : 0;
