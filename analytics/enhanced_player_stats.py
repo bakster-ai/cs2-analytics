@@ -95,7 +95,7 @@ def get_rating_progression(db: Session, player_id: int, limit: int = 50) -> list
     for m in reversed(matches):
         won = (
             (m.team == "CT" and m.team1_score > m.team2_score) or
-            (m.team == "T" and m.team2_score > m.team1_score)
+            (m.team in ("T", "TERRORIST") and m.team2_score > m.team1_score)
         )
         
         progression.append({
