@@ -578,7 +578,7 @@ td.num {
   line-height:.9; letter-spacing:-.01em; text-transform:uppercase;
 }
 .profile-steamid {
-  font-family:var(--font-mn); font-size:11px; color:var(--txt2); margin-top:6px;
+  font-family:var(--font-mn); font-size:11px; color:var(--txt3); margin-top:6px;
 }
 .profile-kpis {
   display:flex; gap:32px; margin-top:20px;
@@ -685,8 +685,178 @@ td.num {
 }
 
 /* ═══════════════════════════════════════════════════════
-   WEAPON TABLE SPECIAL
+   WEAPON PAGE - TOP 3 CARDS
 ═══════════════════════════════════════════════════════ */
+.weapon-top3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.weapon-hero-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  padding: 24px;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all .2s;
+  clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 0 100%);
+}
+.weapon-hero-card::after {
+  content:'';
+  position:absolute; top:0; left:0; right:0;
+  height:3px;
+  transition:opacity .2s;
+  opacity:0;
+}
+.weapon-hero-card.rank1::after { background: linear-gradient(90deg, var(--yellow), transparent); }
+.weapon-hero-card.rank2::after { background: linear-gradient(90deg, var(--txt2), transparent); }
+.weapon-hero-card.rank3::after { background: linear-gradient(90deg, #cd7f32, transparent); }
+.weapon-hero-card:hover { border-color:var(--border2); transform:translateY(-3px); box-shadow:0 12px 32px rgba(0,0,0,.5); }
+.weapon-hero-card:hover::after { opacity:1; }
+
+.weapon-hero-rank {
+  font-family: var(--font-hd);
+  font-size: 48px;
+  font-weight: 900;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+.weapon-hero-card.rank1 .weapon-hero-rank { color: var(--yellow); }
+.weapon-hero-card.rank2 .weapon-hero-rank { color: var(--txt2); }
+.weapon-hero-card.rank3 .weapon-hero-rank { color: #cd7f32; }
+
+.weapon-hero-name {
+  font-family: var(--font-hd);
+  font-size: 28px;
+  font-weight: 900;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--orange);
+  margin-bottom: 16px;
+}
+
+.weapon-hero-stats {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.weapon-hero-stat { }
+.weapon-hero-stat-val {
+  font-family: var(--font-hd);
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--cyan);
+  line-height: 1;
+}
+.weapon-hero-stat-lbl {
+  font-family: var(--font-mn);
+  font-size: 9px;
+  color: var(--txt3);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+
+.weapon-kills-bar {
+  height: 4px;
+  background: var(--border);
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+.weapon-kills-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--orange), var(--cyan));
+  transition: width .6s ease;
+}
+
+.weapon-mvp-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.weapon-mvp-label {
+  font-family: var(--font-mn);
+  font-size: 9px;
+  color: var(--txt3);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.weapon-mvp-name {
+  font-family: var(--font-hd);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--txt);
+}
+
+/* Weapon table rows */
+.weapon-table-row-kills {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: flex-end;
+}
+.weapon-mini-bar {
+  width: 60px;
+  height: 3px;
+  background: var(--border);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.weapon-mini-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--orange), var(--cyan));
+}
+
+/* Weapon detail hero */
+.weapon-detail-hero {
+  background: var(--bg1);
+  border-bottom: 1px solid var(--border);
+  padding: 32px;
+  margin-bottom: 0;
+}
+.weapon-detail-hero-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+.weapon-detail-icon-big {
+  font-family: var(--font-hd);
+  font-size: 36px;
+  font-weight: 900;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--orange);
+  background: rgba(255,106,0,.1);
+  border: 1px solid rgba(255,106,0,.25);
+  padding: 16px 28px;
+  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%);
+}
+.weapon-detail-stats {
+  display: flex;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+.weapon-detail-stat-val {
+  font-family: var(--font-hd);
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--cyan);
+  line-height: 1;
+}
+.weapon-detail-stat-lbl {
+  font-family: var(--font-mn);
+  font-size: 10px;
+  color: var(--txt3);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  margin-top: 3px;
+}
 .weapon-icon {
   font-family: var(--font-hd);  /* Было mono → стало Barlow Condensed (читабельнее) */
   font-size: 16px;              /* Было 11px → стало 16px */
@@ -1539,9 +1709,8 @@ td .swing-negative {
 }
 
 .advanced-stat-desc {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--txt2);
+  font-size: 12px;
+  color: var(--txt3);
   font-style: italic;
 }
 
@@ -2227,19 +2396,22 @@ td .swing-negative {
 ══════════════════════════════════════════════════════════════ -->
 <div class="page" id="page-weapons">
   <div class="section">
-    <div class="section-header">
+    <div class="section-header" style="margin-bottom:24px">
       <div class="section-title">Weapon Rankings</div>
     </div>
+    <!-- TOP 3 HERO CARDS -->
+    <div class="weapon-top3" id="weaponTop3"></div>
+    <!-- REST TABLE -->
     <div class="data-table-wrap">
       <table>
         <thead><tr>
           <th>#</th>
           <th>Weapon</th>
-          <th>MVP</th>
+          <th>MVP Player</th>
           <th class="num">Total Kills</th>
           <th class="num">HS%</th>
           <th class="num">Avg DMG/Kill</th>
-          <th class="num">Usage Count</th>
+          <th class="num">Usage</th>
         </tr></thead>
         <tbody id="weaponTableBody"></tbody>
       </table>
@@ -2252,11 +2424,18 @@ td .swing-negative {
 <div class="page" id="page-weapon-detail">
   <button class="btn-back" onclick="showPage('weapons')">← Back to Weapons</button>
 
-  <div class="section">
-    <div class="section-header">
-      <div class="section-title" id="weaponDetailTitle">Weapon Detail</div>
+  <!-- Weapon detail hero -->
+  <div class="weapon-detail-hero">
+    <div class="weapon-detail-hero-inner">
+      <div class="weapon-detail-icon-big" id="wdWeaponName">AK47</div>
+      <div class="weapon-detail-stats" id="wdStats"></div>
     </div>
+  </div>
 
+  <div class="section">
+    <div class="section-header" style="margin-bottom:20px">
+      <div class="section-title" id="weaponDetailTitle">Top Players</div>
+    </div>
     <div class="data-table-wrap">
       <table>
         <thead>
@@ -2851,9 +3030,11 @@ async function loadWeapons() {
 
 function renderWeapons(data) {
   const tbody = $('weaponTableBody');
+  const top3 = $('weaponTop3');
   if (!tbody) return;
 
   if (!data.length) {
+    if (top3) top3.innerHTML = '';
     tbody.innerHTML = `
       <tr>
         <td colspan="7">
@@ -2868,21 +3049,69 @@ function renderWeapons(data) {
     return;
   }
 
-  tbody.innerHTML = data.map((w, i) => `
-    <tr style="animation:fadeSlideIn .2s ${i * .03}s both">
-      <td><span class="rank-num ${i === 0 ? 'top1' : i === 1 ? 'top2' : i === 2 ? 'top3' : ''}">${i + 1}</span></td>
+  const maxKills = Math.max(...data.map(w => w.total_kills || 0));
+
+  // TOP 3 HERO CARDS
+  if (top3) {
+    const rankClass = ['rank1', 'rank2', 'rank3'];
+    top3.innerHTML = data.slice(0, 3).map((w, i) => `
+      <div class="weapon-hero-card ${rankClass[i]}" onclick="loadWeaponDetail('${w.weapon}')">
+        <div class="weapon-hero-rank">#${i + 1}</div>
+        <div class="weapon-hero-name">${w.weapon}</div>
+        <div class="weapon-kills-bar">
+          <div class="weapon-kills-bar-fill" style="width:${Math.round((w.total_kills || 0) / maxKills * 100)}%"></div>
+        </div>
+        <div class="weapon-hero-stats">
+          <div class="weapon-hero-stat">
+            <div class="weapon-hero-stat-val">${Number(w.total_kills || 0).toLocaleString()}</div>
+            <div class="weapon-hero-stat-lbl">Total Kills</div>
+          </div>
+          <div class="weapon-hero-stat">
+            <div class="weapon-hero-stat-val" style="color:${Number(w.hs_pct||0)>50?'var(--green)':Number(w.hs_pct||0)>30?'var(--yellow)':'var(--txt)'}">${Number(w.hs_pct || 0).toFixed(1)}%</div>
+            <div class="weapon-hero-stat-lbl">HS%</div>
+          </div>
+          <div class="weapon-hero-stat">
+            <div class="weapon-hero-stat-val">${w.usage_count ?? 0}</div>
+            <div class="weapon-hero-stat-lbl">Usage</div>
+          </div>
+        </div>
+        <div class="weapon-mvp-row">
+          <div class="weapon-mvp-label">🏆 MVP</div>
+          <div class="weapon-mvp-name" onclick="event.stopPropagation();loadPlayer('${w.top_player_steamid||''}')" style="cursor:pointer;color:var(--cyan)">${w.top_player || '—'}</div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // REST TABLE (4+)
+  const rest = data.slice(3);
+  if (!rest.length) {
+    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:20px;color:var(--txt3)">All weapons shown above</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = rest.map((w, i) => `
+    <tr onclick="loadWeaponDetail('${w.weapon}')" style="animation:fadeSlideIn .2s ${i * .03}s both;cursor:pointer">
+      <td><span class="rank-num">${i + 4}</span></td>
       <td>
-        <span class="weapon-icon" onclick="loadWeaponDetail('${w.weapon}')" style="cursor:pointer">
+        <span class="weapon-icon">
           ${w.weapon}
         </span>
       </td>
       <td>
-        <span class="weapon-mvp" onclick="loadPlayer('${w.top_player_steamid || ''}')" style="cursor:pointer;color:var(--cyan);font-size:13px;font-weight:600;">
+        <span onclick="event.stopPropagation();loadPlayer('${w.top_player_steamid||''}')" style="cursor:pointer;color:var(--cyan);font-family:var(--font-hd);font-size:15px;font-weight:700">
           ${w.top_player || '—'}
         </span>
       </td>
-      <td class="num"><span class="big-num">${Number(w.total_kills || 0).toLocaleString()}</span></td>
-      <td class="num"><span class="pct-val">${Number(w.hs_pct || 0).toFixed(1)}%</span></td>
+      <td class="num">
+        <div class="weapon-table-row-kills">
+          <div class="weapon-mini-bar">
+            <div class="weapon-mini-bar-fill" style="width:${Math.round((w.total_kills||0)/maxKills*100)}%"></div>
+          </div>
+          <span class="big-num">${Number(w.total_kills || 0).toLocaleString()}</span>
+        </div>
+      </td>
+      <td class="num"><span class="pct-val" style="color:${Number(w.hs_pct||0)>50?'var(--green)':Number(w.hs_pct||0)>30?'var(--yellow)':'var(--txt2)'}">${Number(w.hs_pct || 0).toFixed(1)}%</span></td>
       <td class="num">${w.avg_damage_per_kill != null ? Number(w.avg_damage_per_kill).toFixed(0) : '0'}</td>
       <td class="num">${w.usage_count ?? 0}</td>
     </tr>
@@ -2904,25 +3133,45 @@ async function loadWeaponDetail(weaponName) {
 }
 
 function renderWeaponDetail(weaponName, data) {
-  $('weaponDetailTitle').textContent = `Top Players — ${String(weaponName || '').toUpperCase()}`;
+  const name = String(weaponName || '').toUpperCase();
+  $('weaponDetailTitle').textContent = `Top Players — ${name}`;
+  $('wdWeaponName').textContent = name;
+
+  // Считаем агрегированную статистику
+  const totalKills = data.reduce((s, p) => s + (p.kills || 0), 0);
+  const avgHS = data.length ? data.reduce((s, p) => s + (p.hs_percent || 0), 0) / data.length : 0;
+  const avgDmg = data.length ? data.reduce((s, p) => s + (p.avg_dmg_per_kill || 0), 0) / data.length : 0;
+
+  const wdStats = $('wdStats');
+  if (wdStats) {
+    wdStats.innerHTML = [
+      { v: totalKills.toLocaleString(), l: 'Total Kills' },
+      { v: avgHS.toFixed(1) + '%', l: 'Avg HS%' },
+      { v: avgDmg.toFixed(0), l: 'Avg DMG/Kill' },
+      { v: data.length, l: 'Players Used' },
+    ].map(s => `
+      <div>
+        <div class="weapon-detail-stat-val">${s.v}</div>
+        <div class="weapon-detail-stat-lbl">${s.l}</div>
+      </div>
+    `).join('');
+  }
 
   const tbody = $('weaponDetailBody');
   if (!tbody) return;
 
   if (!data.length) {
-    tbody.innerHTML = `
-      <tr>
-        <td colspan="6" style="text-align:center;padding:40px;color:var(--txt3)">
-          No data
-        </td>
-      </tr>
-    `;
+    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:40px;color:var(--txt3)">No data</td></tr>`;
     return;
   }
 
+  const maxKills = Math.max(...data.map(p => p.kills || 0));
+
   tbody.innerHTML = data.map((p, i) => `
     <tr onclick="loadPlayer('${p.steam_id}')" style="animation:fadeSlideIn .2s ${i * .03}s both">
-      <td>${i + 1}</td>
+      <td>
+        <span class="rank-num ${i===0?'top1':i===1?'top2':i===2?'top3':''}">${i + 1}</span>
+      </td>
       <td>
         <div class="player-cell">
           ${renderAvatar(p, 40)}
@@ -2931,8 +3180,15 @@ function renderWeaponDetail(weaponName, data) {
           </div>
         </div>
       </td>
-      <td class="num">${p.kills ?? 0}</td>
-      <td class="num">${p.hs_percent != null ? Number(p.hs_percent).toFixed(1) : '0.0'}%</td>
+      <td class="num">
+        <div class="weapon-table-row-kills">
+          <div class="weapon-mini-bar">
+            <div class="weapon-mini-bar-fill" style="width:${Math.round((p.kills||0)/maxKills*100)}%"></div>
+          </div>
+          <span class="big-num">${p.kills ?? 0}</span>
+        </div>
+      </td>
+      <td class="num"><span class="pct-val" style="color:${Number(p.hs_percent||0)>50?'var(--green)':Number(p.hs_percent||0)>30?'var(--yellow)':'var(--txt2)'}">${p.hs_percent != null ? Number(p.hs_percent).toFixed(1) : '0.0'}%</span></td>
       <td class="num">${p.avg_dmg_per_kill != null ? Number(p.avg_dmg_per_kill).toFixed(0) : '0'}</td>
       <td class="num">${p.matches_used ?? 0}</td>
     </tr>
@@ -3214,7 +3470,7 @@ function renderProfileMatchHistory(hist) {
 
   tbody.innerHTML = hist.map((m, i) => `
     <tr onclick="loadMatchDetail(${m.match_id})" style="animation:fadeSlideIn .2s ${i * .03}s both">
-      <td style="font-family:var(--font-mn);font-size:12px;color:var(--txt2)">
+      <td style="font-family:var(--font-mn);font-size:11px;color:var(--txt3)">
         ${m.played_at ? formatDate(m.played_at) : '—'}
       </td>
       <td style="font-family:var(--font-hd);font-weight:700">
