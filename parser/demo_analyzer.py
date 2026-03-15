@@ -861,20 +861,39 @@ class CS2DemoAnalyzer:
 
         halftime_round = 12
 
+        # Считаем первую половину (раунды 0-11)
         first_half_ct = sum(
             1 for i in range(min(halftime_round, len(self.round_winners)))
             if self.round_winners[i] == "CT"
         )
         first_half_t = min(halftime_round, len(self.round_winners)) - first_half_ct
 
+        # Считаем вторую половину (раунды 12-23, т.е. до OT)
+        regulation_end = min(24, len(self.round_winners))
         second_half_ct = sum(
-            1 for i in range(halftime_round, len(self.round_winners))
+            1 for i in range(halftime_round, regulation_end)
             if self.round_winners[i] == "CT"
         )
-        second_half_t = (
-            len(self.round_winners) - halftime_round - second_half_ct
-            if len(self.round_winners) > halftime_round else 0
-        )
+        second_half_t = regulation_end - halftime_round - second_half_ct if regulation_end > halftime_round else 0
+
+        # OT раунды (24+): каждые 6 раундов — новый OT, смена сторон каждые 3
+        ot_ct_extra = 0
+        ot_t_extra = 0
+        if len(self.round_winners) > 24:
+            for i in range(24, len(self.round_winners)):
+                ot_round = i - 24  # 0-based внутри OT
+                ot_half = (ot_round % 6) < 3  # первые 3 раунда OT = первая половина OT
+                winner = self.round_winners[i]
+                if winner == "CT":
+                    ot_ct_extra += 1
+                else:
+                    ot_t_extra += 1
+
+        # team1 = команда начавшая за CT
+        # В обычном матче: team1_score = first_half_ct + second_half_t
+        # В OT: CT и T меняются, поэтому просто суммируем все победы CT-стартовой команды
+        team_started_ct_score = first_half_ct + second_half_t + ot_ct_extra
+        team_started_t_score = first_half_t + second_half_ct + ot_t_extra
 
         ct_players = [p for p in players_list if "CT" in p["team"].upper() or "COUNTER" in p["team"].upper()]
         t_players = [p for p in players_list if "T" in p["team"].upper() and "CT" not in p["team"].upper()]
@@ -883,9 +902,6 @@ class CS2DemoAnalyzer:
             mid = len(players_list) // 2
             ct_players = players_list[:mid]
             t_players = players_list[mid:]
-
-        team_started_ct_score = first_half_ct + second_half_t
-        team_started_t_score = first_half_t + second_half_ct
 
         team_ct_name = ct_players[0]["nickname"] if ct_players else "Team 1"
         team_t_name = t_players[0]["nickname"] if t_players else "Team 2"
