@@ -754,8 +754,8 @@ td.num {
 }
 .weapon-hero-stat-lbl {
   font-family: var(--font-mn);
-  font-size: 9px;
-  color: var(--txt3);
+  font-size: 10px;
+  color: var(--txt2);
   letter-spacing: .1em;
   text-transform: uppercase;
   margin-top: 2px;
@@ -780,8 +780,8 @@ td.num {
 }
 .weapon-mvp-label {
   font-family: var(--font-mn);
-  font-size: 9px;
-  color: var(--txt3);
+  font-size: 10px;
+  color: var(--txt2);
   letter-spacing: .12em;
   text-transform: uppercase;
 }
@@ -790,6 +790,58 @@ td.num {
   font-size: 15px;
   font-weight: 700;
   color: var(--txt);
+}
+
+/* Weapon image */
+.weapon-img {
+  width: 100%;
+  max-height: 60px;
+  object-fit: contain;
+  margin-bottom: 12px;
+  filter: drop-shadow(0 2px 8px rgba(255,106,0,.3));
+  image-rendering: auto;
+}
+
+/* Top 3 players in hero card */
+.weapon-top-players {
+  margin-top: 14px;
+  border-top: 1px solid var(--border);
+  padding-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+.weapon-top-player-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: opacity .15s;
+}
+.weapon-top-player-row:hover { opacity: .8; }
+.weapon-top-player-rank-sm {
+  font-family: var(--font-hd);
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--txt3);
+  width: 16px;
+  flex-shrink: 0;
+}
+.weapon-top-player-rank-sm.p1 { color: var(--yellow); }
+.weapon-top-player-rank-sm.p2 { color: var(--txt2); }
+.weapon-top-player-rank-sm.p3 { color: #cd7f32; }
+.weapon-top-player-name-sm {
+  font-family: var(--font-hd);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--cyan);
+  flex: 1;
+}
+.weapon-top-player-kills-sm {
+  font-family: var(--font-hd);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--txt2);
 }
 
 /* Weapon table rows */
@@ -2427,7 +2479,10 @@ td .swing-negative {
   <!-- Weapon detail hero -->
   <div class="weapon-detail-hero">
     <div class="weapon-detail-hero-inner">
-      <div class="weapon-detail-icon-big" id="wdWeaponName">AK47</div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:8px">
+        <img id="wdWeaponImg" src="" alt="" style="max-height:70px;max-width:180px;object-fit:contain;filter:drop-shadow(0 2px 12px rgba(255,106,0,.4));display:none">
+        <div class="weapon-detail-icon-big" id="wdWeaponName">AK47</div>
+      </div>
       <div class="weapon-detail-stats" id="wdStats"></div>
     </div>
   </div>
@@ -3009,6 +3064,31 @@ function renderMatchDetail(m) {
 /* ══════════════════════════════════════════════════════
    WEAPONS
 ══════════════════════════════════════════════════════ */
+const WEAPON_IMAGES = {
+  'ak47':         'https://wiki.teamfortress.com/w/images/thumb/0/0f/Backpack_AK-47.png/120px-Backpack_AK-47.png',
+  'awp':          'https://static.wikia.nocookie.net/cswikia/images/9/9c/Csgo-awp-ingame.png',
+  'm4a1':         'https://static.wikia.nocookie.net/cswikia/images/b/b3/Csgo-m4a1-s-ingame.png',
+  'm4a1_silencer':'https://static.wikia.nocookie.net/cswikia/images/b/b3/Csgo-m4a1-s-ingame.png',
+  'usp_silencer': 'https://static.wikia.nocookie.net/cswikia/images/e/e3/Csgo-usp-s-ingame.png',
+  'glock':        'https://static.wikia.nocookie.net/cswikia/images/7/7d/Csgo-glock-18-ingame.png',
+  'deagle':       'https://static.wikia.nocookie.net/cswikia/images/5/5e/Csgo-desert-eagle-ingame.png',
+  'mp9':          'https://static.wikia.nocookie.net/cswikia/images/9/96/Csgo-mp9-ingame.png',
+  'mac10':        'https://static.wikia.nocookie.net/cswikia/images/3/30/Csgo-mac-10-ingame.png',
+  'mp7':          'https://static.wikia.nocookie.net/cswikia/images/c/c5/Csgo-mp7-ingame.png',
+  'fiveseven':    'https://static.wikia.nocookie.net/cswikia/images/0/08/Csgo-five-seven-ingame.png',
+  'tec9':         'https://static.wikia.nocookie.net/cswikia/images/f/f8/Csgo-tec-9-ingame.png',
+  'galilar':      'https://static.wikia.nocookie.net/cswikia/images/4/47/Csgo-galil-ar-ingame.png',
+  'famas':        'https://static.wikia.nocookie.net/cswikia/images/9/99/Csgo-famas-ingame.png',
+  'sg556':        'https://static.wikia.nocookie.net/cswikia/images/6/6d/Csgo-sg-553-ingame.png',
+  'aug':          'https://static.wikia.nocookie.net/cswikia/images/c/c4/Csgo-aug-ingame.png',
+  'hegrenade':    'https://static.wikia.nocookie.net/cswikia/images/3/39/Csgo-he-grenade-ingame.png',
+};
+
+function getWeaponImage(weapon) {
+  const key = (weapon || '').toLowerCase().replace('-', '_');
+  return WEAPON_IMAGES[key] || null;
+}
+
 async function loadWeapons() {
   try {
     const data = await apiFetch('/api/leaderboard/weapons?min_kills=1');
@@ -3050,37 +3130,56 @@ function renderWeapons(data) {
   }
 
   const maxKills = Math.max(...data.map(w => w.total_kills || 0));
+  const rankClass = ['rank1', 'rank2', 'rank3'];
+  const rankColors = ['p1', 'p2', 'p3'];
 
-  // TOP 3 HERO CARDS
+  // TOP 3 HERO CARDS — загружаем топ игроков для каждого
   if (top3) {
-    const rankClass = ['rank1', 'rank2', 'rank3'];
-    top3.innerHTML = data.slice(0, 3).map((w, i) => `
-      <div class="weapon-hero-card ${rankClass[i]}" onclick="loadWeaponDetail('${w.weapon}')">
-        <div class="weapon-hero-rank">#${i + 1}</div>
-        <div class="weapon-hero-name">${w.weapon}</div>
-        <div class="weapon-kills-bar">
-          <div class="weapon-kills-bar-fill" style="width:${Math.round((w.total_kills || 0) / maxKills * 100)}%"></div>
+    top3.innerHTML = data.slice(0, 3).map((w, i) => {
+      const imgUrl = getWeaponImage(w.weapon);
+      const imgHtml = imgUrl
+        ? `<img src="${imgUrl}" class="weapon-img" alt="${w.weapon}" onerror="this.style.display='none'">`
+        : '';
+
+      // Топ-3 игроков (данные в top_players если есть, иначе только MVP)
+      const players = w.top_players || (w.top_player ? [{nickname: w.top_player, steam_id: w.top_player_steamid, kills: w.top_player_kills}] : []);
+      const playersHtml = players.slice(0, 3).map((p, pi) => `
+        <div class="weapon-top-player-row" onclick="event.stopPropagation();loadPlayer('${p.steam_id||p.top_player_steamid||''}')">
+          <span class="weapon-top-player-rank-sm ${rankColors[pi]}">#${pi+1}</span>
+          <span class="weapon-top-player-name-sm">${p.nickname || p.top_player || '—'}</span>
+          ${p.kills ? `<span class="weapon-top-player-kills-sm">${p.kills}k</span>` : ''}
         </div>
-        <div class="weapon-hero-stats">
-          <div class="weapon-hero-stat">
-            <div class="weapon-hero-stat-val">${Number(w.total_kills || 0).toLocaleString()}</div>
-            <div class="weapon-hero-stat-lbl">Total Kills</div>
+      `).join('');
+
+      return `
+        <div class="weapon-hero-card ${rankClass[i]}" onclick="loadWeaponDetail('${w.weapon}')">
+          <div class="weapon-hero-rank">#${i + 1}</div>
+          ${imgHtml}
+          <div class="weapon-hero-name">${w.weapon}</div>
+          <div class="weapon-kills-bar">
+            <div class="weapon-kills-bar-fill" style="width:${Math.round((w.total_kills || 0) / maxKills * 100)}%"></div>
           </div>
-          <div class="weapon-hero-stat">
-            <div class="weapon-hero-stat-val" style="color:${Number(w.hs_pct||0)>50?'var(--green)':Number(w.hs_pct||0)>30?'var(--yellow)':'var(--txt)'}">${Number(w.hs_pct || 0).toFixed(1)}%</div>
-            <div class="weapon-hero-stat-lbl">HS%</div>
+          <div class="weapon-hero-stats">
+            <div class="weapon-hero-stat">
+              <div class="weapon-hero-stat-val">${Number(w.total_kills || 0).toLocaleString()}</div>
+              <div class="weapon-hero-stat-lbl">Total Kills</div>
+            </div>
+            <div class="weapon-hero-stat">
+              <div class="weapon-hero-stat-val" style="color:${Number(w.hs_pct||0)>50?'var(--green)':Number(w.hs_pct||0)>30?'var(--yellow)':'var(--txt)'}">${Number(w.hs_pct || 0).toFixed(1)}%</div>
+              <div class="weapon-hero-stat-lbl">HS%</div>
+            </div>
+            <div class="weapon-hero-stat">
+              <div class="weapon-hero-stat-val">${w.usage_count ?? 0}</div>
+              <div class="weapon-hero-stat-lbl">Usage</div>
+            </div>
           </div>
-          <div class="weapon-hero-stat">
-            <div class="weapon-hero-stat-val">${w.usage_count ?? 0}</div>
-            <div class="weapon-hero-stat-lbl">Usage</div>
+          <div class="weapon-top-players">
+            <div class="weapon-mvp-label">🏆 Top Players</div>
+            ${playersHtml || `<div class="weapon-top-player-row"><span class="weapon-top-player-name-sm" onclick="event.stopPropagation();loadPlayer('${w.top_player_steamid||''}')">${w.top_player || '—'}</span></div>`}
           </div>
         </div>
-        <div class="weapon-mvp-row">
-          <div class="weapon-mvp-label">🏆 MVP</div>
-          <div class="weapon-mvp-name" onclick="event.stopPropagation();loadPlayer('${w.top_player_steamid||''}')" style="cursor:pointer;color:var(--cyan)">${w.top_player || '—'}</div>
-        </div>
-      </div>
-    `).join('');
+      `;
+    }).join('');
   }
 
   // REST TABLE (4+)
@@ -3141,6 +3240,18 @@ function renderWeaponDetail(weaponName, data) {
   const totalKills = data.reduce((s, p) => s + (p.kills || 0), 0);
   const avgHS = data.length ? data.reduce((s, p) => s + (p.hs_percent || 0), 0) / data.length : 0;
   const avgDmg = data.length ? data.reduce((s, p) => s + (p.avg_dmg_per_kill || 0), 0) / data.length : 0;
+
+  // Картинка оружия
+  const imgUrl = getWeaponImage(weaponName);
+  const wdImg = $('wdWeaponImg');
+  if (wdImg) {
+    if (imgUrl) {
+      wdImg.src = imgUrl;
+      wdImg.style.display = 'block';
+    } else {
+      wdImg.style.display = 'none';
+    }
+  }
 
   const wdStats = $('wdStats');
   if (wdStats) {
