@@ -1108,559 +1108,584 @@ td.num {
 }
 
 /* ═══════════════════════════════════════════════════════
-   FAQ PAGE STYLES — DASHBOARD
+   FAQ PAGE STYLES — v4 Bebas+Manrope
 ═══════════════════════════════════════════════════════ */
+
+/* fonts */
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap');
+
+.faq-page-wrap { position: relative; }
+
 .faq-container {
-  max-width: 1200px;
+  max-width: 1160px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 3px;
+  position: relative;
+  z-index: 1;
 }
 
-/* ── Top hero bar ── */
-.faq-hero {
+/* grain overlay */
+.faq-container::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: .045;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+}
+
+/* ── hero ── */
+.fq-hero {
   background: var(--bg2);
   border: 1px solid var(--border);
-  padding: 28px 32px;
   display: grid;
-  grid-template-columns: 1fr auto;
-  align-items: center;
-  gap: 32px;
+  grid-template-columns: 1fr 300px;
+  overflow: hidden;
   clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 0 100%);
 }
-.faq-hero-title {
-  font-family: var(--font-hd);
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--txt3);
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  margin-bottom: 8px;
+.fq-hero-l {
+  padding: 36px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  border-right: 1px solid var(--border);
 }
-.faq-hero-desc {
-  font-family: var(--font-hd);
-  font-size: 18px;
-  font-weight: 500;
-  color: var(--txt);
-  line-height: 1.6;
-  max-width: 680px;
-}
-.faq-hero-desc strong { color: var(--orange); font-weight: 800; }
-.faq-hero-badge {
-  font-family: var(--font-hd);
+.fq-tag {
+  font-family: 'Space Mono', monospace;
   font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.12em;
+  color: var(--orange);
+  letter-spacing: .15em;
   text-transform: uppercase;
-  color: var(--cyan);
-  border: 1px solid rgba(0,212,255,0.3);
-  background: rgba(0,212,255,0.06);
-  padding: 8px 16px;
-  white-space: nowrap;
 }
-
-/* ── Two-col layout ── */
-.faq-grid-2 {
+.fq-hero-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 56px;
+  line-height: 1.0;
+  color: #fff;
+  letter-spacing: .02em;
+}
+.fq-hero-title em { color: var(--orange); font-style: normal; }
+.fq-hero-p {
+  font-family: 'Manrope', sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+  color: #c8ccd8;
+  line-height: 1.75;
+  max-width: 540px;
+}
+.fq-hero-p strong { color: #fff; font-weight: 700; }
+.fq-hero-r {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 2px;
+  background: var(--bg);
+  gap: 1px;
 }
-.faq-grid-3 {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 2px;
+.fq-hstat {
+  background: var(--bg2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 18px 6px;
+  gap: 5px;
+}
+.fq-hstat-n {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 40px;
+  line-height: 1;
+  letter-spacing: .02em;
+}
+.fq-hstat-l {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  color: #5a6070;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  text-align: center;
 }
 
-/* ── Panel base ── */
-.faq-panel {
+/* ── grid ── */
+.fq-row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; }
+
+/* ── panel ── */
+.fq-panel {
   background: var(--bg2);
   border: 1px solid var(--border);
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
-.faq-panel-full {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  overflow: hidden;
-}
-.faq-panel-hd {
+.fq-ph {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 10px 16px;
+  padding: 9px 18px;
   background: var(--bg3);
   border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
 }
-.faq-panel-hd-label {
-  font-family: var(--font-mn);
+.fq-ph-lbl {
+  font-family: 'Space Mono', monospace;
   font-size: 10px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--txt3);
+  letter-spacing: .12em;
+  color: #6a7080;
   flex: 1;
+  text-transform: uppercase;
 }
-.faq-panel-hd-tag {
-  font-family: var(--font-mn);
+.fq-ph-tag {
+  font-family: 'Space Mono', monospace;
   font-size: 10px;
-  letter-spacing: 0.08em;
   color: var(--orange);
-  background: rgba(255,106,0,0.1);
-  border: 1px solid rgba(255,106,0,0.25);
+  background: rgba(255,106,0,.08);
+  border: 1px solid rgba(255,106,0,.2);
   padding: 2px 8px;
 }
-.faq-panel-body {
-  padding: 16px;
-}
 
-/* ── Formula panel ── */
-.faq-formula {
-  font-family: var(--font-mn);
-  font-size: 13px;
-  color: var(--orange2);
-  background: var(--bg);
-  border: 1px solid var(--border);
-  padding: 12px 16px;
-  margin-bottom: 12px;
-  letter-spacing: 0.04em;
-}
-
-/* ── Weight bars (components) ── */
-.faq-weight-row {
+/* ── weight rows ── */
+.fq-wr {
   display: flex;
-  align-items: center;
-  gap: 0;
+  align-items: stretch;
   border-bottom: 1px solid var(--border);
-  height: 44px;
-  cursor: default;
-  transition: background .15s;
 }
-.faq-weight-row:last-child { border-bottom: none; }
-.faq-weight-row:hover { background: rgba(255,255,255,0.02); }
-
-.faq-wr-icon {
-  width: 44px;
-  height: 44px;
+.fq-wr:last-of-type { border-bottom: none; }
+.fq-wr-ic {
+  width: 46px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 18px;
+  font-size: 17px;
   background: var(--bg3);
   border-right: 1px solid var(--border);
   flex-shrink: 0;
 }
-.faq-wr-name {
-  font-family: var(--font-hd);
-  font-size: 15px;
-  font-weight: 800;
-  color: var(--txt);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  width: 140px;
-  padding: 0 14px;
-  flex-shrink: 0;
-}
-.faq-wr-bar-wrap {
-  flex: 1;
-  height: 44px;
+.fq-wr-nm {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 16px;
+  letter-spacing: .06em;
+  color: #fff;
+  width: 64px;
   display: flex;
   align-items: center;
-  padding: 0 14px;
-  position: relative;
-  border-left: 1px solid var(--border);
-}
-.faq-wr-bar-bg {
-  position: absolute;
-  left: 0; top: 0; bottom: 0;
-  opacity: 0.08;
-}
-.faq-wr-bar-fill {
-  height: 4px;
-  border-radius: 0;
-  position: relative;
-  z-index: 1;
-}
-.faq-wr-pct {
-  font-family: var(--font-hd);
-  font-size: 20px;
-  font-weight: 900;
-  position: relative;
-  z-index: 1;
-  margin-left: 12px;
+  padding: 0 10px;
+  border-right: 1px solid var(--border);
   flex-shrink: 0;
-  min-width: 52px;
 }
-.faq-wr-desc {
-  font-family: var(--font-hd);
+.fq-wr-bd {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  padding: 10px 14px;
+  gap: 12px;
+}
+.fq-wr-bw { flex: 1; height: 2px; background: var(--border2); }
+.fq-wr-bf { height: 100%; }
+.fq-wr-pct {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 24px;
+  min-width: 48px;
+  letter-spacing: .02em;
+  line-height: 1;
+}
+.fq-wr-ds {
+  font-family: 'Manrope', sans-serif;
   font-size: 12px;
-  font-weight: 400;
-  color: var(--txt3);
-  position: relative;
-  z-index: 1;
-  margin-left: 10px;
+  font-weight: 500;
+  color: #a0a8b8;
   flex: 1;
 }
 
-/* bar colors */
-.faq-wr-bar-fill.c-orange { background: var(--orange); }
-.faq-wr-bar-fill.c-cyan   { background: var(--cyan); }
-.faq-wr-bar-fill.c-green  { background: var(--green); }
-.faq-wr-bar-fill.c-yellow { background: var(--yellow); }
-.faq-wr-bar-fill.c-red    { background: var(--red); }
-.faq-wr-bar-bg.c-orange   { background: var(--orange); width: 100%; }
-.faq-wr-bar-bg.c-cyan     { background: var(--cyan); width: 100%; }
-.faq-wr-bar-bg.c-green    { background: var(--green); width: 100%; }
-.faq-wr-bar-bg.c-yellow   { background: var(--yellow); width: 100%; }
-.faq-wr-pct.c-orange { color: var(--orange); }
-.faq-wr-pct.c-cyan   { color: var(--cyan); }
-.faq-wr-pct.c-green  { color: var(--green); }
-.faq-wr-pct.c-yellow { color: var(--yellow); }
-.faq-wr-pct.c-red    { color: var(--red); }
+/* ── explain box ── */
+.fq-explain {
+  background: var(--bg3);
+  border-top: 1px solid var(--border);
+  padding: 14px 18px;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  margin-top: auto;
+}
+.fq-explain-icon { font-size: 15px; flex-shrink: 0; margin-top: 2px; }
+.fq-explain-txt {
+  font-family: 'Manrope', sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  color: #b0b8c8;
+  line-height: 1.7;
+}
+.fq-explain-txt strong { color: #fff; font-weight: 700; }
 
-/* ── SWING visual grid ── */
-.faq-swing-grid {
+/* ── formula ── */
+.fq-formula {
+  background: var(--bg);
+  border-top: 1px solid var(--border);
+  padding: 12px 18px;
+}
+.fq-formula-code {
+  font-family: 'Space Mono', monospace;
+  font-size: 12px;
+  color: var(--orange);
+  letter-spacing: .04em;
+  margin-bottom: 5px;
+}
+.fq-formula-note {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  color: #5a6070;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+}
+
+/* ── swing cells ── */
+.fq-swing-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(4,1fr);
+  gap: 1px;
+  background: var(--border);
+  flex: 1;
+}
+.fq-sc {
+  background: var(--bg2);
+  padding: 18px 10px 14px;
+  text-align: center;
+  position: relative;
+}
+.fq-sc::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+}
+.fq-sc.sg::after { background: var(--green); }
+.fq-sc.sc::after { background: var(--cyan); }
+.fq-sc.sw::after { background: var(--border2); }
+.fq-sc.sy::after { background: var(--yellow); }
+.fq-sc-sit {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  color: #5a6070;
+  letter-spacing: .07em;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+.fq-sc-val {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 36px;
+  line-height: 1;
+  margin-bottom: 5px;
+  letter-spacing: .02em;
+}
+.fq-sc-val.sg { color: var(--green); }
+.fq-sc-val.sc { color: var(--cyan); }
+.fq-sc-val.sw { color: #3a4050; }
+.fq-sc-val.sy { color: var(--yellow); }
+.fq-sc-lbl {
+  font-family: 'Manrope', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  color: #a0a8b8;
+}
+
+/* ── multikill ── */
+.fq-mg {
+  display: grid;
+  grid-template-columns: repeat(4,1fr);
   gap: 1px;
   background: var(--border);
 }
-.faq-swing-cell {
-  background: var(--bg3);
-  padding: 16px 12px;
+.fq-mc {
+  background: var(--bg2);
+  padding: 13px 8px;
   text-align: center;
-  position: relative;
-  overflow: hidden;
+  border-top: 2px solid transparent;
 }
-.faq-swing-cell::after {
-  content: '';
-  position: absolute;
-  bottom: 0; left: 0; right: 0;
-  height: 3px;
-}
-.faq-swing-cell.s-green::after  { background: var(--green); }
-.faq-swing-cell.s-cyan::after   { background: var(--cyan); }
-.faq-swing-cell.s-grey::after   { background: var(--txt3); }
-.faq-swing-cell.s-yellow::after { background: var(--yellow); }
-
-.faq-swing-situation {
-  font-family: var(--font-mn);
-  font-size: 10px;
-  letter-spacing: 0.08em;
-  color: var(--txt3);
-  text-transform: uppercase;
-  margin-bottom: 10px;
-}
-.faq-swing-val {
-  font-family: var(--font-hd);
-  font-size: 28px;
-  font-weight: 900;
-  margin-bottom: 4px;
+.fq-mc.mo { border-top-color: var(--orange); }
+.fq-mc.mc { border-top-color: var(--cyan); }
+.fq-mc.my { border-top-color: var(--yellow); }
+.fq-mc.mg { border-top-color: var(--green); }
+.fq-mc-v {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 24px;
   line-height: 1;
+  margin-bottom: 4px;
+  letter-spacing: .02em;
 }
-.faq-swing-val.s-green  { color: var(--green); }
-.faq-swing-val.s-cyan   { color: var(--cyan); }
-.faq-swing-val.s-grey   { color: var(--txt3); }
-.faq-swing-val.s-yellow { color: var(--yellow); }
-.faq-swing-label {
-  font-family: var(--font-hd);
-  font-size: 12px;
-  font-weight: 400;
-  color: var(--txt3);
+.fq-mc-v.mo { color: var(--orange); }
+.fq-mc-v.mc { color: var(--cyan); }
+.fq-mc-v.my { color: var(--yellow); }
+.fq-mc-v.mg { color: var(--green); }
+.fq-mc-l {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  color: #5a6070;
+  letter-spacing: .1em;
 }
 
-/* ── Scenario table ── */
-.faq-scenario-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-.faq-scenario-table th {
-  font-family: var(--font-mn);
-  font-size: 10px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--txt3);
-  padding: 8px 12px;
+/* ── scenario table ── */
+.fq-stbl { width: 100%; border-collapse: collapse; }
+.fq-stbl th {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  letter-spacing: .12em;
+  color: #6a7080;
+  padding: 8px 14px;
   background: var(--bg3);
   border-bottom: 1px solid var(--border);
   text-align: left;
   font-weight: 400;
+  text-transform: uppercase;
 }
-.faq-scenario-table th:not(:first-child) { text-align: right; }
-.faq-scenario-table td {
-  padding: 0 12px;
+.fq-stbl th:not(:first-child) { text-align: right; }
+.fq-stbl td {
+  padding: 0 14px;
   border-bottom: 1px solid var(--border);
-  height: 42px;
+  height: 52px;
   vertical-align: middle;
 }
-.faq-scenario-table tr:last-child td { border-bottom: none; }
-.faq-scenario-table tr:hover td { background: rgba(255,255,255,0.015); }
-.faq-st-name {
-  font-family: var(--font-hd);
+.fq-stbl tr:last-child td { border-bottom: none; }
+.fq-stbl tr:hover td { background: rgba(255,255,255,.012); }
+.fq-sn {
+  font-family: 'Manrope', sans-serif;
   font-size: 14px;
   font-weight: 700;
-  color: var(--txt);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
+  color: #e0e4f0;
 }
-.faq-st-sub {
-  font-family: var(--font-mn);
+.fq-ss {
+  font-family: 'Space Mono', monospace;
   font-size: 10px;
-  color: var(--txt3);
+  color: #6a7080;
   display: block;
-  margin-top: 1px;
-  letter-spacing: 0.05em;
+  margin-top: 3px;
 }
-.faq-st-val {
-  font-family: var(--font-hd);
-  font-size: 16px;
-  font-weight: 800;
+.fq-sv {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 20px;
   text-align: right;
+  display: block;
+  letter-spacing: .02em;
 }
-.faq-st-note {
-  font-family: var(--font-mn);
-  font-size: 11px;
-  color: var(--txt3);
-  text-align: right;
-}
+.fq-sv.g { color: var(--green); }
+.fq-sv.y { color: var(--yellow); }
+.fq-sv.r { color: var(--red); }
+.fq-sv.d { color: #3a4050; }
 
-/* ── Rating scale ── */
-.faq-rating-scale {
+/* ── rating tiers ── */
+.fq-tier {
   display: flex;
-  flex-direction: column;
-  gap: 1px;
-}
-.faq-rs-row {
-  display: grid;
-  grid-template-columns: 72px 1fr auto;
   align-items: center;
-  gap: 12px;
-  padding: 12px 16px;
-  background: var(--bg3);
+  border-bottom: 1px solid var(--border);
   border-left: 3px solid transparent;
-  transition: background .15s;
 }
-.faq-rs-row:hover { background: rgba(255,255,255,0.025); }
-.faq-rs-row.tier-top    { border-left-color: var(--green); }
-.faq-rs-row.tier-good   { border-left-color: var(--cyan); }
-.faq-rs-row.tier-avg    { border-left-color: var(--yellow); }
-.faq-rs-row.tier-low    { border-left-color: var(--red); }
-.faq-rs-num {
-  font-family: var(--font-hd);
-  font-size: 32px;
-  font-weight: 900;
+.fq-tier:last-child { border-bottom: none; }
+.fq-tier-n {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 42px;
+  width: 88px;
+  text-align: center;
+  padding: 14px 8px;
+  flex-shrink: 0;
+  border-right: 1px solid var(--border);
+  letter-spacing: .02em;
   line-height: 1;
 }
-.tier-top  .faq-rs-num { color: var(--green); }
-.tier-good .faq-rs-num { color: var(--cyan); }
-.tier-avg  .faq-rs-num { color: var(--yellow); }
-.tier-low  .faq-rs-num { color: var(--red); }
-.faq-rs-info {}
-.faq-rs-title {
-  font-family: var(--font-hd);
+.fq-tier-i {
+  flex: 1;
+  padding: 12px 16px;
+  border-right: 1px solid var(--border);
+}
+.fq-tier-nm {
+  font-family: 'Manrope', sans-serif;
   font-size: 14px;
-  font-weight: 800;
-  color: var(--txt);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+  font-weight: 700;
+  color: #e0e4f0;
   margin-bottom: 4px;
 }
-.faq-rs-stats {
-  font-family: var(--font-mn);
-  font-size: 11px;
-  color: var(--txt3);
-  letter-spacing: 0.05em;
-}
-.faq-rs-bar-wrap {
-  width: 120px;
-}
-.faq-rs-bar-bg {
-  height: 4px;
-  background: var(--bg1);
-  border-radius: 0;
-  overflow: hidden;
-}
-.faq-rs-bar-fill {
-  height: 100%;
-  transition: width .6s;
-}
-.tier-top  .faq-rs-bar-fill { background: var(--green); width: 95%; }
-.tier-good .faq-rs-bar-fill { background: var(--cyan);  width: 65%; }
-.tier-avg  .faq-rs-bar-fill { background: var(--yellow);width: 48%; }
-.tier-low  .faq-rs-bar-fill { background: var(--red);   width: 34%; }
-.faq-rs-pct {
-  font-family: var(--font-mn);
+.fq-tier-st {
+  font-family: 'Space Mono', monospace;
   font-size: 10px;
-  color: var(--txt3);
-  margin-top: 4px;
-  letter-spacing: 0.06em;
+  color: #6a7080;
+  letter-spacing: .04em;
+}
+.fq-tier-bw {
+  width: 90px;
+  padding: 0 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  justify-content: center;
+}
+.fq-tier-bb { height: 2px; background: var(--border2); overflow: hidden; }
+.fq-tier-bf { height: 100%; }
+.fq-tier-bl {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  color: #6a7080;
+  letter-spacing: .08em;
 }
 
-/* ── Player vs player ── */
-.faq-vs-grid {
-  display: grid;
-  grid-template-columns: 1fr 48px 1fr;
-  align-items: stretch;
-}
-.faq-vs-col {
-  padding: 20px;
-}
-.faq-vs-hd {
-  margin-bottom: 16px;
-  padding-bottom: 12px;
-  border-bottom: 1px solid var(--border);
-}
-.faq-vs-name {
-  font-family: var(--font-hd);
-  font-size: 15px;
-  font-weight: 800;
+/* ── VS comparison ── */
+.fq-vs-grid { display: grid; grid-template-columns: 1fr 40px 1fr; }
+.fq-vs-col { padding: 22px; }
+.fq-vs-nm {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  color: #6a7080;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: var(--txt);
+  letter-spacing: .06em;
   margin-bottom: 6px;
 }
-.faq-vs-rating {
-  font-family: var(--font-hd);
-  font-size: 32px;
-  font-weight: 900;
+.fq-vs-rt {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 60px;
   line-height: 1;
+  letter-spacing: .02em;
 }
-.faq-vs-rating.lose { color: var(--cyan); }
-.faq-vs-rating.win  { color: var(--green); }
-.faq-vs-label {
-  font-family: var(--font-mn);
-  font-size: 10px;
-  color: var(--txt3);
-  letter-spacing: 0.08em;
+.fq-vs-rt.l { color: var(--cyan); }
+.fq-vs-rt.w { color: var(--green); }
+.fq-vs-rl {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  color: #6a7080;
+  letter-spacing: .1em;
   text-transform: uppercase;
-  margin-top: 2px;
+  margin-top: 3px;
+  margin-bottom: 16px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border);
 }
-.faq-vs-sep {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--bg3);
-  border-left: 1px solid var(--border);
-  border-right: 1px solid var(--border);
-  font-family: var(--font-hd);
-  font-size: 14px;
-  font-weight: 900;
-  color: var(--txt3);
-  letter-spacing: 0.05em;
-}
-.faq-vs-row {
+.fq-vs-row {
   display: grid;
-  grid-template-columns: 1fr 80px 1fr;
+  grid-template-columns: 1fr 56px 1fr;
   align-items: center;
   border-bottom: 1px solid var(--border);
   min-height: 36px;
-  gap: 8px;
 }
-.faq-vs-row:last-child { border-bottom: none; }
-.faq-vs-stat {
-  font-family: var(--font-hd);
-  font-size: 17px;
-  font-weight: 800;
-  text-align: right;
-  padding: 0 8px;
+.fq-vs-row:last-child { border-bottom: none; }
+.fq-vs-sv {
+  font-family: 'Manrope', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: #e0e4f0;
 }
-.faq-vs-stat.left { text-align: left; }
-.faq-vs-stat-key {
-  font-family: var(--font-mn);
-  font-size: 10px;
-  color: var(--txt3);
+.fq-vs-sv.r { text-align: right; }
+.fq-vs-key {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  color: #5a6070;
   text-align: center;
+  letter-spacing: .08em;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
 }
-.faq-vs-winner { color: var(--green); }
-.faq-vs-loser  { color: var(--txt2); }
+.fq-vs-sep {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg);
+  border-left: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 16px;
+  color: #3a4050;
+  letter-spacing: .1em;
+}
+.fq-vs-win { color: var(--green); }
+.fq-vs-dim { color: #3a4050; }
+.fq-vs-note {
+  padding: 12px 22px;
+  background: var(--bg3);
+  border-top: 1px solid var(--border);
+  font-family: 'Manrope', sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  color: #8090a0;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.fq-vs-note-tag {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  color: var(--yellow);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+.fq-vs-note strong { color: #e0e4f0; font-weight: 700; }
 
-/* ── Comparison K/D vs Impact ── */
-.faq-compare-grid {
+/* ── compare ── */
+.fq-cmp {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1px;
   background: var(--border);
 }
-.faq-compare-col {
-  background: var(--bg2);
-  padding: 20px;
-}
-.faq-compare-title {
-  font-family: var(--font-hd);
-  font-size: 18px;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+.fq-cmp-col { background: var(--bg2); padding: 22px; }
+.fq-cmp-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 24px;
+  letter-spacing: .03em;
   margin-bottom: 16px;
   padding-bottom: 12px;
-  border-bottom: 2px solid var(--border2);
+  border-bottom: 1px solid var(--border);
 }
-.faq-compare-row {
+.fq-cmp-row {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 10px;
   padding: 9px 0;
   border-bottom: 1px solid var(--border);
-  font-family: var(--font-hd);
+  font-family: 'Manrope', sans-serif;
   font-size: 14px;
   font-weight: 500;
+  line-height: 1.5;
 }
-.faq-compare-row:last-child { border-bottom: none; }
-.faq-compare-row.pro { color: var(--txt); }
-.faq-compare-row.pro::before {
-  content: '✓';
-  color: var(--green);
-  font-weight: 900;
-  font-size: 14px;
-  flex-shrink: 0;
-}
-.faq-compare-row.con { color: var(--txt3); }
-.faq-compare-row.con::before {
-  content: '✗';
-  color: var(--red);
-  font-weight: 900;
-  font-size: 14px;
-  flex-shrink: 0;
-}
+.fq-cmp-row:last-child { border-bottom: none; }
+.fq-cmp-row.pro { color: #c8d0e0; }
+.fq-cmp-row.con { color: #6a7080; }
+.fq-cmp-ic { flex-shrink: 0; margin-top: 2px; font-size: 12px; }
 
-/* ── Final CTA ── */
-.faq-final-panel {
+/* ── final ── */
+.fq-final {
   background: var(--bg2);
-  border: 1px solid var(--orange);
-  padding: 28px 32px;
+  border: 1px solid rgba(255,106,0,.25);
   display: grid;
   grid-template-columns: 1fr auto;
   align-items: center;
   gap: 32px;
+  padding: 30px 36px;
+  clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 0 100%);
 }
-.faq-final-text {
-  font-family: var(--font-hd);
-  font-size: 17px;
-  font-weight: 500;
-  color: var(--txt2);
-  line-height: 1.7;
-}
-.faq-final-text strong { color: var(--txt); font-weight: 800; }
-.faq-final-cta {
-  font-family: var(--font-hd);
+.fq-final-t {
+  font-family: 'Manrope', sans-serif;
   font-size: 16px;
-  font-weight: 800;
+  font-weight: 400;
+  color: #a0a8b8;
+  line-height: 1.8;
+}
+.fq-final-t strong { color: #e8eaf0; font-weight: 700; }
+.fq-final-cta {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 18px;
+  letter-spacing: .12em;
   color: var(--orange);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
+  border: 1px solid rgba(255,106,0,.25);
+  padding: 16px 22px;
+  background: rgba(255,106,0,.05);
   white-space: nowrap;
-  border: 1px solid rgba(255,106,0,0.4);
-  padding: 14px 24px;
-  background: rgba(255,106,0,0.06);
+  text-align: center;
+  line-height: 1.5;
   clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%);
 }
 
-/* highlights used in tables */
-.highlight-green { color: var(--green);  font-weight: 800; font-family: var(--font-hd); }
-.highlight-cyan  { color: var(--cyan);   font-weight: 800; font-family: var(--font-hd); }
-.highlight-yellow{ color: var(--yellow); font-weight: 800; font-family: var(--font-hd); }
-.highlight-red   { color: var(--red);    font-weight: 800; font-family: var(--font-hd); }
-.highlight-low   { color: var(--txt3);   font-weight: 800; font-family: var(--font-hd); }
+/* highlight utils */
+.highlight-green { color: var(--green); font-weight: 700; font-family: 'Manrope',sans-serif; }
+.highlight-cyan  { color: var(--cyan);  font-weight: 700; font-family: 'Manrope',sans-serif; }
+.highlight-yellow{ color: var(--yellow);font-weight: 700; font-family: 'Manrope',sans-serif; }
+.highlight-red   { color: var(--red);   font-weight: 700; font-family: 'Manrope',sans-serif; }
+.highlight-low   { color: #5a6070;      font-weight: 700; font-family: 'Manrope',sans-serif; }
 
 .swing-val {
   font-family: var(--font-hd);
@@ -2160,377 +2185,253 @@ td .swing-negative {
     <div class="section-header">
       <div class="section-title">Rating System Explained</div>
     </div>
-
     <div class="faq-container">
 
       <!-- HERO -->
-      <div class="faq-hero">
-        <div>
-          <div class="faq-hero-title">// IMPACT RATING 3.0 — DOCUMENTATION</div>
-          <div class="faq-hero-desc">
-            Система оценки вклада игрока, учитывающая <strong>КОНТЕКСТ</strong> каждого действия.
-            Не просто K/D — а когда, как и в каком состоянии игры был сделан фраг.
+      <div class="fq-hero">
+        <div class="fq-hero-l">
+          <div class="fq-tag">// Impact Rating 3.0 — как это работает</div>
+          <div class="fq-hero-title">Каждый фраг<br>стоит <em>по-разному</em></div>
+          <div class="fq-hero-p">
+            Убийство в 5v1 и убийство в 1v4 clutch — это не одно и то же.
+            Impact Rating считает не сколько ты убил, а <strong>когда</strong> и <strong>в какой ситуации</strong>.
+            Убиваешь когда раунд уже выигран — почти ноль. Убиваешь в критический момент — рейтинг взлетает.
           </div>
         </div>
-        <div class="faq-hero-badge">~70% HLTV 3.0 accuracy</div>
+        <div class="fq-hero-r">
+          <div class="fq-hstat"><div class="fq-hstat-n" style="color:var(--orange)">5</div><div class="fq-hstat-l">компонентов</div></div>
+          <div class="fq-hstat"><div class="fq-hstat-n" style="color:var(--cyan)">~70%</div><div class="fq-hstat-l">точность<br>vs HLTV</div></div>
+          <div class="fq-hstat"><div class="fq-hstat-n" style="color:var(--green)">+35%</div><div class="fq-hstat-l">1v4 clutch<br>swing</div></div>
+          <div class="fq-hstat"><div class="fq-hstat-n" style="color:#3a4050">~0%</div><div class="fq-hstat-l">5v1 cleanup<br>swing</div></div>
+        </div>
       </div>
 
-      <!-- ROW 1: components + swing -->
-      <div class="faq-grid-2">
+      <!-- ROW 1 -->
+      <div class="fq-row2">
 
-        <!-- Weight panel -->
-        <div class="faq-panel">
-          <div class="faq-panel-hd">
-            <div class="faq-panel-hd-label">Rating components</div>
-            <div class="faq-panel-hd-tag">weight distribution</div>
+        <!-- components -->
+        <div class="fq-panel">
+          <div class="fq-ph">
+            <div class="fq-ph-lbl">из чего состоит рейтинг</div>
+            <div class="fq-ph-tag">вес компонента</div>
           </div>
-          <div class="faq-wr-row">
-            <div class="faq-wr-icon">⚡</div>
-            <div class="faq-wr-name">SWING</div>
-            <div class="faq-wr-bar-wrap">
-              <div class="faq-wr-bar-bg c-orange"></div>
-              <div class="faq-wr-bar-fill c-orange" style="width:55%"></div>
-              <div class="faq-wr-pct c-orange">55%</div>
-              <div class="faq-wr-desc">Win probability delta per round</div>
+          <div class="fq-wr">
+            <div class="fq-wr-ic">⚡</div>
+            <div class="fq-wr-nm">SWING</div>
+            <div class="fq-wr-bd">
+              <div class="fq-wr-bw"><div class="fq-wr-bf" style="width:55%;background:var(--orange)"></div></div>
+              <div class="fq-wr-pct" style="color:var(--orange)">55%</div>
+              <div class="fq-wr-ds">Насколько твой фраг изменил шансы на победу в раунде</div>
             </div>
           </div>
-          <div class="faq-wr-row">
-            <div class="faq-wr-icon">🚪</div>
-            <div class="faq-wr-name">ENTRY</div>
-            <div class="faq-wr-bar-wrap">
-              <div class="faq-wr-bar-bg c-cyan"></div>
-              <div class="faq-wr-bar-fill c-cyan" style="width:35%"></div>
-              <div class="faq-wr-pct c-cyan">35%</div>
-              <div class="faq-wr-desc">First kill / first death impact</div>
+          <div class="fq-wr">
+            <div class="fq-wr-ic">🚪</div>
+            <div class="fq-wr-nm">ENTRY</div>
+            <div class="fq-wr-bd">
+              <div class="fq-wr-bw"><div class="fq-wr-bf" style="width:35%;background:var(--cyan)"></div></div>
+              <div class="fq-wr-pct" style="color:var(--cyan)">35%</div>
+              <div class="fq-wr-ds">Первым убил или первым умер в раунде</div>
             </div>
           </div>
-          <div class="faq-wr-row">
-            <div class="faq-wr-icon">🔥</div>
-            <div class="faq-wr-name">MULTI</div>
-            <div class="faq-wr-bar-wrap">
-              <div class="faq-wr-bar-bg c-yellow"></div>
-              <div class="faq-wr-bar-fill c-yellow" style="width:18%"></div>
-              <div class="faq-wr-pct c-yellow">18%</div>
-              <div class="faq-wr-desc">2K/3K/4K/ACE multipliers</div>
+          <div class="fq-wr">
+            <div class="fq-wr-ic">🔥</div>
+            <div class="fq-wr-nm">MULTI</div>
+            <div class="fq-wr-bd">
+              <div class="fq-wr-bw"><div class="fq-wr-bf" style="width:18%;background:var(--yellow)"></div></div>
+              <div class="fq-wr-pct" style="color:var(--yellow)">18%</div>
+              <div class="fq-wr-ds">Бонус за 2K, 3K, 4K и ACE в одном раунде</div>
             </div>
           </div>
-          <div class="faq-wr-row">
-            <div class="faq-wr-icon">🎯</div>
-            <div class="faq-wr-name">KAST</div>
-            <div class="faq-wr-bar-wrap">
-              <div class="faq-wr-bar-bg c-green"></div>
-              <div class="faq-wr-bar-fill c-green" style="width:17%"></div>
-              <div class="faq-wr-pct c-green">17%</div>
-              <div class="faq-wr-desc">Kill / Assist / Survive / Trade %</div>
+          <div class="fq-wr">
+            <div class="fq-wr-ic">🎯</div>
+            <div class="fq-wr-nm">KAST</div>
+            <div class="fq-wr-bd">
+              <div class="fq-wr-bw"><div class="fq-wr-bf" style="width:17%;background:var(--green)"></div></div>
+              <div class="fq-wr-pct" style="color:var(--green)">17%</div>
+              <div class="fq-wr-ds">% раундов где ты убил, помог, выжил или был отомщён</div>
             </div>
           </div>
-          <div class="faq-wr-row">
-            <div class="faq-wr-icon">💣</div>
-            <div class="faq-wr-name">BOMB</div>
-            <div class="faq-wr-bar-wrap">
-              <div class="faq-wr-bar-bg c-red"></div>
-              <div class="faq-wr-bar-fill c-red" style="width:8%"></div>
-              <div class="faq-wr-pct c-red">8%</div>
-              <div class="faq-wr-desc">Plant / defuse win probability</div>
+          <div class="fq-wr" style="border-bottom:none">
+            <div class="fq-wr-ic">💣</div>
+            <div class="fq-wr-nm">BOMB</div>
+            <div class="fq-wr-bd">
+              <div class="fq-wr-bw"><div class="fq-wr-bf" style="width:8%;background:var(--red)"></div></div>
+              <div class="fq-wr-pct" style="color:var(--red)">8%</div>
+              <div class="fq-wr-ds">Установка или обезвреживание бомбы меняет шансы</div>
             </div>
           </div>
-          <div style="padding:12px 16px;background:var(--bg3);border-top:1px solid var(--border)">
-            <div class="faq-formula">Impact = 2.13 × KPR + 0.42 × APR − 0.41</div>
-            <div style="font-family:var(--font-mn);font-size:11px;color:var(--txt3);letter-spacing:0.06em">BASE HLTV FORMULA — KPR = kills/round, APR = assists/round</div>
+          <div class="fq-explain">
+            <div class="fq-explain-icon">💡</div>
+            <div class="fq-explain-txt"><strong>SWING — главный компонент (55%).</strong> Это насколько конкретно твой фраг изменил вероятность победы. Убить в 1v3 clutch = +25% к шансам. Убить последнего в 5v1 = +0.5%. Один и тот же убийство — разная ценность.</div>
+          </div>
+          <div class="fq-formula">
+            <div class="fq-formula-code">Base = 2.13 × KPR + 0.42 × APR − 0.41</div>
+            <div class="fq-formula-note">HLTV 3.0 формула — KPR = убийств/раунд, APR = ассистов/раунд</div>
           </div>
         </div>
 
-        <!-- SWING values panel -->
-        <div class="faq-panel" style="display:flex;flex-direction:column;">
-          <div class="faq-panel-hd">
-            <div class="faq-panel-hd-label">SWING — situational values</div>
-            <div class="faq-panel-hd-tag">win probability delta</div>
+        <!-- swing + multi -->
+        <div class="fq-panel">
+          <div class="fq-ph">
+            <div class="fq-ph-lbl">SWING — примеры в числах</div>
+            <div class="fq-ph-tag">+win probability</div>
           </div>
-          <div class="faq-swing-grid" style="flex:1">
-            <div class="faq-swing-cell s-green">
-              <div class="faq-swing-situation">5v5 → 5v4</div>
-              <div class="faq-swing-val s-green">+12%</div>
-              <div class="faq-swing-label">Entry frag</div>
-            </div>
-            <div class="faq-swing-cell s-cyan">
-              <div class="faq-swing-situation">3v3 mid-round</div>
-              <div class="faq-swing-val s-cyan">+8%</div>
-              <div class="faq-swing-label">Standard kill</div>
-            </div>
-            <div class="faq-swing-cell s-grey">
-              <div class="faq-swing-situation">5v1 cleanup</div>
-              <div class="faq-swing-val s-grey">+0.5%</div>
-              <div class="faq-swing-label">Near zero</div>
-            </div>
-            <div class="faq-swing-cell s-yellow">
-              <div class="faq-swing-situation">1v3 clutch</div>
-              <div class="faq-swing-val s-yellow">+25%</div>
-              <div class="faq-swing-label">Clutch kill</div>
-            </div>
+          <div class="fq-swing-grid">
+            <div class="fq-sc sg"><div class="fq-sc-sit">5v5 → 5v4</div><div class="fq-sc-val sg">+12%</div><div class="fq-sc-lbl">Entry — открыл раунд</div></div>
+            <div class="fq-sc sc"><div class="fq-sc-sit">3v3 mid-round</div><div class="fq-sc-val sc">+8%</div><div class="fq-sc-lbl">Стандартный фраг</div></div>
+            <div class="fq-sc sw"><div class="fq-sc-sit">5v1 cleanup</div><div class="fq-sc-val sw">+0.5%</div><div class="fq-sc-lbl">Раунд уже выигран</div></div>
+            <div class="fq-sc sy"><div class="fq-sc-sit">1v3 clutch</div><div class="fq-sc-val sy">+25%</div><div class="fq-sc-lbl">Огромный импакт</div></div>
           </div>
-          <!-- Multikill bonuses -->
-          <div class="faq-panel-hd" style="border-top:1px solid var(--border);border-bottom:none;margin-top:auto">
-            <div class="faq-panel-hd-label">Multikill multipliers</div>
+          <div class="fq-explain">
+            <div class="fq-explain-icon">⚡</div>
+            <div class="fq-explain-txt"><strong>Почему 5v1 cleanup почти ничего не даёт?</strong> Если вас 5 против 1 — вы и без этого убийства почти 100% выигрываете. Фраг не изменил ситуацию. А в 1v3 каждое убийство — огромный сдвиг в вероятности победы.</div>
           </div>
-          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border)">
-            <div style="background:var(--bg3);padding:14px;text-align:center">
-              <div style="font-family:var(--font-hd);font-size:22px;font-weight:900;color:var(--txt)">×1.12</div>
-              <div style="font-family:var(--font-mn);font-size:10px;color:var(--txt3);letter-spacing:.08em;margin-top:4px">2K</div>
-            </div>
-            <div style="background:var(--bg3);padding:14px;text-align:center">
-              <div style="font-family:var(--font-hd);font-size:22px;font-weight:900;color:var(--cyan)">×1.20</div>
-              <div style="font-family:var(--font-mn);font-size:10px;color:var(--txt3);letter-spacing:.08em;margin-top:4px">3K</div>
-            </div>
-            <div style="background:var(--bg3);padding:14px;text-align:center">
-              <div style="font-family:var(--font-hd);font-size:22px;font-weight:900;color:var(--orange)">×1.28</div>
-              <div style="font-family:var(--font-mn);font-size:10px;color:var(--txt3);letter-spacing:.08em;margin-top:4px">4K</div>
-            </div>
-            <div style="background:var(--bg3);padding:14px;text-align:center">
-              <div style="font-family:var(--font-hd);font-size:22px;font-weight:900;color:var(--yellow)">×1.35</div>
-              <div style="font-family:var(--font-mn);font-size:10px;color:var(--txt3);letter-spacing:.08em;margin-top:4px">ACE</div>
-            </div>
+          <div class="fq-ph" style="border-top:1px solid var(--border)">
+            <div class="fq-ph-lbl">multikill бонусы — множители</div>
+          </div>
+          <div class="fq-mg">
+            <div class="fq-mc mo"><div class="fq-mc-v mo">×1.12</div><div class="fq-mc-l">2K</div></div>
+            <div class="fq-mc mc"><div class="fq-mc-v mc">×1.20</div><div class="fq-mc-l">3K</div></div>
+            <div class="fq-mc my"><div class="fq-mc-v my">×1.28</div><div class="fq-mc-l">4K</div></div>
+            <div class="fq-mc mg"><div class="fq-mc-v mg">×1.35</div><div class="fq-mc-l">ACE</div></div>
           </div>
         </div>
       </div>
 
-      <!-- ROW 2: Scenario table + Rating scale -->
-      <div class="faq-grid-2">
+      <!-- ROW 2 -->
+      <div class="fq-row2">
 
-        <!-- Scenario table -->
-        <div class="faq-panel">
-          <div class="faq-panel-hd">
-            <div class="faq-panel-hd-label">Eco / Fullbuy / Clutch — kill weight</div>
-            <div class="faq-panel-hd-tag">context multipliers</div>
+        <!-- scenario table -->
+        <div class="fq-panel">
+          <div class="fq-ph">
+            <div class="fq-ph-lbl">эко / fullbuy / clutch — вес убийства</div>
+            <div class="fq-ph-tag">контекст меняет всё</div>
           </div>
-          <div class="faq-panel-body" style="padding:0">
-            <table class="faq-scenario-table">
-              <thead>
-                <tr>
-                  <th>Ситуация</th>
-                  <th>Ваш килл</th>
-                  <th>Ваша смерть</th>
-                  <th>SWING</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td><span class="faq-st-name">Fullbuy vs Fullbuy</span><span class="faq-st-sub">AK/M4 · full utility</span></td>
-                  <td><span class="faq-st-val highlight-green">100%</span></td>
-                  <td><span class="faq-st-val highlight-green">100%</span></td>
-                  <td><span class="faq-st-note">стандарт</span></td>
-                </tr>
-                <tr>
-                  <td><span class="faq-st-name">Fullbuy vs Eco</span><span class="faq-st-sub">pistols / no armor</span></td>
-                  <td><span class="faq-st-val highlight-yellow">68%</span></td>
-                  <td><span class="faq-st-val highlight-red">122%</span></td>
-                  <td><span class="faq-st-note">eco penalty</span></td>
-                </tr>
-                <tr>
-                  <td><span class="faq-st-name">Clutch 1v2</span><span class="faq-st-sub">1 vs 2 alive</span></td>
-                  <td><span class="faq-st-val highlight-green">+18%</span></td>
-                  <td><span class="faq-st-val">—</span></td>
-                  <td><span class="faq-st-note c-green">swing boost</span></td>
-                </tr>
-                <tr>
-                  <td><span class="faq-st-name">Clutch 1v3</span><span class="faq-st-sub">1 vs 3 alive</span></td>
-                  <td><span class="faq-st-val highlight-green">+25%</span></td>
-                  <td><span class="faq-st-val">—</span></td>
-                  <td><span class="faq-st-note c-green">swing boost</span></td>
-                </tr>
-                <tr>
-                  <td><span class="faq-st-name">Clutch 1v4</span><span class="faq-st-sub">1 vs 4 alive</span></td>
-                  <td><span class="faq-st-val highlight-yellow">+35%</span></td>
-                  <td><span class="faq-st-val">—</span></td>
-                  <td><span class="faq-st-note c-yellow">huge swing</span></td>
-                </tr>
-                <tr>
-                  <td><span class="faq-st-name">5v1 Cleanup</span><span class="faq-st-sub">5 vs 1 alive</span></td>
-                  <td><span class="faq-st-val highlight-low">~0%</span></td>
-                  <td><span class="faq-st-val highlight-red">high</span></td>
-                  <td><span class="faq-st-note">no value</span></td>
-                </tr>
-              </tbody>
-            </table>
+          <table class="fq-stbl">
+            <thead><tr><th>Ситуация</th><th>Твой килл</th><th>Твоя смерть</th></tr></thead>
+            <tbody>
+              <tr><td><span class="fq-sn">Fullbuy vs Fullbuy</span><span class="fq-ss">обе команды с AK/M4 и бронёй</span></td><td><span class="fq-sv g">100%</span></td><td><span class="fq-sv g">100%</span></td></tr>
+              <tr><td><span class="fq-sn">Fullbuy vs Eco</span><span class="fq-ss">ты с винтовкой, они с пистолетами</span></td><td><span class="fq-sv y">68%</span></td><td><span class="fq-sv r">122%</span></td></tr>
+              <tr><td><span class="fq-sn">Clutch 1v2</span><span class="fq-ss">ты один против двух</span></td><td><span class="fq-sv g">+18%</span></td><td><span class="fq-sv d">—</span></td></tr>
+              <tr><td><span class="fq-sn">Clutch 1v3</span><span class="fq-ss">ты один против трёх</span></td><td><span class="fq-sv g">+25%</span></td><td><span class="fq-sv d">—</span></td></tr>
+              <tr><td><span class="fq-sn">Clutch 1v4</span><span class="fq-ss">ты один против четырёх</span></td><td><span class="fq-sv y">+35%</span></td><td><span class="fq-sv d">—</span></td></tr>
+              <tr><td><span class="fq-sn">5v1 Cleanup</span><span class="fq-ss">вас пятеро против одного</span></td><td><span class="fq-sv d">~0%</span></td><td><span class="fq-sv r">высокий</span></td></tr>
+            </tbody>
+          </table>
+          <div class="fq-explain">
+            <div class="fq-explain-icon">⚠️</div>
+            <div class="fq-explain-txt"><strong>Убить на eco = нормально, умереть на eco = позор.</strong> Если противник без брони и с пистолетом — ты обязан его убить. Умер — рейтинг падает сильнее обычного, потому что проиграл заведомо выигрышную ситуацию.</div>
           </div>
         </div>
 
-        <!-- Rating scale -->
-        <div class="faq-panel">
-          <div class="faq-panel-hd">
-            <div class="faq-panel-hd-label">Rating tiers</div>
-            <div class="faq-panel-hd-tag">performance scale</div>
+        <!-- tiers -->
+        <div class="fq-panel">
+          <div class="fq-ph">
+            <div class="fq-ph-lbl">шкала рейтинга — что значат цифры</div>
+            <div class="fq-ph-tag">performance scale</div>
           </div>
-          <div class="faq-panel-body" style="padding:0">
-            <div class="faq-rating-scale">
-              <div class="faq-rs-row tier-top">
-                <div class="faq-rs-num">2.10</div>
-                <div class="faq-rs-info">
-                  <div class="faq-rs-title">s1mple-level</div>
-                  <div class="faq-rs-stats">KAST 92% · SWING +2.4 · K/D 1.85</div>
-                </div>
-                <div class="faq-rs-bar-wrap">
-                  <div class="faq-rs-bar-bg"><div class="faq-rs-bar-fill"></div></div>
-                  <div class="faq-rs-pct">WORLD CLASS</div>
-                </div>
-              </div>
-              <div class="faq-rs-row tier-good">
-                <div class="faq-rs-num">1.35</div>
-                <div class="faq-rs-info">
-                  <div class="faq-rs-title">Solid player</div>
-                  <div class="faq-rs-stats">KAST 78% · SWING +1.1 · K/D 1.25</div>
-                </div>
-                <div class="faq-rs-bar-wrap">
-                  <div class="faq-rs-bar-bg"><div class="faq-rs-bar-fill"></div></div>
-                  <div class="faq-rs-pct">ABOVE AVG</div>
-                </div>
-              </div>
-              <div class="faq-rs-row tier-avg">
-                <div class="faq-rs-num">1.00</div>
-                <div class="faq-rs-info">
-                  <div class="faq-rs-title">Average</div>
-                  <div class="faq-rs-stats">KAST 68% · SWING +0.3 · K/D 1.00</div>
-                </div>
-                <div class="faq-rs-bar-wrap">
-                  <div class="faq-rs-bar-bg"><div class="faq-rs-bar-fill"></div></div>
-                  <div class="faq-rs-pct">BASELINE</div>
-                </div>
-              </div>
-              <div class="faq-rs-row tier-low">
-                <div class="faq-rs-num">0.72</div>
-                <div class="faq-rs-info">
-                  <div class="faq-rs-title">Struggling</div>
-                  <div class="faq-rs-stats">KAST 52% · SWING −0.4 · K/D 0.75</div>
-                </div>
-                <div class="faq-rs-bar-wrap">
-                  <div class="faq-rs-bar-bg"><div class="faq-rs-bar-fill"></div></div>
-                  <div class="faq-rs-pct">BELOW AVG</div>
-                </div>
-              </div>
+          <div class="fq-tier" style="border-left-color:var(--green)">
+            <div class="fq-tier-n" style="color:var(--green)">2.10</div>
+            <div class="fq-tier-i">
+              <div class="fq-tier-nm">s1mple-level — абсолютное доминирование</div>
+              <div class="fq-tier-st">KAST 92% · SWING +2.4 · K/D 1.85 · Entry 80%</div>
             </div>
+            <div class="fq-tier-bw"><div class="fq-tier-bb"><div class="fq-tier-bf" style="width:95%;background:var(--green)"></div></div><div class="fq-tier-bl">WORLD CLASS</div></div>
+          </div>
+          <div class="fq-tier" style="border-left-color:var(--cyan)">
+            <div class="fq-tier-n" style="color:var(--cyan)">1.35</div>
+            <div class="fq-tier-i">
+              <div class="fq-tier-nm">Сильный игрок — тащишь команду</div>
+              <div class="fq-tier-st">KAST 78% · SWING +1.1 · K/D 1.25 · Entry 55%</div>
+            </div>
+            <div class="fq-tier-bw"><div class="fq-tier-bb"><div class="fq-tier-bf" style="width:64%;background:var(--cyan)"></div></div><div class="fq-tier-bl">ABOVE AVG</div></div>
+          </div>
+          <div class="fq-tier" style="border-left-color:var(--yellow)">
+            <div class="fq-tier-n" style="color:var(--yellow)">1.00</div>
+            <div class="fq-tier-i">
+              <div class="fq-tier-nm">Средний уровень — норма для большинства</div>
+              <div class="fq-tier-st">KAST 68% · SWING +0.3 · K/D 1.00 · Entry 50%</div>
+            </div>
+            <div class="fq-tier-bw"><div class="fq-tier-bb"><div class="fq-tier-bf" style="width:47%;background:var(--yellow)"></div></div><div class="fq-tier-bl">BASELINE</div></div>
+          </div>
+          <div class="fq-tier" style="border-left-color:var(--red)">
+            <div class="fq-tier-n" style="color:var(--red)">0.72</div>
+            <div class="fq-tier-i">
+              <div class="fq-tier-nm">Сложно — нужно работать над игрой</div>
+              <div class="fq-tier-st">KAST 52% · SWING −0.4 · K/D 0.75 · Entry 35%</div>
+            </div>
+            <div class="fq-tier-bw"><div class="fq-tier-bb"><div class="fq-tier-bf" style="width:34%;background:var(--red)"></div></div><div class="fq-tier-bl">BELOW AVG</div></div>
+          </div>
+          <div class="fq-explain">
+            <div class="fq-explain-icon">📊</div>
+            <div class="fq-explain-txt"><strong>Рейтинг 1.00 = ты полезен на среднем уровне.</strong> Выше 1.20 — реально тащишь команду. Ниже 0.85 — чаще мешаешь чем помогаешь. У лучших про-игроков обычно 1.15–1.35.</div>
           </div>
         </div>
       </div>
 
-      <!-- ROW 3: Player A vs B comparison -->
-      <div class="faq-panel-full">
-        <div class="faq-panel-hd">
-          <div class="faq-panel-hd-label">Context matters — K/D 2.0 vs K/D 1.0</div>
-          <div class="faq-panel-hd-tag">why context beats raw stats</div>
+      <!-- VS comparison -->
+      <div class="fq-panel">
+        <div class="fq-ph">
+          <div class="fq-ph-lbl">почему K/D 2.0 может быть хуже K/D 1.0</div>
+          <div class="fq-ph-tag">реальный пример</div>
         </div>
-        <div class="faq-vs-grid">
-          <div class="faq-vs-col" style="background:rgba(0,212,255,0.02)">
-            <div class="faq-vs-hd">
-              <div class="faq-vs-name">Игрок A — 20–10</div>
-              <div class="faq-vs-rating lose">1.18</div>
-              <div class="faq-vs-label">IMPACT RATING</div>
-            </div>
-            <div class="faq-vs-row">
-              <div class="faq-vs-stat left faq-vs-loser">2 FK / 0 FD</div>
-              <div class="faq-vs-stat-key">ENTRY</div>
-              <div></div>
-            </div>
-            <div class="faq-vs-row">
-              <div class="faq-vs-stat left faq-vs-loser">2×2K, 1×3K</div>
-              <div class="faq-vs-stat-key">MULTI</div>
-              <div></div>
-            </div>
-            <div class="faq-vs-row">
-              <div class="faq-vs-stat left faq-vs-loser">Проиграл все</div>
-              <div class="faq-vs-stat-key">CLUTCH</div>
-              <div></div>
-            </div>
-            <div class="faq-vs-row">
-              <div class="faq-vs-stat left faq-vs-loser">65%</div>
-              <div class="faq-vs-stat-key">KAST</div>
-              <div></div>
-            </div>
-            <div class="faq-vs-row">
-              <div class="faq-vs-stat left highlight-yellow">+4.2%</div>
-              <div class="faq-vs-stat-key">SWING</div>
-              <div></div>
-            </div>
-            <div style="margin-top:16px;padding:12px;background:var(--bg);border-left:2px solid var(--txt3);font-family:var(--font-hd);font-size:13px;color:var(--txt3);line-height:1.6">
-              Фраги в 5v1/5v2 cleanup. Не открывает раунды, не выигрывает клатчи.
-            </div>
+        <div class="fq-vs-grid">
+          <div class="fq-vs-col" style="background:rgba(0,212,255,.015)">
+            <div class="fq-vs-nm">Игрок A — 20 убийств / 10 смертей</div>
+            <div class="fq-vs-rt l">1.18</div>
+            <div class="fq-vs-rl">IMPACT RATING — проиграл по импакту</div>
+            <div class="fq-vs-row"><div class="fq-vs-sv r fq-vs-dim">2 FK / 0 FD</div><div class="fq-vs-key">ENTRY</div><div></div></div>
+            <div class="fq-vs-row"><div class="fq-vs-sv r fq-vs-dim">Проиграл все</div><div class="fq-vs-key">CLUTCH</div><div></div></div>
+            <div class="fq-vs-row"><div class="fq-vs-sv r fq-vs-dim">65%</div><div class="fq-vs-key">KAST</div><div></div></div>
+            <div class="fq-vs-row"><div class="fq-vs-sv r" style="color:var(--yellow)">+4.2%</div><div class="fq-vs-key">SWING</div><div></div></div>
+            <div style="margin-top:14px;padding:12px;background:var(--bg3);border-left:2px solid var(--border2);font-family:'Manrope',sans-serif;font-size:12px;color:#8090a0;line-height:1.7">Большинство фрагов в ситуациях 5v1 и 5v2 — раунд уже выигран без него. Не открывал раунды, не выигрывал клатчи.</div>
           </div>
-          <div class="faq-vs-sep">VS</div>
-          <div class="faq-vs-col" style="background:rgba(0,230,118,0.02)">
-            <div class="faq-vs-hd">
-              <div class="faq-vs-name">Игрок B — 15–15</div>
-              <div class="faq-vs-rating win">1.42</div>
-              <div class="faq-vs-label">IMPACT RATING</div>
-            </div>
-            <div class="faq-vs-row">
-              <div></div>
-              <div class="faq-vs-stat-key">ENTRY</div>
-              <div class="faq-vs-stat faq-vs-winner">8 FK / 3 FD</div>
-            </div>
-            <div class="faq-vs-row">
-              <div></div>
-              <div class="faq-vs-stat-key">MULTI</div>
-              <div class="faq-vs-stat faq-vs-loser">1×2K, 1×3K</div>
-            </div>
-            <div class="faq-vs-row">
-              <div></div>
-              <div class="faq-vs-stat-key">CLUTCH</div>
-              <div class="faq-vs-stat faq-vs-winner">1v2 + 1v3 ✓</div>
-            </div>
-            <div class="faq-vs-row">
-              <div></div>
-              <div class="faq-vs-stat-key">KAST</div>
-              <div class="faq-vs-stat faq-vs-winner">88%</div>
-            </div>
-            <div class="faq-vs-row">
-              <div></div>
-              <div class="faq-vs-stat-key">SWING</div>
-              <div class="faq-vs-stat highlight-green">+12.8%</div>
-            </div>
-            <div style="margin-top:16px;padding:12px;background:var(--bg);border-left:2px solid var(--green);font-family:var(--font-hd);font-size:13px;color:var(--txt2);line-height:1.6">
-              Entry kills, clutch wins, 88% KAST. Меньше фрагов — огромный impact.
-            </div>
+          <div class="fq-vs-sep">VS</div>
+          <div class="fq-vs-col" style="background:rgba(0,230,118,.015)">
+            <div class="fq-vs-nm">Игрок B — 15 убийств / 15 смертей</div>
+            <div class="fq-vs-rt w">1.42</div>
+            <div class="fq-vs-rl">IMPACT RATING — выиграл по импакту</div>
+            <div class="fq-vs-row"><div></div><div class="fq-vs-key">ENTRY</div><div class="fq-vs-sv fq-vs-win">8 FK / 3 FD</div></div>
+            <div class="fq-vs-row"><div></div><div class="fq-vs-key">CLUTCH</div><div class="fq-vs-sv fq-vs-win">1v2 + 1v3 ✓</div></div>
+            <div class="fq-vs-row"><div></div><div class="fq-vs-key">KAST</div><div class="fq-vs-sv fq-vs-win">88%</div></div>
+            <div class="fq-vs-row"><div></div><div class="fq-vs-key">SWING</div><div class="fq-vs-sv" style="color:var(--green)">+12.8%</div></div>
+            <div style="margin-top:14px;padding:12px;background:var(--bg3);border-left:2px solid var(--green);font-family:'Manrope',sans-serif;font-size:12px;color:#b0c0b0;line-height:1.7">Открывал раунды (8 entry kills), выигрывал критические клатчи, участвовал в 88% раундов. Меньше фрагов — больше пользы для команды.</div>
           </div>
         </div>
-        <!-- donk vs ZywOo -->
-        <div style="padding:14px 20px;background:var(--bg3);border-top:1px solid var(--border);display:flex;align-items:center;gap:16px">
-          <div style="font-family:var(--font-mn);font-size:10px;color:var(--yellow);letter-spacing:.12em;text-transform:uppercase;flex-shrink:0">🌟 Pro example · IEM Katowice 2024</div>
-          <div style="font-family:var(--font-hd);font-size:13px;color:var(--txt2)">
-            <strong style="color:var(--txt)">ZywOo</strong> 28–18 (K/D 1.56) cleanup frags → Rating 1.31 &nbsp;·&nbsp;
-            <strong style="color:var(--green)">donk</strong> 22–20 (K/D 1.10) entry + clutches → Rating 1.48 · <strong style="color:var(--green)">MVP</strong>
-          </div>
+        <div class="fq-vs-note">
+          <span class="fq-vs-note-tag">🌟 IEM Katowice 2024</span>
+          <span><strong>ZywOo</strong> — 28–18, K/D 1.56, фраги в cleanup → Рейтинг 1.31 &nbsp;·&nbsp; <strong>donk</strong> — 22–20, K/D 1.10, entry kills + клатчи → Рейтинг 1.48 · <strong style="color:var(--green)">MVP турнира</strong></span>
         </div>
       </div>
 
-      <!-- ROW 4: K/D vs Impact Rating -->
-      <div class="faq-panel-full">
-        <div class="faq-panel-hd">
-          <div class="faq-panel-hd-label">K/D vs Impact Rating 3.0</div>
-          <div class="faq-panel-hd-tag">why we don't use K/D</div>
+      <!-- K/D vs Impact -->
+      <div class="fq-panel">
+        <div class="fq-ph">
+          <div class="fq-ph-lbl">почему K/D — плохая метрика</div>
+          <div class="fq-ph-tag">K/D vs Impact Rating 3.0</div>
         </div>
-        <div class="faq-compare-grid">
-          <div class="faq-compare-col">
-            <div class="faq-compare-title" style="color:var(--txt3)">K / D ratio</div>
-            <div class="faq-compare-row con">Не учитывает контекст убийства</div>
-            <div class="faq-compare-row con">5v1 = 1v5 по ценности</div>
-            <div class="faq-compare-row con">Eco = Fullbuy по весу</div>
-            <div class="faq-compare-row con">Cleanup = Entry по значимости</div>
+        <div class="fq-cmp">
+          <div class="fq-cmp-col">
+            <div class="fq-cmp-title" style="color:#5a6070">K/D ratio</div>
+            <div class="fq-cmp-row con"><div class="fq-cmp-ic">✗</div><div>Убийство в 5v1 = убийству в 1v4 — одинаковая ценность</div></div>
+            <div class="fq-cmp-row con"><div class="fq-cmp-ic">✗</div><div>Не различает eco и fullbuy противника</div></div>
+            <div class="fq-cmp-row con"><div class="fq-cmp-ic">✗</div><div>Фраг в конце проигранного раунда = фрагу в начале выигранного</div></div>
+            <div class="fq-cmp-row con"><div class="fq-cmp-ic">✗</div><div>Clutch и cleanup статистически неотличимы</div></div>
           </div>
-          <div class="faq-compare-col">
-            <div class="faq-compare-title" style="color:var(--orange)">Impact Rating 3.0</div>
-            <div class="faq-compare-row pro">Win probability delta (SWING)</div>
-            <div class="faq-compare-row pro">Clutch &gt; Cleanup — всегда</div>
-            <div class="faq-compare-row pro">Eco penalties / fullbuy bonuses</div>
-            <div class="faq-compare-row pro">Entry + Trade + KAST учтены</div>
+          <div class="fq-cmp-col">
+            <div class="fq-cmp-title" style="color:var(--orange)">Impact Rating 3.0</div>
+            <div class="fq-cmp-row pro"><div class="fq-cmp-ic">✓</div><div>Каждый фраг взвешен по изменению вероятности победы</div></div>
+            <div class="fq-cmp-row pro"><div class="fq-cmp-ic">✓</div><div>Eco-убийства стоят меньше, eco-смерти штрафуются</div></div>
+            <div class="fq-cmp-row pro"><div class="fq-cmp-ic">✓</div><div>Clutch-фраги ценятся в 50× больше чем cleanup</div></div>
+            <div class="fq-cmp-row pro"><div class="fq-cmp-ic">✓</div><div>Entry, KAST, multikill и bomb impact — всё учтено</div></div>
           </div>
         </div>
       </div>
 
       <!-- FINAL -->
-      <div class="faq-final-panel">
-        <div class="faq-final-text">
-          Impact Rating 3.0 оценивает <strong>реальный вклад в победу</strong>, а не просто статистику.
-          Основан на принципах HLTV 3.0 с улучшениями для клатчей, эко-раундов и критических ситуаций.
-        </div>
-        <div class="faq-final-cta">Играй умно.<br>Делай импакт 🔥</div>
+      <div class="fq-final">
+        <div class="fq-final-t">Impact Rating 3.0 — это ответ на вопрос <strong>«кто реально выиграл этот раунд для команды?»</strong>, а не просто кто больше убил. Основан на методологии HLTV 3.0 с улучшениями для клатчей, эко-раундов и критических ситуаций.</div>
+        <div class="fq-final-cta">Делай<br>импакт 🔥</div>
       </div>
 
     </div>
