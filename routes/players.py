@@ -33,8 +33,9 @@ def list_players(
             func.avg(MatchPlayer.kast_pct).label("kast"),
             func.avg(MatchPlayer.swing).label("swing"),
         )
-        .outerjoin(MatchPlayer, MatchPlayer.player_id == Player.id)
+        .join(MatchPlayer, MatchPlayer.player_id == Player.id)
         .group_by(Player.id)
+        .having(func.count(MatchPlayer.id) > 0)
         .order_by(func.avg(MatchPlayer.impact_rating).desc())
         .offset(offset)
         .limit(limit)
